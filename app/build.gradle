@@ -5,6 +5,7 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "com.example.alarm_app"
         minSdkVersion 19
         targetSdkVersion 30

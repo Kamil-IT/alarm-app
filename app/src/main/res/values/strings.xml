@@ -9,4 +9,10 @@
     <string name="title_setting">Settings</string>
 <!--    Menu-end-->
 
+<!--    Home Fragment-->
+    <string name="text_view_next_alarm">Next alarm</string>
+    <string name="text_view_next_alarm_be">No upcoming alarms</string>
+
+    <!--    Home Fragment-end-->
+
 </resources>

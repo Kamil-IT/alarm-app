@@ -11,15 +11,16 @@
         android:icon="@drawable/ic_next_alarm_black_24dp"
         android:title="@string/title_next_alarm" />
 
-    <item
-        android:id="@+id/navigation_timer"
-        android:icon="@drawable/ic_timer_black_24dp"
-        android:title="@string/title_timer" />
+<!--    TODO: add it future-->
+<!--    <item-->
+<!--        android:id="@+id/navigation_timer"-->
+<!--        android:icon="@drawable/ic_timer_black_24dp"-->
+<!--        android:title="@string/title_timer" />-->
 
-    <item
-        android:id="@+id/navigation_stopwatch"
-        android:icon="@drawable/ic_stopwatch_black_24dp"
-        android:title="@string/title_stopwatch" />
+<!--    <item-->
+<!--        android:id="@+id/navigation_stopwatch"-->
+<!--        android:icon="@drawable/ic_stopwatch_black_24dp"-->
+<!--        android:title="@string/title_stopwatch" />-->
 
     <item
         android:id="@+id/navigation_settings"
