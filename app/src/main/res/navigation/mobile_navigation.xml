@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.alarm_app.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_next_alarm"
+        android:name="com.example.alarm_app.ui.nextalarm.NextAlarmFragment"
+        android:label="@string/title_next_alarm"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_timer"
+        android:name="com.example.alarm_app.ui.timer.TimerFragment"
+        android:label="@string/title_timer"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_stopwatch"
+        android:name="com.example.alarm_app.ui.stopwatch.StopwatchFragment"
+        android:label="@string/title_stopwatch"
+        tools:layout="@layout/fragment_stopwatch" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.alarm_app.ui.settings.SettingsFragment"
+        android:label="@string/title_setting"
+        tools:layout="@layout/fragment_settings" />
+</navigation>

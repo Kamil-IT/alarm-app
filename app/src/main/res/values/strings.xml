@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">alarm-app</string>
+
+<!--    Menu-->
+    <string name="title_home">Alarm</string>
+    <string name="title_next_alarm">Next alarm</string>
+    <string name="title_timer">Timer</string>
+    <string name="title_stopwatch">Stopwatch</string>
+    <string name="title_setting">Settings</string>
+<!--    Menu-end-->
+
+</resources>
