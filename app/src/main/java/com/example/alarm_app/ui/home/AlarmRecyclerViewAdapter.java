@@ -15,16 +15,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
 
     List<String> strings = Arrays.asList("asdasda", "asdasd", "gsf", "dasda", "asdas", "dasda", "asdas");
 
-    Context context;
+    private Context context;
+    private FragmentManager fragmentManager;
 
-    public AlarmRecyclerViewAdapter(Context context) {
+    public AlarmRecyclerViewAdapter(Context context, FragmentManager fragmentManager) {
         this.context = context;
+        this.fragmentManager = fragmentManager;
     }
 
     @NonNull
@@ -35,8 +38,16 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 //        Impl data to fields
+
+        holder.btnOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlarmOptionSheetDialog sheet = new AlarmOptionSheetDialog();
+                sheet.show(fragmentManager, "Option for alarm nr " + position);
+            }
+        });
     }
 
     @Override

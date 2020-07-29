@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">alarm-app</string>
 
+<!--    Main strings-->
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+
+    <!--    Main strings-end-->
+
 <!--    Menu-->
     <string name="title_home">Alarm</string>
     <string name="title_next_alarm">Next alarm</string>
@@ -12,7 +19,8 @@
 <!--    Home Fragment-->
     <string name="text_view_next_alarm">Next alarm</string>
     <string name="text_view_next_alarm_be">No upcoming alarms</string>
+    <string name="add_new_alarm">Add new alarm</string>
 
-    <!--    Home Fragment-end-->
+<!--    Home Fragment-end-->
 
 </resources>

@@ -21,20 +21,35 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private RecyclerView recyclerView;
+    private FloatingActionButton btnAddNewAlarm;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        final View root = inflater.inflate(R.layout.fragment_home, container, false);
 
+//        Recycle view all alarms
         recyclerView = root.findViewById(R.id.recycle_view_all_alarms);
-        AlarmRecyclerViewAdapter adapter = new AlarmRecyclerViewAdapter(inflater.getContext());
+        AlarmRecyclerViewAdapter adapter = new AlarmRecyclerViewAdapter(
+                inflater.getContext(), getParentFragmentManager());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
 
+//        Add alarm sheet
+        btnAddNewAlarm = root.findViewById(R.id.button_add_new_alarm);
+        btnAddNewAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlarmAddSheetDialog sheet = new AlarmAddSheetDialog();
+                sheet.show(getParentFragmentManager(), "Add alarm bottom sheet");
+            }
+        });
+
         return root;
     }
+
+
 }
