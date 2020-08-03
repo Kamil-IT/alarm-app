@@ -4,15 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.alarm_app.R;
+import com.example.alarm_app.alarmserver.AlarmService;
+import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-
-import java.util.Arrays;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -20,14 +18,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
 
-    List<String> strings = Arrays.asList("asdasda", "asdasd", "gsf", "dasda", "asdas", "dasda", "asdas");
-
+    private AlarmService alarmService;
     private Context context;
     private FragmentManager fragmentManager;
 
     public AlarmRecyclerViewAdapter(Context context, FragmentManager fragmentManager) {
         this.context = context;
         this.fragmentManager = fragmentManager;
+        this.alarmService = AlarmService.getInstance();
+
+        alarmService.addListener(new AlarmService.OnDataSetChanged() {
+            @Override
+            public void dataChanged() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @NonNull
@@ -39,20 +44,30 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-//        Impl data to fields
+        AlarmDto alarm = alarmService.getAllAlarms().get(position);
+
+        holder.checkBoxIsActive.setActivated(alarm.getActive());
+        holder.textAlarmTime.setText(alarm.getTime().toString());
+//        TODO: add costumes message when create enum for it
+        holder.textDaysWhenAlarmPlay.setText(alarm.getAlarmFrequencyType());
+        holder.textDesc.setText(alarm.getDescription());
 
         holder.btnOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlarmOptionSheetDialog sheet = new AlarmOptionSheetDialog();
                 sheet.show(fragmentManager, "Option for alarm nr " + position);
+                //        TODO: Add implementation to option button
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return strings.size();
+        if (alarmService.getAllAlarms() == null){
+            return 0;
+        }
+        return alarmService.getAllAlarms().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

@@ -2,6 +2,9 @@ package com.example.alarm_app;
 
 import android.os.Bundle;
 
+import com.example.alarm_app.alarmserver.AlarmService;
+import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
+import com.example.alarm_app.alarmserver.auth.Credentials;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +29,24 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+
+        createConnectionWitchAlarmService();
+
+//        ConnectionToAlarmServer.getJsonDataFromServer(this, "v2/api-docs");
+
+
+//        ConnectionToAlarmServer.getJsonDataFromServer(this, "/api/v1/alarm", AuthTokenHolder.getINSTANCE().getTokenAsAuthMap(this));
+
     }
 
-}
+    private void createConnectionWitchAlarmService(){
+        AuthTokenHolder.getINSTANCE()
+                .setCredentials(new Credentials("admin", "admin"));
+        AuthTokenHolder.getINSTANCE()
+                .generateToken(this);
+        AlarmService.getInstance()
+                .updateAlarmsFromServer(this);
+        }
+
+        }
