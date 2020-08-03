@@ -1,26 +1,38 @@
 <resources>
     <string name="app_name">alarm-app</string>
 
-<!--    Main strings-->
+    <!--    Main strings-->
     <string name="cancel">Cancel</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
 
+<!--    Week days-->
+    <string name="monday_shortcut">Mon</string>
+    <string name="tuesday_shortcut">Tue</string>
+    <string name="wednesday_shortcut">Wed</string>
+    <string name="thursday_shortcut">Thu</string>
+    <string name="friday_shortcut">Fri</string>
+    <string name="saturday_shortcut">Sat</string>
+    <string name="sunday_shortcut">Sun</string>
+
     <!--    Main strings-end-->
 
-<!--    Menu-->
+    <!--    Menu-->
     <string name="title_home">Alarm</string>
     <string name="title_next_alarm">Next alarm</string>
     <string name="title_timer">Timer</string>
     <string name="title_stopwatch">Stopwatch</string>
     <string name="title_setting">Settings</string>
-<!--    Menu-end-->
+    <!--    Menu-end-->
 
-<!--    Home Fragment-->
+    <!--    Home Fragment-->
     <string name="text_view_next_alarm">Next alarm</string>
     <string name="text_view_next_alarm_be">No upcoming alarms</string>
     <string name="add_new_alarm">Add new alarm</string>
+    <string name="label">Label</string>
+    <string name="snooze">Snooze</string>
 
-<!--    Home Fragment-end-->
+
+    <!--    Home Fragment-end-->
 
 </resources>

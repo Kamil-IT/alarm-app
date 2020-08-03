@@ -12,6 +12,8 @@ import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,11 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
 
     private AlarmService alarmService;
-    private Context context;
+    private Context mContext;
     private FragmentManager fragmentManager;
 
-    public AlarmRecyclerViewAdapter(Context context, FragmentManager fragmentManager) {
-        this.context = context;
+    public AlarmRecyclerViewAdapter(Context mContext, FragmentManager fragmentManager) {
+        this.mContext = mContext;
         this.fragmentManager = fragmentManager;
         this.alarmService = AlarmService.getInstance();
 
@@ -44,20 +46,18 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        AlarmDto alarm = alarmService.getAllAlarms().get(position);
+        final AlarmDto alarm = Objects.requireNonNull(alarmService.getAllAlarms()).get(position);
 
         holder.checkBoxIsActive.setActivated(alarm.getActive());
         holder.textAlarmTime.setText(alarm.getTime().toString());
 //        TODO: add costumes message when create enum for it
         holder.textDaysWhenAlarmPlay.setText(alarm.getAlarmFrequencyType());
         holder.textDesc.setText(alarm.getDescription());
-
         holder.btnOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlarmOptionSheetDialog sheet = new AlarmOptionSheetDialog();
+                AlarmOptionSheetDialog sheet = new AlarmOptionSheetDialog(alarm);
                 sheet.show(fragmentManager, "Option for alarm nr " + position);
-                //        TODO: Add implementation to option button
             }
         });
     }

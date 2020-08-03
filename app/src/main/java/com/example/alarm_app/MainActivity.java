@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         AuthTokenHolder.getINSTANCE()
                 .generateToken(this);
         AlarmService.getInstance()
+                .setSharedPreferences(this);
+        AlarmService.getInstance()
                 .updateAlarmsFromServer(this);
         }
 

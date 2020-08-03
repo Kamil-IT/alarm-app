@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.alarm_app.R;
+import com.example.alarm_app.alarmserver.AlarmService;
+import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,12 @@ import androidx.annotation.Nullable;
 public class AlarmOptionSheetDialog extends BottomSheetDialogFragment {
 
     private Button btnUpdateAlarm, btnDelete, btnCancel;
+    private AlarmDto alarm;
+
+    public AlarmOptionSheetDialog(AlarmDto alarm) {
+        super();
+        this.alarm = alarm;
+    }
 
     @Nullable
     @Override
@@ -31,7 +39,7 @@ public class AlarmOptionSheetDialog extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 dismiss();
-//                TODO: implement it like add new alarm
+                setButtonUpdateAlarmOnClickListener();
             }
         });
 
@@ -39,6 +47,7 @@ public class AlarmOptionSheetDialog extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 dismiss();
+                setButtonCancelAlarmOnClickListener();
             }
         });
 
@@ -46,10 +55,20 @@ public class AlarmOptionSheetDialog extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 dismiss();
-                //                TODO: implement it like add new alarm
+                setButtonDeleteAlarmOnClickListener();
             }
         });
-
         return v;
+    }
+
+    public void setButtonDeleteAlarmOnClickListener() {
+        AlarmService.getInstance().deleteById(getContext(), alarm.getId());
+    }
+
+    public void setButtonCancelAlarmOnClickListener() {
+    }
+
+    public void setButtonUpdateAlarmOnClickListener() {
+        AlarmService.getInstance().updateAlarm(getContext(), alarm);
     }
 }

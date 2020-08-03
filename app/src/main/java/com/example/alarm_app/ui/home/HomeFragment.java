@@ -1,5 +1,6 @@
 package com.example.alarm_app.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.example.alarm_app.R;
+import com.example.alarm_app.ui.addalarm.AddAlarmActivity;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -43,8 +45,10 @@ public class HomeFragment extends Fragment {
         btnAddNewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlarmAddSheetDialog sheet = new AlarmAddSheetDialog();
-                sheet.show(getParentFragmentManager(), "Add alarm bottom sheet");
+                Intent intent = new Intent(getContext(), AddAlarmActivity.class);
+                startActivity(intent);
+//                AlarmAddSheetDialog sheet = new AlarmAddSheetDialog();
+//                sheet.show(getParentFragmentManager(), "Add alarm bottom sheet");
             }
         });
 

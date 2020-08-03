@@ -1,6 +1,7 @@
 package com.example.alarm_app.ui.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.alarm_app.R;
+import com.example.alarm_app.ui.addalarm.AddAlarmActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import java.util.zip.Inflater;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,7 +35,7 @@ public class AlarmAddSheetDialog extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 dismiss();
-//                TODO: implement it like add new alarm
+                setOnClickListenerButtonAddNewAlarm();
             }
         });
 
@@ -43,5 +47,10 @@ public class AlarmAddSheetDialog extends BottomSheetDialogFragment {
         });
 
         return v;
+    }
+
+    private void setOnClickListenerButtonAddNewAlarm() {
+        Intent intent = new Intent(getContext(), AddAlarmActivity.class);
+        startActivity(intent);
     }
 }

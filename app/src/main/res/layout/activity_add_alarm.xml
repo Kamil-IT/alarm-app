@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.addalarm.AddAlarmActivity"
+    android:layout_gravity="center">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            tools:context=".ui.addalarm.AddAlarmActivity">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+<!--                TODO: in future delete it-->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="keeping in correct form :)"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="keeping in correct form :)"/>
+
+
+                <TimePicker
+                    android:id="@+id/time_picker_add_alarm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/text_time_to_start_alarm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/cardview_shadow_start_color"
+                    android:gravity="center"
+                    android:text="Alarm will start in 20 min" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/monday_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/monday_shortcut" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/tuesday_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tuesday_shortcut" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/wednesday_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wednesday_shortcut" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/thursday_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/thursday_shortcut" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/friday_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/friday_shortcut" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/saturday_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/saturday_shortcut" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/sunday_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sunday_shortcut" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_costume"
+                    android:layout_width="270dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="costume"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/button_ringtone"
+                    android:layout_width="270dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="ringtone"
+                    app:icon="@drawable/ic_ring_black_24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_costume" />
+
+
+                <Button
+                    android:id="@+id/button_turn_off_type"
+                    android:layout_width="270dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Turn off type"
+                    app:icon="@drawable/ic__alarm_turn_off_black_24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_ringtone" />
+
+                <Button
+                    android:id="@+id/button_snooze"
+                    android:layout_width="270dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/snooze"
+                    app:icon="@drawable/ic_snooze_black_24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_turn_off_type" />
+
+                <EditText
+                    android:id="@+id/label"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@color/cardview_shadow_start_color"
+                    android:hint="@string/label"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_snooze"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/text_turn_of_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Day 1, day 2"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_turn_off_type"
+                    app:layout_constraintStart_toEndOf="@+id/button_turn_off_type"
+                    app:layout_constraintTop_toBottomOf="@+id/button_ringtone" />
+
+                <TextView
+                    android:id="@+id/text_ringtone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Day 1, day 2"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_ringtone"
+                    app:layout_constraintStart_toEndOf="@+id/button_ringtone"
+                    app:layout_constraintTop_toBottomOf="@+id/button_costume" />
+
+                <TextView
+                    android:id="@+id/text_snooze"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Day 1, day 2"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_snooze"
+                    app:layout_constraintStart_toEndOf="@+id/button_snooze"
+                    app:layout_constraintTop_toBottomOf="@+id/button_turn_off_type" />
+
+                <TextView
+                    android:id="@+id/text_costume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Day 1, day 2"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_costume"
+                    app:layout_constraintStart_toEndOf="@+id/button_costume"
+                    app:layout_constraintTop_toTopOf="@+id/button_costume" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floating_action_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_margin="16dp"
+                android:contentDescription="sdas"
+                app:srcCompat="@drawable/ic_add_alarm_black_24dp" />
+        </LinearLayout>
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

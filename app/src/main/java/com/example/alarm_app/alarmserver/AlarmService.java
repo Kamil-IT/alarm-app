@@ -1,6 +1,7 @@
 package com.example.alarm_app.alarmserver;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -34,6 +35,12 @@ public class AlarmService {
 
     public static final AlarmService INSTANCE = new AlarmService();
 
+    public static final String ALARMS_DB = "alarms_database_main_context";
+    public static final String ALL_ALARM_CODE = "alarms";
+
+    private List<AlarmDto> alarmsDto;
+    private SharedPreferences sharedPreferences;
+
     private List<OnDataSetChanged> listeners = new ArrayList<>();
 
     private AlarmService() {
@@ -43,17 +50,31 @@ public class AlarmService {
         return INSTANCE;
     }
 
-    private List<AlarmDto> alarmsDto;
-
-    public List<AlarmDto> getAllAlarms() {
-        return alarmsDto;
-    }
-
-    public void addListener(OnDataSetChanged listener){
+    public void addListener(OnDataSetChanged listener) {
         listeners.add(listener);
     }
 
-    public void dataChanged(){
+    @Nullable
+    public List<AlarmDto> getAllAlarms() {
+        if (alarmsDto == null && sharedPreferences != null){
+            Gson gson = new Gson();
+            String jsonAlarms = sharedPreferences.getString(ALL_ALARM_CODE, null);
+            if (jsonAlarms != null){
+                return Arrays.asList(gson.fromJson(jsonAlarms, AlarmDto[].class));
+            }
+
+        }
+        return alarmsDto;
+    }
+
+    public void dataChanged() {
+        if (sharedPreferences != null){
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            Gson gson = new Gson();
+            editor.putString(ALL_ALARM_CODE, gson.toJson(alarmsDto));
+            editor.apply();
+        }
+
         for (OnDataSetChanged listener :
                 listeners) {
             listener.dataChanged();
@@ -81,8 +102,8 @@ public class AlarmService {
                             @Override
                             public void onResponse(JSONArray response) {
                                 Gson gson = new Gson();
-                                AlarmDto[] alarmListDto = gson.fromJson(response.toString(), AlarmDto[].class);
-                                checkListsAndUpdate(context, Arrays.asList(alarmListDto));
+                                List<AlarmDto> alarmListDto = Arrays.asList(gson.fromJson(response.toString(), AlarmDto[].class));
+                                checkListsAndUpdate(context, alarmListDto);
                                 Log.i("Alarms", response.toString());
                             }
                         },
@@ -147,7 +168,55 @@ public class AlarmService {
         dataChanged();
     }
 
-    private void updateAlarm(final Context context, final AlarmDto alarmDto) {
+    public void deleteById(final Context context, final String id){
+        final RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                JsonObjectRequest objectRequest = new JsonObjectRequest(
+                        Request.Method.DELETE,
+                        BASE_SERVER_URL + ALARMS_PATH + "/" + id,
+                        null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("Alarm deleted", response.toString());
+                                updateAlarmsFromServer(context);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("Rest response", error.toString());
+
+                            }
+                        }
+                ) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = getBasicHeaders();
+                        headers.putAll(AuthTokenHolder.getINSTANCE().getTokenAsAuthMap());
+                        return headers;
+                    }
+                };
+
+
+                requestQueue.add(objectRequest);
+            }
+        });
+        thread.start();
+    }
+
+    public void updateAlarm(final Context context, final AlarmDto alarmDto) {
         final RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         Thread thread = new Thread(new Runnable() {
@@ -176,7 +245,6 @@ public class AlarmService {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Gson gson = new Gson();
-                                AlarmListDto alarmListDto = gson.fromJson(response.toString(), AlarmListDto.class);
                                 updateAlarmsFromServer(context);
                                 Log.i("Alarm updated", response.toString());
                             }
@@ -213,7 +281,7 @@ public class AlarmService {
             public void run() {
                 while (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -234,7 +302,6 @@ public class AlarmService {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Gson gson = new Gson();
-                                AlarmListDto alarmListDto = gson.fromJson(response.toString(), AlarmListDto.class);
                                 updateAlarmsFromServer(context);
                                 Log.i("Alarm updated", response.toString());
                             }
@@ -280,7 +347,6 @@ public class AlarmService {
         return null;
     }
 
-
     /**
      * Find alarm by id in local alarms
      *
@@ -298,20 +364,8 @@ public class AlarmService {
         throw new IllegalArgumentException("Id not found");
     }
 
-    private static class AlarmListDto {
-
-        List<AlarmDto> alarmListDto;
-
-        public AlarmListDto() {
-        }
-
-        public List<AlarmDto> getAlarmListDto() {
-            return alarmListDto;
-        }
-
-        public void setAlarmListDto(List<AlarmDto> alarmListDto) {
-            this.alarmListDto = alarmListDto;
-        }
+    public void setSharedPreferences(Context context){
+        this.sharedPreferences = context.getSharedPreferences(ALARMS_DB, Context.MODE_PRIVATE);
     }
 
     public interface OnDataSetChanged {

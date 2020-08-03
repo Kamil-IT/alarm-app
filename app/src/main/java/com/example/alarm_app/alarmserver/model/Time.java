@@ -58,6 +58,19 @@ public class Time {
 
     @Override
     public String toString() {
-        return hours + ":" + minutes + ":" + seconds;
+        StringBuilder response = new StringBuilder();
+
+        if (hours < 10) response.append("0").append(hours);
+        else response.append(hours);
+        response.append(":");
+
+        if (minutes < 10) response.append("0").append(minutes);
+        else response.append(minutes);
+        response.append(":");
+
+        if (seconds < 10) response.append("0").append(seconds);
+        else response.append(seconds);
+
+        return response.toString();
     }
 }
