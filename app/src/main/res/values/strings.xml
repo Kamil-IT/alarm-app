@@ -5,8 +5,9 @@
     <string name="cancel">Cancel</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="apply">Apply</string>
 
-<!--    Week days-->
+    <!--    Week days-->
     <string name="monday_shortcut">Mon</string>
     <string name="tuesday_shortcut">Tue</string>
     <string name="wednesday_shortcut">Wed</string>
@@ -29,10 +30,37 @@
     <string name="text_view_next_alarm">Next alarm</string>
     <string name="text_view_next_alarm_be">No upcoming alarms</string>
     <string name="add_new_alarm">Add new alarm</string>
-    <string name="label">Label</string>
-    <string name="snooze">Snooze</string>
-
 
     <!--    Home Fragment-end-->
+
+    <!--    Add new alarm-->
+    <string name="label">Label</string>
+    <string name="snooze">Snooze</string>
+    <string name="costume">Costume</string>
+    <string name="turn_off_type">Turn off type</string>
+    <string name="ringtone">ringtone</string>
+
+    <string-array name="alarm_turn_off_type">
+        <item>Normal</item>
+<!--        <item>MATH_TASK</item>-->
+        <item>Vibes</item>
+    </string-array>
+
+    <string-array name="ringtone_types">
+        <item>Costume</item>
+        <item>Birds</item>
+    </string-array>
+
+    <string-array name="snooze_duration">
+        <item>1 minute</item>
+        <item>2 minute</item>
+        <item>3 minute</item>
+        <item>4 minute</item>
+        <item>5 minute</item>
+        <item>10 minute</item>
+        <item>15 minute</item>
+        <item>30 minute</item>
+        <item>60 minute</item>
+    </string-array>
 
 </resources>
