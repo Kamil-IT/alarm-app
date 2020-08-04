@@ -85,7 +85,7 @@ public class AddAlarmActivity extends AppCompatActivity {
                 final TurnOffType turnOffType = turnOffTypeGiven;
 //                TODO: make converter
                 final Snooze snooze = snoozeGiven;
-                String label = textLabel.getText().toString();
+                final String label = textLabel.getText().toString();
 
                 if (alarmFrequencyTypes.isEmpty() && textCostume.getText().length() != 0) {
                     throw new IllegalArgumentException("alarmFrequencyTypes.isEmpty() have to be empty or textCostume.getText().length() != 0");
@@ -106,7 +106,7 @@ public class AddAlarmActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 AlarmDto alarmDto = new AlarmDto(
-                                        "",
+                                        label,
                                         time,
                                         ringType,
                                         alarmFrequencyTypes,
