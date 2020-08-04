@@ -6,6 +6,7 @@
     <string name="update">Update</string>
     <string name="delete">Delete</string>
     <string name="apply">Apply</string>
+    <string name="create">Create</string>
 
     <!--    Week days-->
     <string name="monday_shortcut">Mon</string>
@@ -39,10 +40,11 @@
     <string name="costume">Costume</string>
     <string name="turn_off_type">Turn off type</string>
     <string name="ringtone">ringtone</string>
+    <string name="create_new_alarm">Create new alarm</string>
 
     <string-array name="alarm_turn_off_type">
         <item>Normal</item>
-<!--        <item>MATH_TASK</item>-->
+        <item>MATH_TASK</item>
         <item>Vibes</item>
     </string-array>
 
@@ -53,14 +55,17 @@
 
     <string-array name="snooze_duration">
         <item>1 minute</item>
-        <item>2 minute</item>
-        <item>3 minute</item>
-        <item>4 minute</item>
-        <item>5 minute</item>
-        <item>10 minute</item>
-        <item>15 minute</item>
-        <item>30 minute</item>
-        <item>60 minute</item>
+        <item>2 minutes</item>
+        <item>3 minutes</item>
+        <item>4 minutes</item>
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>60 minutes</item>
     </string-array>
+
+    <string name="alarm_created">Alarm created</string>
+    <string name="alarm_not_created">Alarm created</string>
 
 </resources>

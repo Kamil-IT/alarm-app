@@ -2,6 +2,7 @@ package com.example.alarm_app.alarmserver.model;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class AlarmDto {
 
@@ -16,7 +17,7 @@ public class AlarmDto {
 
     private Long timeCreateInMillis;
 
-    private String ringType;
+    private RingType ringType;
 
     /**
      * Only not null if ringType = costume
@@ -24,7 +25,7 @@ public class AlarmDto {
     private String ringName;
 
 
-    private String alarmFrequencyType;
+    private Set<AlarmFrequencyType> alarmFrequencyType;
 
     private Boolean isActive;
 
@@ -34,12 +35,14 @@ public class AlarmDto {
     private List<Date> alarmFrequencyCostume;
 
 
-    private String alarmTurnOffType;
+    private TurnOffType alarmTurnOffType;
+
+    private Snooze snooze;
 
     public AlarmDto() {
     }
 
-    public AlarmDto(String id, String name, String description, String userId, Time time, Long timeCreateInMillis, String ringType, String ringName, String alarmFrequencyType, Boolean isActive, List<Date> alarmFrequencyCostume, String alarmTurnOffType) {
+    public AlarmDto(String id, String name, String description, String userId, Time time, Long timeCreateInMillis, RingType ringType, String ringName, Set<AlarmFrequencyType> alarmFrequencyType, Boolean isActive, List<Date> alarmFrequencyCostume, TurnOffType alarmTurnOffType, Snooze snooze) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -52,6 +55,18 @@ public class AlarmDto {
         this.isActive = isActive;
         this.alarmFrequencyCostume = alarmFrequencyCostume;
         this.alarmTurnOffType = alarmTurnOffType;
+        this.snooze = snooze;
+    }
+
+    public AlarmDto(String name, Time time, RingType ringType, Set<AlarmFrequencyType> alarmFrequencyType, Boolean isActive, List<Date> alarmFrequencyCostume, TurnOffType alarmTurnOffType, Snooze snooze) {
+        this.name = name;
+        this.time = time;
+        this.ringType = ringType;
+        this.alarmFrequencyType = alarmFrequencyType;
+        this.isActive = isActive;
+        this.alarmFrequencyCostume = alarmFrequencyCostume;
+        this.alarmTurnOffType = alarmTurnOffType;
+        this.snooze = snooze;
     }
 
     public Boolean getActive() {
@@ -110,11 +125,11 @@ public class AlarmDto {
         this.timeCreateInMillis = timeCreateInMillis;
     }
 
-    public String getRingType() {
+    public RingType getRingType() {
         return ringType;
     }
 
-    public void setRingType(String ringType) {
+    public void setRingType(RingType ringType) {
         this.ringType = ringType;
     }
 
@@ -126,12 +141,20 @@ public class AlarmDto {
         this.ringName = ringName;
     }
 
-    public String getAlarmFrequencyType() {
+    public Set<AlarmFrequencyType> getAlarmFrequencyType() {
         return alarmFrequencyType;
     }
 
-    public void setAlarmFrequencyType(String alarmFrequencyType) {
+    public void setAlarmFrequencyType(Set<AlarmFrequencyType> alarmFrequencyType) {
         this.alarmFrequencyType = alarmFrequencyType;
+    }
+
+    public Snooze getSnooze() {
+        return snooze;
+    }
+
+    public void setSnooze(Snooze snooze) {
+        this.snooze = snooze;
     }
 
     public List<Date> getAlarmFrequencyCostume() {
@@ -142,11 +165,11 @@ public class AlarmDto {
         this.alarmFrequencyCostume = alarmFrequencyCostume;
     }
 
-    public String getAlarmTurnOffType() {
+    public TurnOffType getAlarmTurnOffType() {
         return alarmTurnOffType;
     }
 
-    public void setAlarmTurnOffType(String alarmTurnOffType) {
+    public void setAlarmTurnOffType(TurnOffType alarmTurnOffType) {
         this.alarmTurnOffType = alarmTurnOffType;
     }
 

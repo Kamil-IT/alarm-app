@@ -3,6 +3,7 @@ package com.example.alarm_app.alarmserver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -12,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
 import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.google.gson.Gson;
@@ -56,10 +58,10 @@ public class AlarmService {
 
     @Nullable
     public List<AlarmDto> getAllAlarms() {
-        if (alarmsDto == null && sharedPreferences != null){
+        if (alarmsDto == null && sharedPreferences != null) {
             Gson gson = new Gson();
             String jsonAlarms = sharedPreferences.getString(ALL_ALARM_CODE, null);
-            if (jsonAlarms != null){
+            if (jsonAlarms != null) {
                 return Arrays.asList(gson.fromJson(jsonAlarms, AlarmDto[].class));
             }
 
@@ -68,7 +70,7 @@ public class AlarmService {
     }
 
     public void dataChanged() {
-        if (sharedPreferences != null){
+        if (sharedPreferences != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             Gson gson = new Gson();
             editor.putString(ALL_ALARM_CODE, gson.toJson(alarmsDto));
@@ -133,42 +135,33 @@ public class AlarmService {
     //    TODO: create test for it
     private void checkListsAndUpdate(Context context, List<AlarmDto> alarmDtoNewList) {
         if (!alarmDtoNewList.equals(alarmsDto) && this.alarmsDto != null) {
-
-            if (alarmsDto.size() >= alarmDtoNewList.size()) {
-                for (int i = 0; i < alarmsDto.size(); i++) {
-                    AlarmDto alarmFromNewList = findById(alarmDtoNewList, alarmsDto.get(i).getId());
-
-                    if (alarmFromNewList != null) {
-                        if (alarmsDto.get(i).getTimeCreateInMillis() > alarmFromNewList.getTimeCreateInMillis()) {
-                            updateAlarm(context, alarmsDto.get(i));
-                        }
-                    } else {
-                        creteAlarm(context, alarmDtoNewList.get(i));
-                    }
-
+            for (AlarmDto alarmOld : this.alarmsDto) {
+//                Alarm not added to server
+                if (alarmOld.getId() == null || alarmOld.getId().equals("")) {
+                    creteAlarm(context, alarmOld);
                 }
-            } else {
-                for (int i = 0; i < alarmDtoNewList.size(); i++) {
-                    AlarmDto alarmFromServer;
-                    try {
-                        alarmFromServer = findById(alarmDtoNewList.get(i).getId());
-                    } catch (Exception e) {
-                        creteAlarm(context, alarmDtoNewList.get(i));
-                        continue;
-                    }
 
-                    if (alarmDtoNewList.get(i).getTimeCreateInMillis() < alarmFromServer.getTimeCreateInMillis()) {
-                        updateAlarm(context, alarmsDto.get(i));
-                    }
+                AlarmDto alarmNew = findById(alarmDtoNewList, alarmOld.getId());
+
+//                Alarm deleted by user directly through server
+                if (alarmNew == null) {
+                    continue;
+                }
+
+//                Different alarms check which was created first
+                if (!alarmOld.equals(alarmNew) &&
+                        alarmNew.getTimeCreateInMillis() < alarmOld.getTimeCreateInMillis()) {
+                    updateAlarm(context, alarmOld);
                 }
             }
         }
 
         alarmsDto = alarmDtoNewList;
+
         dataChanged();
     }
 
-    public void deleteById(final Context context, final String id){
+    public void deleteById(final Context context, final String id) {
         final RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         Thread thread = new Thread(new Runnable() {
@@ -272,7 +265,7 @@ public class AlarmService {
         thread.start();
     }
 
-    private void creteAlarm(final Context context, final AlarmDto alarmDto) {
+    public void creteAlarm(final Context context, final AlarmDto alarmDto) {
 
         final RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -293,7 +286,6 @@ public class AlarmService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
                 JsonObjectRequest objectRequest = new JsonObjectRequest(
                         Request.Method.POST,
                         BASE_SERVER_URL + ALARMS_PATH,
@@ -301,9 +293,17 @@ public class AlarmService {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Gson gson = new Gson();
-                                updateAlarmsFromServer(context);
-                                Log.i("Alarm updated", response.toString());
+                                try {
+                                    Gson gson = new Gson();
+                                    AlarmDto alarm = gson.fromJson(response.toString(), AlarmDto.class);
+                                    Log.i("Alarm created", response.toString());
+                                    addStaticAlarm(alarm);
+                                    Toast.makeText(context, R.string.alarm_created, Toast.LENGTH_SHORT).show();
+                                } catch (Exception ignored){
+
+//                               TODO:Add static alarm and wait for connection to server or internet
+                                    Toast.makeText(context, R.string.alarm_not_created, Toast.LENGTH_SHORT).show();
+                                }
                             }
                         },
                         new Response.ErrorListener() {
@@ -347,6 +347,11 @@ public class AlarmService {
         return null;
     }
 
+    private void addStaticAlarm(AlarmDto alarmDto){
+        this.alarmsDto.add(alarmDto);
+        dataChanged();
+    }
+
     /**
      * Find alarm by id in local alarms
      *
@@ -364,7 +369,7 @@ public class AlarmService {
         throw new IllegalArgumentException("Id not found");
     }
 
-    public void setSharedPreferences(Context context){
+    public void setSharedPreferences(Context context) {
         this.sharedPreferences = context.getSharedPreferences(ALARMS_DB, Context.MODE_PRIVATE);
     }
 

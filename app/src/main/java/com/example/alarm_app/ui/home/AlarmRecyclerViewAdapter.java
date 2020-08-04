@@ -51,8 +51,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         holder.checkBoxIsActive.setActivated(alarm.getActive());
         holder.textAlarmTime.setText(alarm.getTime().toString());
 //        TODO: add costumes message when create enum for it
-        holder.textDaysWhenAlarmPlay.setText(alarm.getAlarmFrequencyType());
-        holder.textDesc.setText(alarm.getDescription());
+        holder.textDaysWhenAlarmPlay.setText(alarm.getAlarmFrequencyType().toString());
+        holder.textDesc.setText(alarm.getName());
         holder.btnOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:text="desc"
+        android:text="name"
         app:layout_constraintBottom_toBottomOf="@+id/floating_action_button_option"
         app:layout_constraintStart_toEndOf="@+id/linearLayout"
         app:layout_constraintTop_toTopOf="@+id/floating_action_button_option" />
