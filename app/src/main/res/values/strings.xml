@@ -44,13 +44,15 @@
 
     <string-array name="alarm_turn_off_type">
         <item>Normal</item>
-        <item>MATH_TASK</item>
+        <item>Math task</item>
         <item>Vibes</item>
     </string-array>
 
     <string-array name="ringtone_types">
-        <item>Costume</item>
         <item>Birds</item>
+        <item>Costume</item>
+        <item>Ocean</item>
+        <item>Rooster</item>
     </string-array>
 
     <string-array name="snooze_duration">
@@ -67,5 +69,7 @@
 
     <string name="alarm_created">Alarm created</string>
     <string name="alarm_not_created">Alarm created</string>
+    <string name="alarm_updated">Alarm updated</string>
+    <string name="alarm_not_updated">Alarm not updated</string>
 
 </resources>

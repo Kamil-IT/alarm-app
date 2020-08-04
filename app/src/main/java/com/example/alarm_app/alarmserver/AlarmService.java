@@ -1,7 +1,6 @@
 package com.example.alarm_app.alarmserver;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,6 +23,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,54 +34,21 @@ import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.ALARMS_P
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.BASE_SERVER_URL;
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.getBasicHeaders;
 
-public class AlarmService {
+public class AlarmService extends AlarmStaticService{
 
     public static final AlarmService INSTANCE = new AlarmService();
-
-    public static final String ALARMS_DB = "alarms_database_main_context";
-    public static final String ALL_ALARM_CODE = "alarms";
-
-    private List<AlarmDto> alarmsDto;
-    private SharedPreferences sharedPreferences;
-
-    private List<OnDataSetChanged> listeners = new ArrayList<>();
-
-    private AlarmService() {
-    }
 
     public static AlarmService getInstance() {
         return INSTANCE;
     }
 
-    public void addListener(OnDataSetChanged listener) {
-        listeners.add(listener);
+    private AlarmService() {
+        super();
     }
 
     @Nullable
     public List<AlarmDto> getAllAlarms() {
-        if (alarmsDto == null && sharedPreferences != null) {
-            Gson gson = new Gson();
-            String jsonAlarms = sharedPreferences.getString(ALL_ALARM_CODE, null);
-            if (jsonAlarms != null) {
-                return Arrays.asList(gson.fromJson(jsonAlarms, AlarmDto[].class));
-            }
-
-        }
-        return alarmsDto;
-    }
-
-    public void dataChanged() {
-        if (sharedPreferences != null) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            Gson gson = new Gson();
-            editor.putString(ALL_ALARM_CODE, gson.toJson(alarmsDto));
-            editor.apply();
-        }
-
-        for (OnDataSetChanged listener :
-                listeners) {
-            listener.dataChanged();
-        }
+        return getAllStaticAlarms();
     }
 
     public void updateAlarmsFromServer(final Context context) {
@@ -104,7 +72,7 @@ public class AlarmService {
                             @Override
                             public void onResponse(JSONArray response) {
                                 Gson gson = new Gson();
-                                List<AlarmDto> alarmListDto = Arrays.asList(gson.fromJson(response.toString(), AlarmDto[].class));
+                                List<AlarmDto> alarmListDto = new LinkedList<>(Arrays.asList(gson.fromJson(response.toString(), AlarmDto[].class)));
                                 checkListsAndUpdate(context, alarmListDto);
                                 Log.i("Alarms", response.toString());
                             }
@@ -134,14 +102,17 @@ public class AlarmService {
 
     //    TODO: create test for it
     private void checkListsAndUpdate(Context context, List<AlarmDto> alarmDtoNewList) {
-        if (!alarmDtoNewList.equals(alarmsDto) && this.alarmsDto != null) {
-            for (AlarmDto alarmOld : this.alarmsDto) {
+        if (!alarmDtoNewList.equals(getAllStaticAlarms())) {
+            for (AlarmDto alarmOld : getAllStaticAlarms()) {
 //                Alarm not added to server
                 if (alarmOld.getId() == null || alarmOld.getId().equals("")) {
                     creteAlarm(context, alarmOld);
                 }
 
-                AlarmDto alarmNew = findById(alarmDtoNewList, alarmOld.getId());
+                AlarmDto alarmNew = null;
+                for (AlarmDto alarm : alarmDtoNewList) {
+                    if (alarm.getId().equals(alarmOld.getId())) alarmNew = alarm;
+                }
 
 //                Alarm deleted by user directly through server
                 if (alarmNew == null) {
@@ -155,10 +126,7 @@ public class AlarmService {
                 }
             }
         }
-
-        alarmsDto = alarmDtoNewList;
-
-        dataChanged();
+        setAllStaticAlarms(alarmDtoNewList);
     }
 
     public void deleteById(final Context context, final String id) {
@@ -222,13 +190,8 @@ public class AlarmService {
                         e.printStackTrace();
                     }
                 }
-                JSONObject jsonToSend = null;
-                try {
-                    Gson gson = new Gson();
-                    jsonToSend = new JSONObject(gson.toJson(alarmDto));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                JSONObject jsonToSend = getJsonObject(alarmDto);
+                final AlarmDto alarmOld = alarmDto;
 
                 JsonObjectRequest objectRequest = new JsonObjectRequest(
                         Request.Method.PUT,
@@ -237,9 +200,21 @@ public class AlarmService {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
+//                                try {
                                 Gson gson = new Gson();
-                                updateAlarmsFromServer(context);
+                                AlarmDto alarm = gson.fromJson(response.toString(), AlarmDto.class);
                                 Log.i("Alarm updated", response.toString());
+                                if (alarmOld.getId() != null) {
+                                    deleteStaticAlarmById(alarm.getId());
+                                } else {
+                                    deleteStaticAlarmByTimeAndIdNull(alarmOld.getTimeCreateInMillis());
+                                }
+                                addStaticAlarm(alarm);
+                                Toast.makeText(context, R.string.alarm_updated, Toast.LENGTH_SHORT).show();
+//                                } catch (Exception e){
+//                               TODO:Add static alarm and wait for connection to server or internet
+//                                    Toast.makeText(context, R.string.alarm_not_updated, Toast.LENGTH_SHORT).show();
+//                                }
                             }
                         },
                         new Response.ErrorListener() {
@@ -279,13 +254,8 @@ public class AlarmService {
                         e.printStackTrace();
                     }
                 }
-                JSONObject jsonToSend = null;
-                try {
-                    Gson gson = new Gson();
-                    jsonToSend = new JSONObject(gson.toJson(alarmDto));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                JSONObject jsonToSend = getJsonObject(alarmDto);
+
                 JsonObjectRequest objectRequest = new JsonObjectRequest(
                         Request.Method.POST,
                         BASE_SERVER_URL + ALARMS_PATH,
@@ -295,11 +265,12 @@ public class AlarmService {
                             public void onResponse(JSONObject response) {
                                 try {
                                     Gson gson = new Gson();
+//                                    TODO: don't delete better update
                                     AlarmDto alarm = gson.fromJson(response.toString(), AlarmDto.class);
                                     Log.i("Alarm created", response.toString());
                                     addStaticAlarm(alarm);
                                     Toast.makeText(context, R.string.alarm_created, Toast.LENGTH_SHORT).show();
-                                } catch (Exception ignored){
+                                } catch (Exception e) {
 
 //                               TODO:Add static alarm and wait for connection to server or internet
                                     Toast.makeText(context, R.string.alarm_not_created, Toast.LENGTH_SHORT).show();
@@ -329,51 +300,23 @@ public class AlarmService {
         thread.start();
     }
 
-    /**
-     * Find Alarm by id from alarmsDto list, given in function
-     *
-     * @param alarmsDto Alarms list
-     * @param id        alarm id
-     * @return null or find alarm
-     */
-    @Nullable
-    private AlarmDto findById(List<AlarmDto> alarmsDto, String id) {
-        for (AlarmDto alarm :
-                alarmsDto) {
-            if (alarm.getId().equals(id)) {
-                return alarm;
-            }
+    private JSONObject getJsonObject(AlarmDto alarmDto) {
+        Gson gson = new Gson();
+        JSONObject jsonToSend = null;
+        try {
+            jsonToSend = new JSONObject(gson.toJson(alarmDto));
+        } catch (JSONException e) {
+            Log.e("Convert error", "Cannot convert AlarmDto to json, Exception message: " + e.getMessage());
+            e.printStackTrace();
         }
-        return null;
+        return jsonToSend;
     }
 
-    private void addStaticAlarm(AlarmDto alarmDto){
-        this.alarmsDto.add(alarmDto);
-        dataChanged();
-    }
-
-    /**
-     * Find alarm by id in local alarms
-     *
-     * @param id Alarm id to find
-     * @return found alarm
-     * @throws IllegalArgumentException if not found
-     */
-    public AlarmDto findById(String id) {
-        for (AlarmDto alarmDto :
-                alarmsDto) {
-            if (alarmDto.getId().equals(id)) {
-                return alarmDto;
-            }
+    public List<AlarmDto> getSortedAlarmsWithOutNotActive() {
+        List<AlarmDto> alarmsToSort = new LinkedList<>();
+        for (AlarmDto alarm : getStaticAlarmsSortedByTime()) {
+            if (alarm.getActive()) alarmsToSort.add(alarm);
         }
-        throw new IllegalArgumentException("Id not found");
-    }
-
-    public void setSharedPreferences(Context context) {
-        this.sharedPreferences = context.getSharedPreferences(ALARMS_DB, Context.MODE_PRIVATE);
-    }
-
-    public interface OnDataSetChanged {
-        void dataChanged();
+        return alarmsToSort;
     }
 }

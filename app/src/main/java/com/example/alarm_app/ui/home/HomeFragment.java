@@ -5,13 +5,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.example.alarm_app.R;
-import com.example.alarm_app.ui.addalarm.AddAlarmActivity;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.example.alarm_app.alarmserver.AlarmService;
+import com.example.alarm_app.alarmserver.model.AlarmDto;
+import com.example.alarm_app.alarmserver.model.Time;
+import com.example.alarm_app.ui.modifyalarm.AddUpdateAlarmActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -24,6 +27,7 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private RecyclerView recyclerView;
     private FloatingActionButton btnAddNewAlarm;
+    private TextView textNextAlarmWillBe;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -45,15 +49,32 @@ public class HomeFragment extends Fragment {
         btnAddNewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AddAlarmActivity.class);
+                Intent intent = new Intent(getContext(), AddUpdateAlarmActivity.class);
                 startActivity(intent);
-//                AlarmAddSheetDialog sheet = new AlarmAddSheetDialog();
-//                sheet.show(getParentFragmentManager(), "Add alarm bottom sheet");
             }
         });
 
+
+        textNextAlarmWillBe = root.findViewById(R.id.text_view_next_alarm_be);
+        AlarmService.getInstance().addListener(new AlarmService.OnDataSetChanged() {
+            @Override
+            public void dataChanged() {
+                String strNextAlar = "";
+                List<AlarmDto> sortedAlarmsWithOutNotActive = AlarmService.getInstance().getSortedAlarmsWithOutNotActive();
+
+                if (sortedAlarmsWithOutNotActive.size() == 0) {
+                    strNextAlar = getString(R.string.text_view_next_alarm_be);
+                }
+                else {
+                    AlarmDto alarmDto = sortedAlarmsWithOutNotActive.get(0);
+                    Time time = alarmDto.getTime();
+//                    Add day of week or date
+                    strNextAlar = time.toString();
+                }
+                textNextAlarmWillBe.setText(strNextAlar);
+            }
+        });
         return root;
     }
-
 
 }

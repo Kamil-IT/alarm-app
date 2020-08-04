@@ -1,5 +1,6 @@
 package com.example.alarm_app.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,15 @@ import android.widget.Button;
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.model.AlarmDto;
+import com.example.alarm_app.ui.modifyalarm.AddUpdateAlarmActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.gson.Gson;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import static com.example.alarm_app.ui.modifyalarm.AddUpdateAlarmActivity.EXTRA_ID_ALARM_UPDATE;
+import static com.example.alarm_app.ui.modifyalarm.AddUpdateAlarmActivity.EXTRA_ID_IS_UPDATE;
 
 public class AlarmOptionSheetDialog extends BottomSheetDialogFragment {
 
@@ -69,6 +75,11 @@ public class AlarmOptionSheetDialog extends BottomSheetDialogFragment {
     }
 
     public void setButtonUpdateAlarmOnClickListener() {
-        AlarmService.getInstance().updateAlarm(getContext(), alarm);
+        Intent intent = new Intent(getContext(), AddUpdateAlarmActivity.class);
+        Gson gson = new Gson();
+        String alarmInJason = gson.toJson(alarm);
+        intent.putExtra(EXTRA_ID_ALARM_UPDATE, alarmInJason);
+        intent.putExtra(EXTRA_ID_IS_UPDATE, true);
+        startActivity(intent);
     }
 }

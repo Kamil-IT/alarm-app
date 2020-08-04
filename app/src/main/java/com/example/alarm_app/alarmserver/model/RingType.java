@@ -1,8 +1,10 @@
 package com.example.alarm_app.alarmserver.model;
 
 public enum RingType {
-    COSTUME(0),
-    BIRDS(1);
+    BIRDS(0),
+    COSTUME(1),
+    OCEAN(2),
+    ROOSTER(3);
 
     private final long id;
 

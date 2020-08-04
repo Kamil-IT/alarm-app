@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
+
 public class AlarmDto {
 
     private String id;

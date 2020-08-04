@@ -5,7 +5,10 @@ import android.os.Bundle;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
 import com.example.alarm_app.alarmserver.auth.Credentials;
+import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -33,22 +36,22 @@ public class MainActivity extends AppCompatActivity {
 
         createConnectionWitchAlarmService();
 
-//        ConnectionToAlarmServer.getJsonDataFromServer(this, "v2/api-docs");
-
-
-//        ConnectionToAlarmServer.getJsonDataFromServer(this, "/api/v1/alarm", AuthTokenHolder.getINSTANCE().getTokenAsAuthMap(this));
 
     }
 
-    private void createConnectionWitchAlarmService(){
+    private void createConnectionWitchAlarmService() {
+//        Auth
         AuthTokenHolder.getINSTANCE()
                 .setCredentials(new Credentials("admin", "admin"));
         AuthTokenHolder.getINSTANCE()
                 .generateToken(this);
+
+//        Alarm service
         AlarmService.getInstance()
                 .setSharedPreferences(this);
         AlarmService.getInstance()
                 .updateAlarmsFromServer(this);
-        }
+    }
 
-        }
+
+}

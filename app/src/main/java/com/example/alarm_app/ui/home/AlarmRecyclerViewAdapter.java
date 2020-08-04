@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
@@ -12,6 +14,7 @@ import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -48,7 +51,8 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final AlarmDto alarm = Objects.requireNonNull(alarmService.getAllAlarms()).get(position);
 
-        holder.checkBoxIsActive.setActivated(alarm.getActive());
+        holder.checkBoxIsActive.setActivated(true);
+        holder.checkBoxIsActive.setChecked(alarm.getActive());
         holder.textAlarmTime.setText(alarm.getTime().toString());
 //        TODO: add costumes message when create enum for it
         holder.textDaysWhenAlarmPlay.setText(alarm.getAlarmFrequencyType().toString());
@@ -60,17 +64,26 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 sheet.show(fragmentManager, "Option for alarm nr " + position);
             }
         });
+
+
+        holder.checkBoxIsActive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alarm.setActive(holder.checkBoxIsActive.isChecked());
+                alarmService.updateAlarm(mContext, alarm);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        if (alarmService.getAllAlarms() == null){
+        if (alarmService.getAllAlarms() == null) {
             return 0;
         }
         return alarmService.getAllAlarms().size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textAlarmTime, textDaysWhenAlarmPlay, textDesc;
         private SwitchMaterial checkBoxIsActive;

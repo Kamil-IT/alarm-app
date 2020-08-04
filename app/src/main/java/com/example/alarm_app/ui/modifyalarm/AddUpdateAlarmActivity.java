@@ -1,4 +1,4 @@
-package com.example.alarm_app.ui.addalarm;
+package com.example.alarm_app.ui.modifyalarm;
 
 import androidx.annotation.ArrayRes;
 import androidx.annotation.StringRes;
@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.media.Ringtone;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.alarm_app.MainActivity;
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.model.AlarmDto;
@@ -30,11 +31,11 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -51,8 +52,13 @@ import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.SUNDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.THURSDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.TUESDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.WEDNESDAY;
+import static com.example.alarm_app.alarmserver.model.RingType.COSTUME;
 
-public class AddAlarmActivity extends AppCompatActivity {
+public class AddUpdateAlarmActivity extends AppCompatActivity {
+
+    public static final String EXTRA_ID_ALARM_UPDATE = "alarm_to_update";
+    public static final String EXTRA_ID_IS_UPDATE = "is_to_update";
+    private Boolean isToUpdate;
 
     private Button btnCostume, btnRingtone, btnTurnOfType, btnSnooze;
     private FloatingActionButton btnAddNewAlarm;
@@ -66,64 +72,41 @@ public class AddAlarmActivity extends AppCompatActivity {
     private Snooze snoozeGiven;
     private RingType ringTypeGiven;
 
+    private AlarmDto alarmDefault = new AlarmDto(
+            null,
+            "",
+            "",
+            "",
+            null,
+            0L,
+            RingType.BIRDS,
+            null,
+            Collections.<AlarmFrequencyType>emptySet(),
+            true,
+            Collections.<com.example.alarm_app.alarmserver.model.Date>emptyList(),
+            TurnOffType.NORMAL,
+            Snooze.MIN_5
+    );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
-        mContext = this;
 
+        prepareDataFromIntent();
         initVariables();
         setDefaultValues();
         createListenersToSimpleChoose();
 
-        btnAddNewAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Time time = new Time(timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
-                final Set<AlarmFrequencyType> alarmFrequencyTypes = getFrequencyTypesFromView();
-                final RingType ringType = ringTypeGiven;
-                final TurnOffType turnOffType = turnOffTypeGiven;
-//                TODO: make converter
-                final Snooze snooze = snoozeGiven;
-                final String label = textLabel.getText().toString();
+    }
 
-                if (alarmFrequencyTypes.isEmpty() && textCostume.getText().length() != 0) {
-                    throw new IllegalArgumentException("alarmFrequencyTypes.isEmpty() have to be empty or textCostume.getText().length() != 0");
-                }
-                List<String> infoAboutValues = new ArrayList<>();
-                infoAboutValues.add("Time: " + time);
-                infoAboutValues.add("Alarm frequency types: " + alarmFrequencyTypes);
-                infoAboutValues.add("Ring Type: " + textRingtone.getText().toString());
-                infoAboutValues.add("Turn Off Type: " + textTurnOfType.getText().toString());
-                infoAboutValues.add("Snooze: " + textSnooze.getText().toString());
-                infoAboutValues.add("Label: " + label);
-
-                new MaterialAlertDialogBuilder(mContext)
-                        .setItems(infoAboutValues.toArray(new CharSequence[0]), null)
-                        .setNegativeButton(R.string.cancel, null)
-                        .setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                AlarmDto alarmDto = new AlarmDto(
-                                        label,
-                                        time,
-                                        ringType,
-                                        alarmFrequencyTypes,
-                                        true,
-                                        Collections.<com.example.alarm_app.alarmserver.model.Date>emptyList(),
-                                        turnOffType,
-                                        snooze
-                                );
-                                AlarmService.getInstance().creteAlarm(mContext, alarmDto);
-                            }
-                        })
-                        .setTitle(R.string.create_new_alarm)
-                .create()
-                .show();
-            }
-        });
-
+    private void prepareDataFromIntent() {
+        Gson gson = new Gson();
+        AlarmDto alarmDto = gson.fromJson(getIntent().getStringExtra(EXTRA_ID_ALARM_UPDATE), AlarmDto.class);
+        isToUpdate = getIntent().getBooleanExtra(EXTRA_ID_IS_UPDATE, false);
+        if (alarmDto != null){
+            alarmDefault = alarmDto;
+        }
     }
 
     private void createListenersToSimpleChoose() {
@@ -132,6 +115,25 @@ public class AddAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                TODO: Implement it as counter to alarm start
                 textAlarmBe.setText("");
+            }
+        });
+
+        btnTurnOfType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAlertDialogWithItems(R.array.alarm_turn_off_type, R.string.turn_off_type, textTurnOfType).show();
+            }
+        });
+        btnSnooze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAlertDialogWithItems(R.array.snooze_duration, R.string.snooze, textSnooze).show();
+            }
+        });
+        btnRingtone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createAlertDialogWithItems(R.array.ringtone_types, R.string.ringtone, textRingtone).show();
             }
         });
 
@@ -180,22 +182,67 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
-        btnTurnOfType.setOnClickListener(new View.OnClickListener() {
+        btnAddNewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAlertDialogWithItems(R.array.alarm_turn_off_type, R.string.turn_off_type, textTurnOfType).show();
-            }
-        });
-        btnSnooze.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAlertDialogWithItems(R.array.snooze_duration, R.string.snooze, textSnooze).show();
-            }
-        });
-        btnRingtone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAlertDialogWithItems(R.array.ringtone_types, R.string.ringtone, textRingtone).show();
+                final Time time = new Time(timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
+                final Set<AlarmFrequencyType> alarmFrequencyTypes = getFrequencyTypesFromView();
+                final RingType ringType = ringTypeGiven;
+                final TurnOffType turnOffType = turnOffTypeGiven;
+//                TODO: make converter
+                final Snooze snooze = snoozeGiven;
+                final String label = textLabel.getText().toString();
+
+                if (alarmFrequencyTypes.isEmpty() && textCostume.getText().length() != 0) {
+                    throw new IllegalArgumentException("alarmFrequencyTypes.isEmpty() have to be empty or textCostume.getText().length() != 0");
+                }
+                List<String> infoAboutValues = new ArrayList<>();
+                infoAboutValues.add("Time: " + time);
+                infoAboutValues.add("Alarm frequency types: " + alarmFrequencyTypes);
+                infoAboutValues.add("Ring Type: " + textRingtone.getText().toString());
+                infoAboutValues.add("Turn Off Type: " + textTurnOfType.getText().toString());
+                infoAboutValues.add("Snooze: " + textSnooze.getText().toString());
+                infoAboutValues.add("Label: " + label);
+
+                int positiveButtonText = R.string.create;
+                int titleText = R.string.create_new_alarm;
+                if (isToUpdate){
+                    positiveButtonText = R.string.update;
+                    titleText = R.string.update;
+                }
+                new MaterialAlertDialogBuilder(mContext)
+                        .setItems(infoAboutValues.toArray(new CharSequence[0]), null)
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                AlarmDto alarmDto = new AlarmDto(
+                                        label,
+                                        time,
+                                        ringType,
+                                        alarmFrequencyTypes,
+                                        true,
+                                        Collections.<com.example.alarm_app.alarmserver.model.Date>emptyList(),
+                                        turnOffType,
+                                        snooze
+                                );
+                                if (isToUpdate){
+                                    alarmDto.setId(alarmDefault.getId());
+                                    alarmDto.setDescription(alarmDefault.getDescription());
+                                    alarmDto.setRingName(alarmDefault.getRingName());
+                                    alarmDto.setTimeCreateInMillis(System.currentTimeMillis());
+                                    AlarmService.getInstance().updateAlarm(mContext, alarmDto);
+                                }else {
+                                    AlarmService.getInstance().creteAlarm(mContext, alarmDto);
+                                }
+                                Intent intent = new Intent(mContext, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setTitle(titleText)
+                        .create()
+                        .show();
             }
         });
     }
@@ -251,16 +298,44 @@ public class AddAlarmActivity extends AppCompatActivity {
     private void setDefaultValues() {
         textLabel.setInputType(InputType.TYPE_NULL);
         timePicker.setIs24HourView(true);
-        textTurnOfType.setText(getResources().getStringArray(R.array.alarm_turn_off_type)[0]);
-        textSnooze.setText(getResources().getStringArray(R.array.snooze_duration)[5]);
-        textRingtone.setText(getResources().getStringArray(R.array.ringtone_types)[1]);
 
-        turnOffTypeGiven = TurnOffType.NORMAL;
-        snoozeGiven = Snooze.MIN_5;
-        ringTypeGiven = RingType.BIRDS;
+        textLabel.setText(alarmDefault.getName());
+        textTurnOfType.setText(getResources().getStringArray(R.array.alarm_turn_off_type)[(int) alarmDefault.getAlarmTurnOffType().getId()]);
+        textSnooze.setText(getResources().getStringArray(R.array.snooze_duration)[(int) alarmDefault.getSnooze().getId()]);
+        textRingtone.setText(getResources().getStringArray(R.array.ringtone_types)[(int) alarmDefault.getRingType().getId()]);
+
+//        TODo: Make alarm frquency type, date
+
+        if(alarmDefault.getAlarmFrequencyType().contains(MONDAY)) chipMon.setChecked(true);
+        if(alarmDefault.getAlarmFrequencyType().contains(TUESDAY)) chipTue.setChecked(true);
+        if(alarmDefault.getAlarmFrequencyType().contains(WEDNESDAY)) chipWed.setChecked(true);
+        if(alarmDefault.getAlarmFrequencyType().contains(THURSDAY)) chipThu.setChecked(true);
+        if(alarmDefault.getAlarmFrequencyType().contains(FRIDAY)) chipFri.setChecked(true);
+        if(alarmDefault.getAlarmFrequencyType().contains(SATURDAY)) chipSat.setChecked(true);
+        if(alarmDefault.getAlarmFrequencyType().contains(SUNDAY)) chipSun.setChecked(true);
+
+        if (alarmDefault.getAlarmFrequencyType().contains(COSTUME)){
+//            TODO: make data from default alarm dates show like respone from rest
+//            Calendar instance = Calendar.getInstance();
+//            instance.setTimeInMillis(selection);
+//            Date time = instance.getTime();
+//            @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("dd, MMM yyyy");
+        }
+
+
+        if (alarmDefault.getTime() != null){
+            timePicker.setCurrentHour(alarmDefault.getTime().getHours());
+            timePicker.setCurrentMinute(alarmDefault.getTime().getMinutes());
+        }
+
+        turnOffTypeGiven = alarmDefault.getAlarmTurnOffType();
+        snoozeGiven = alarmDefault.getSnooze();
+        ringTypeGiven = alarmDefault.getRingType();
     }
 
     private void initVariables() {
+        mContext = this;
+
         btnCostume = findViewById(R.id.button_costume);
         btnRingtone = findViewById(R.id.button_ringtone);
         btnTurnOfType = findViewById(R.id.button_turn_off_type);
