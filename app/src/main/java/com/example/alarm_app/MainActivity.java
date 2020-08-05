@@ -1,19 +1,31 @@
 package com.example.alarm_app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.alarm_app.alarmreciver.AlarmNotifyUpdateService;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
 import com.example.alarm_app.alarmserver.auth.Credentials;
+import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import static com.example.alarm_app.alarmreciver.AlarmNotifyUpdateService.ID_EXTRA_NEXT_ALARM;
+
 public class MainActivity extends AppCompatActivity {
+
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +41,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
+        mContext = this;
 
         createConnectionWitchAlarmService();
+        initAlarmNotificationAndService();
     }
 
     private void createConnectionWitchAlarmService() {
@@ -46,6 +59,32 @@ public class MainActivity extends AppCompatActivity {
                 .setSharedPreferences(this);
         AlarmService.getInstance()
                 .updateAlarmsFromServer(this);
+    }
+
+    public void initAlarmNotificationAndService() {
+//        Create service and notification
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    if (AlarmService.getInstance().getAllAlarms().size() == 0) {
+                        try { Thread.sleep(2000); }
+                        catch (InterruptedException e) { e.printStackTrace(); }
+                    } else { i = 5; }
+                }
+                Intent intentService = new Intent(mContext, AlarmNotifyUpdateService.class);
+
+                List<AlarmFor14Days> sortedAlarms = AlarmService.getInstance().getSortedActiveAlarmsFor14Days();
+                if (sortedAlarms.size() != 0) {
+                    AlarmFor14Days alarm = sortedAlarms.get(0);
+                    Gson gson = new Gson();
+                    String alarm14Json = gson.toJson(alarm);
+                    intentService.putExtra(ID_EXTRA_NEXT_ALARM, alarm14Json);
+                }
+                ContextCompat.startForegroundService(mContext, intentService);
+            }
+        });
+        thread.start();
     }
 
 

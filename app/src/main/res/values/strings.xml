@@ -2,11 +2,11 @@
     <string name="app_name">alarm-app</string>
 
     <!--    Main strings-->
-    <string name="cancel">Cancel</string>
-    <string name="update">Update</string>
-    <string name="delete">Delete</string>
     <string name="apply">Apply</string>
     <string name="create">Create</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 
     <!--    Week days-->
     <string name="monday_shortcut">Mon</string>
@@ -17,7 +17,24 @@
     <string name="saturday_shortcut">Sat</string>
     <string name="sunday_shortcut">Sun</string>
 
-    <!--    Main strings-end-->
+    <string-array name="week_days">
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+    </string-array>
+
+
+    <!--    Notification channels, desc-->
+    <string name="notify_channel_name">Alarm notify</string>
+    <string name="notify_desc_alarm_starter">Chanel for keeping alive main service with is responsible for run alarms given time</string>
+    <string name="notify_next_alarm_will_be">Next alarm will be</string>
+    <string name="notify_no_upcoming_alarms">No upcoming alarms</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 
     <!--    Menu-->
     <string name="title_home">Alarm</string>
@@ -25,36 +42,30 @@
     <string name="title_timer">Timer</string>
     <string name="title_stopwatch">Stopwatch</string>
     <string name="title_setting">Settings</string>
-    <!--    Menu-end-->
 
     <!--    Home Fragment-->
     <string name="text_view_next_alarm">Next alarm</string>
     <string name="text_view_next_alarm_be">No upcoming alarms</string>
     <string name="add_new_alarm">Add new alarm</string>
 
-    <!--    Home Fragment-end-->
-
-    <!--    Add new alarm-->
+    <!--    Add, update new alarm-->
     <string name="label">Label</string>
     <string name="snooze">Snooze</string>
     <string name="costume">Costume</string>
     <string name="turn_off_type">Turn off type</string>
     <string name="ringtone">ringtone</string>
     <string name="create_new_alarm">Create new alarm</string>
-
     <string-array name="alarm_turn_off_type">
         <item>Normal</item>
         <item>Math task</item>
         <item>Vibes</item>
     </string-array>
-
     <string-array name="ringtone_types">
         <item>Birds</item>
         <item>Costume</item>
         <item>Ocean</item>
         <item>Rooster</item>
     </string-array>
-
     <string-array name="snooze_duration">
         <item>1 minute</item>
         <item>2 minutes</item>
@@ -66,9 +77,8 @@
         <item>30 minutes</item>
         <item>60 minutes</item>
     </string-array>
-
     <string name="alarm_created">Alarm created</string>
-    <string name="alarm_not_created">Alarm created</string>
+    <string name="alarm_not_created">Alarm not created</string>
     <string name="alarm_updated">Alarm updated</string>
     <string name="alarm_not_updated">Alarm not updated</string>
     <string name="next_alarms">Next alarms</string>

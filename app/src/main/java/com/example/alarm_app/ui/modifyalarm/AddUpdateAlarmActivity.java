@@ -50,7 +50,6 @@ import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.SUNDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.THURSDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.TUESDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.WEDNESDAY;
-import static com.example.alarm_app.alarmserver.model.RingType.COSTUME;
 
 public class AddUpdateAlarmActivity extends AppCompatActivity {
 
@@ -176,7 +175,7 @@ public class AddUpdateAlarmActivity extends AppCompatActivity {
                         textCostume.setText(formatter.format(time));
                     }
                 });
-                datePicker.show(getSupportFragmentManager(), String.valueOf(R.string.costume));
+                datePicker.show(getSupportFragmentManager(), getString(R.string.costume));
             }
         });
 
@@ -315,12 +314,12 @@ public class AddUpdateAlarmActivity extends AppCompatActivity {
         if(alarmDefault.getAlarmFrequencyType().contains(SATURDAY)) chipSat.setChecked(true);
         if(alarmDefault.getAlarmFrequencyType().contains(SUNDAY)) chipSun.setChecked(true);
 
-        if (alarmDefault.getAlarmFrequencyType().contains(COSTUME)){
+        if (alarmDefault.getAlarmFrequencyType().contains(CUSTOM)){
 //            TODO: make data from default alarm dates show like respone from rest
 //            Calendar instance = Calendar.getInstance();
 //            instance.setTimeInMillis(selection);
 //            Date time = instance.getTime();
-//            @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("dd, MMM yyyy");
+//            @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("dd, MMM yyyy"); cvgf fdz dfzdf zfd
         }
 
 
