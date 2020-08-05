@@ -5,10 +5,7 @@ import android.os.Bundle;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
 import com.example.alarm_app.alarmserver.auth.Credentials;
-import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -35,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         createConnectionWitchAlarmService();
-
-
     }
 
     private void createConnectionWitchAlarmService() {

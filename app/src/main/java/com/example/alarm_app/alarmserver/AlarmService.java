@@ -15,15 +15,14 @@ import com.android.volley.toolbox.Volley;
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
 import com.example.alarm_app.alarmserver.model.AlarmDto;
+import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -151,7 +150,7 @@ public class AlarmService extends AlarmStaticService{
                             @Override
                             public void onResponse(JSONObject response) {
                                 Log.i("Alarm deleted", response.toString());
-                                updateAlarmsFromServer(context);
+                                deleteStaticAlarmById(id);
                             }
                         },
                         new Response.ErrorListener() {
@@ -200,18 +199,16 @@ public class AlarmService extends AlarmStaticService{
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-//                                try {
                                 Gson gson = new Gson();
-                                AlarmDto alarm = gson.fromJson(response.toString(), AlarmDto.class);
+                                AlarmDto alarmFromServer = gson.fromJson(response.toString(), AlarmDto.class);
                                 Log.i("Alarm updated", response.toString());
                                 if (alarmOld.getId() != null) {
-                                    deleteStaticAlarmById(alarm.getId());
+                                    updateStaticAlarmById(alarmOld.getId(), alarmFromServer);
                                 } else {
-                                    deleteStaticAlarmByTimeAndIdNull(alarmOld.getTimeCreateInMillis());
+                                    updateStaticAlarmByTimeCreateAndIdNull(alarmOld.getTimeCreateInMillis(), alarmFromServer);
                                 }
-                                addStaticAlarm(alarm);
                                 Toast.makeText(context, R.string.alarm_updated, Toast.LENGTH_SHORT).show();
-//                                } catch (Exception e){
+
 //                               TODO:Add static alarm and wait for connection to server or internet
 //                                    Toast.makeText(context, R.string.alarm_not_updated, Toast.LENGTH_SHORT).show();
 //                                }
@@ -293,7 +290,6 @@ public class AlarmService extends AlarmStaticService{
                     }
                 };
 
-
                 requestQueue.add(objectRequest);
             }
         });
@@ -312,10 +308,18 @@ public class AlarmService extends AlarmStaticService{
         return jsonToSend;
     }
 
-    public List<AlarmDto> getSortedAlarmsWithOutNotActive() {
+    public List<AlarmDto> getSortedActiveAlarms() {
         List<AlarmDto> alarmsToSort = new LinkedList<>();
-        for (AlarmDto alarm : getStaticAlarmsSortedByTime()) {
-            if (alarm.getActive()) alarmsToSort.add(alarm);
+        for (AlarmDto alarm : getStaticAlarmsSortedByTime(getAllStaticAlarms())) {
+            if (alarm.getActive() == true) alarmsToSort.add(alarm);
+        }
+        return alarmsToSort;
+    }
+
+    public List<AlarmFor14Days> getSortedActiveAlarmsFor14Days(){
+        List<AlarmFor14Days> alarmsToSort = new LinkedList<>();
+        for (AlarmFor14Days alarm : getStaticAlarmsSortedByTimeFor14Days(getAllStaticAlarms())) {
+            if (alarm.getActive() == true) alarmsToSort.add(alarm);
         }
         return alarmsToSort;
     }

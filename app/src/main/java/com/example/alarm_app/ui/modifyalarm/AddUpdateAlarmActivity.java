@@ -1,10 +1,5 @@
 package com.example.alarm_app.ui.modifyalarm;
 
-import androidx.annotation.ArrayRes;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,9 +34,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import androidx.annotation.ArrayRes;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.CUSTOM;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.FRIDAY;
@@ -81,7 +79,7 @@ public class AddUpdateAlarmActivity extends AppCompatActivity {
             0L,
             RingType.BIRDS,
             null,
-            Collections.<AlarmFrequencyType>emptySet(),
+            Collections.<AlarmFrequencyType>emptyList(),
             true,
             Collections.<com.example.alarm_app.alarmserver.model.Date>emptyList(),
             TurnOffType.NORMAL,
@@ -185,8 +183,11 @@ public class AddUpdateAlarmActivity extends AppCompatActivity {
         btnAddNewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+//                TODO: add possible to add costume alarm
+
                 final Time time = new Time(timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
-                final Set<AlarmFrequencyType> alarmFrequencyTypes = getFrequencyTypesFromView();
+                final List<AlarmFrequencyType> alarmFrequencyTypes = getFrequencyTypesFromView();
                 final RingType ringType = ringTypeGiven;
                 final TurnOffType turnOffType = turnOffTypeGiven;
 //                TODO: make converter
@@ -362,8 +363,8 @@ public class AddUpdateAlarmActivity extends AppCompatActivity {
         textSnooze = findViewById(R.id.text_snooze);
     }
 
-    private Set<AlarmFrequencyType> getFrequencyTypesFromView() {
-        Set<AlarmFrequencyType> alarmFrequencyTypes = new HashSet<>();
+    private List<AlarmFrequencyType> getFrequencyTypesFromView() {
+        List<AlarmFrequencyType> alarmFrequencyTypes = new ArrayList<>();
         if (chipMon.isChecked()) alarmFrequencyTypes.add(MONDAY);
         if (chipTue.isChecked()) alarmFrequencyTypes.add(TUESDAY);
         if (chipWed.isChecked()) alarmFrequencyTypes.add(WEDNESDAY);

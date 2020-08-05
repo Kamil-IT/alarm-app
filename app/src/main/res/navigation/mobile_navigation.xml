@@ -15,7 +15,7 @@
         android:id="@+id/navigation_next_alarm"
         android:name="com.example.alarm_app.ui.nextalarm.NextAlarmFragment"
         android:label="@string/title_next_alarm"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_next_alarm" />
 
     <fragment
         android:id="@+id/navigation_timer"

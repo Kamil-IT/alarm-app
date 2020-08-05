@@ -71,5 +71,6 @@
     <string name="alarm_not_created">Alarm created</string>
     <string name="alarm_updated">Alarm updated</string>
     <string name="alarm_not_updated">Alarm not updated</string>
+    <string name="next_alarms">Next alarms</string>
 
 </resources>

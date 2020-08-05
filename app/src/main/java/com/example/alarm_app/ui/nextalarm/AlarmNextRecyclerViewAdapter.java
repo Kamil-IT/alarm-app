@@ -1,5 +1,6 @@
-package com.example.alarm_app.ui.home;
+package com.example.alarm_app.ui.nextalarm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,24 +9,26 @@ import android.widget.TextView;
 
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
-import com.example.alarm_app.alarmserver.model.AlarmDto;
+import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
+import com.example.alarm_app.alarmserver.model.Time;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
+public class AlarmNextRecyclerViewAdapter extends RecyclerView.Adapter<AlarmNextRecyclerViewAdapter.ViewHolder> {
 
     private AlarmService alarmService;
     private Context mContext;
     private FragmentManager fragmentManager;
 
-    public AlarmRecyclerViewAdapter(Context mContext, FragmentManager fragmentManager) {
+    public AlarmNextRecyclerViewAdapter(Context mContext, FragmentManager fragmentManager) {
         this.mContext = mContext;
         this.fragmentManager = fragmentManager;
         this.alarmService = AlarmService.getInstance();
@@ -47,35 +50,33 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        final AlarmDto alarm = Objects.requireNonNull(alarmService.getAllAlarms()).get(position);
+        final AlarmFor14Days alarm = alarmService.getSortedActiveAlarmsFor14Days().get(position);
+        Time time = new Time(alarm.getAlarmBe().getHours(),
+                alarm.getAlarmBe().getMinutes(), alarm.getAlarmBe().getSeconds());
+        @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
         holder.checkBoxIsActive.setActivated(true);
         holder.checkBoxIsActive.setChecked(alarm.getActive());
-        holder.textAlarmTime.setText(alarm.getTime().toString());
+        holder.textAlarmTime.setText(time.toString());
 //        TODO: add costumes message when create enum for it
-        holder.textDaysWhenAlarmPlay.setText(alarm.getAlarmFrequencyType().toString());
+        holder.textDaysWhenAlarmPlay.setText(df.format(alarm.getAlarmBe()));
         holder.textDesc.setText(alarm.getName());
-        holder.btnOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlarmOptionSheetDialog sheet = new AlarmOptionSheetDialog(alarm);
-                sheet.show(fragmentManager, "Option for alarm nr " + position);
-            }
-        });
+        holder.btnOption.setVisibility(View.GONE);
 
 
         holder.checkBoxIsActive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alarm.setActive(holder.checkBoxIsActive.isChecked());
-                alarmService.updateAlarm(mContext, alarm);
+//                TODO: disable next alarm add it after create service for keeping all alarms
+//                alarmService.updateAlarm(mContext, alarm);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        List<AlarmDto> allAlarms = alarmService.getAllAlarms();
+        List<AlarmFor14Days> allAlarms = alarmService.getSortedActiveAlarmsFor14Days();
         if (allAlarms == null) {
             return 0;
         }

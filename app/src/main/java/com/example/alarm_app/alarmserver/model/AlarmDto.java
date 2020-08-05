@@ -2,9 +2,6 @@ package com.example.alarm_app.alarmserver.model;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-
-import androidx.annotation.NonNull;
 
 public class AlarmDto {
 
@@ -27,7 +24,7 @@ public class AlarmDto {
     private String ringName;
 
 
-    private Set<AlarmFrequencyType> alarmFrequencyType;
+    private List<AlarmFrequencyType> alarmFrequencyType;
 
     private Boolean isActive;
 
@@ -44,7 +41,7 @@ public class AlarmDto {
     public AlarmDto() {
     }
 
-    public AlarmDto(String id, String name, String description, String userId, Time time, Long timeCreateInMillis, RingType ringType, String ringName, Set<AlarmFrequencyType> alarmFrequencyType, Boolean isActive, List<Date> alarmFrequencyCostume, TurnOffType alarmTurnOffType, Snooze snooze) {
+    public AlarmDto(String id, String name, String description, String userId, Time time, Long timeCreateInMillis, RingType ringType, String ringName, List<AlarmFrequencyType> alarmFrequencyType, Boolean isActive, List<Date> alarmFrequencyCostume, TurnOffType alarmTurnOffType, Snooze snooze) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -60,7 +57,7 @@ public class AlarmDto {
         this.snooze = snooze;
     }
 
-    public AlarmDto(String name, Time time, RingType ringType, Set<AlarmFrequencyType> alarmFrequencyType, Boolean isActive, List<Date> alarmFrequencyCostume, TurnOffType alarmTurnOffType, Snooze snooze) {
+    public AlarmDto(String name, Time time, RingType ringType, List<AlarmFrequencyType> alarmFrequencyType, Boolean isActive, List<Date> alarmFrequencyCostume, TurnOffType alarmTurnOffType, Snooze snooze) {
         this.name = name;
         this.time = time;
         this.ringType = ringType;
@@ -143,11 +140,11 @@ public class AlarmDto {
         this.ringName = ringName;
     }
 
-    public Set<AlarmFrequencyType> getAlarmFrequencyType() {
+    public List<AlarmFrequencyType> getAlarmFrequencyType() {
         return alarmFrequencyType;
     }
 
-    public void setAlarmFrequencyType(Set<AlarmFrequencyType> alarmFrequencyType) {
+    public void setAlarmFrequencyType(List<AlarmFrequencyType> alarmFrequencyType) {
         this.alarmFrequencyType = alarmFrequencyType;
     }
 

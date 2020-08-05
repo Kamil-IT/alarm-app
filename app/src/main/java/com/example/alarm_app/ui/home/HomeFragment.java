@@ -59,22 +59,31 @@ public class HomeFragment extends Fragment {
         AlarmService.getInstance().addListener(new AlarmService.OnDataSetChanged() {
             @Override
             public void dataChanged() {
-                String strNextAlar = "";
-                List<AlarmDto> sortedAlarmsWithOutNotActive = AlarmService.getInstance().getSortedAlarmsWithOutNotActive();
-
-                if (sortedAlarmsWithOutNotActive.size() == 0) {
-                    strNextAlar = getString(R.string.text_view_next_alarm_be);
-                }
-                else {
-                    AlarmDto alarmDto = sortedAlarmsWithOutNotActive.get(0);
-                    Time time = alarmDto.getTime();
-//                    Add day of week or date
-                    strNextAlar = time.toString();
-                }
-                textNextAlarmWillBe.setText(strNextAlar);
+                addNextAlarmTime();
             }
         });
         return root;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        addNextAlarmTime();
+    }
+
+    private void addNextAlarmTime() {
+        String strNextAlar;
+        List<AlarmDto> sortedAlarmsWithOutNotActive = AlarmService.getInstance().getSortedActiveAlarms();
+
+        if (sortedAlarmsWithOutNotActive.size() == 0) {
+            strNextAlar = getString(R.string.text_view_next_alarm_be);
+        }
+        else {
+            AlarmDto alarmDto = sortedAlarmsWithOutNotActive.get(0);
+            Time time = alarmDto.getTime();
+//                    Add day of week or date
+            strNextAlar = time.toString();
+        }
+        textNextAlarmWillBe.setText(strNextAlar);
+    }
 }
