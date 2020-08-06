@@ -45,11 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
         createConnectionWitchAlarmService();
         initAlarmNotificationAndService();
+
+//        TODO: check working annotation    @OnClick(R.id.button)
     }
 
     private void createConnectionWitchAlarmService() {
 //        Auth
         AuthTokenHolder.getINSTANCE()
+                //                TODO: Make it static
                 .setCredentials(new Credentials("admin", "admin"));
         AuthTokenHolder.getINSTANCE()
                 .generateToken(this);
@@ -61,16 +64,21 @@ public class MainActivity extends AppCompatActivity {
                 .updateAlarmsFromServer(this);
     }
 
-    public void initAlarmNotificationAndService() {
+    private void initAlarmNotificationAndService() {
 //        Create service and notification
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < 5; i++) {
                     if (AlarmService.getInstance().getAllAlarms().size() == 0) {
-                        try { Thread.sleep(2000); }
-                        catch (InterruptedException e) { e.printStackTrace(); }
-                    } else { i = 5; }
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        i = 5;
+                    }
                 }
                 Intent intentService = new Intent(mContext, AlarmNotifyUpdateService.class);
 

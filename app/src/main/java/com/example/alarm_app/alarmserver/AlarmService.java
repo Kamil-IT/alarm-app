@@ -79,7 +79,7 @@ public class AlarmService extends AlarmStaticService{
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.e("Rest response", error.toString());
+                                Log.e("Alarm server error", error.toString());
 
                             }
                         }

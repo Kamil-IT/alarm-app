@@ -17,6 +17,40 @@
     <string name="saturday_shortcut">Sat</string>
     <string name="sunday_shortcut">Sun</string>
 
+    <string name="notify_channel_name">Alarm notify</string>
+
+
+    <!--    Notification channels, desc-->
+    <string name="notify_desc_alarm_starter">Chanel for keeping alive main service with is responsible for run alarms given time</string>
+    <string name="notify_next_alarm_will_be">Next alarm will be</string>
+    <string name="notify_no_upcoming_alarms">No upcoming alarms</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="title_home">Alarm</string>
+
+    <!--    Menu-->
+    <string name="title_next_alarm">Next alarm</string>
+    <string name="title_timer">Timer</string>
+    <string name="title_stopwatch">Stopwatch</string>
+    <string name="title_setting">Settings</string>
+    <string name="text_view_next_alarm">Next alarm</string>
+
+    <!--    Home Fragment-->
+    <string name="text_view_next_alarm_be">No upcoming alarms</string>
+    <string name="add_new_alarm">Add new alarm</string>
+    <string name="label">Label</string>
+
+    <!--    Add, update new alarm-->
+    <string name="snooze">Snooze</string>
+    <string name="costume">Costume</string>
+    <string name="turn_off_type">Turn off type</string>
+    <string name="ringtone">ringtone</string>
+    <string name="create_new_alarm">Create new alarm</string>
+    <string name="alarm_created">Alarm created</string>
+    <string name="alarm_not_created">Alarm not created</string>
+    <string name="alarm_updated">Alarm updated</string>
+    <string name="alarm_not_updated">Alarm not updated</string>
+    <string name="next_alarms">Next alarms</string>
     <string-array name="week_days">
         <item>Sun</item>
         <item>Mon</item>
@@ -26,35 +60,6 @@
         <item>Fri</item>
         <item>Sat</item>
     </string-array>
-
-
-    <!--    Notification channels, desc-->
-    <string name="notify_channel_name">Alarm notify</string>
-    <string name="notify_desc_alarm_starter">Chanel for keeping alive main service with is responsible for run alarms given time</string>
-    <string name="notify_next_alarm_will_be">Next alarm will be</string>
-    <string name="notify_no_upcoming_alarms">No upcoming alarms</string>
-    <string name="today">Today</string>
-    <string name="tomorrow">Tomorrow</string>
-
-    <!--    Menu-->
-    <string name="title_home">Alarm</string>
-    <string name="title_next_alarm">Next alarm</string>
-    <string name="title_timer">Timer</string>
-    <string name="title_stopwatch">Stopwatch</string>
-    <string name="title_setting">Settings</string>
-
-    <!--    Home Fragment-->
-    <string name="text_view_next_alarm">Next alarm</string>
-    <string name="text_view_next_alarm_be">No upcoming alarms</string>
-    <string name="add_new_alarm">Add new alarm</string>
-
-    <!--    Add, update new alarm-->
-    <string name="label">Label</string>
-    <string name="snooze">Snooze</string>
-    <string name="costume">Costume</string>
-    <string name="turn_off_type">Turn off type</string>
-    <string name="ringtone">ringtone</string>
-    <string name="create_new_alarm">Create new alarm</string>
     <string-array name="alarm_turn_off_type">
         <item>Normal</item>
         <item>Math task</item>
@@ -77,10 +82,5 @@
         <item>30 minutes</item>
         <item>60 minutes</item>
     </string-array>
-    <string name="alarm_created">Alarm created</string>
-    <string name="alarm_not_created">Alarm not created</string>
-    <string name="alarm_updated">Alarm updated</string>
-    <string name="alarm_not_updated">Alarm not updated</string>
-    <string name="next_alarms">Next alarms</string>
 
 </resources>
