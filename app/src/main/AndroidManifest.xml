@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.alarmringing.AlarmRingingActivity"></activity>
+        <activity
+            android:name=".ui.alarmringing.AlarmRingingActivity"
+            android:showOnLockScreen="true"></activity>
         <activity android:name=".ui.modifyalarm.AddUpdateAlarmActivity" />
         <activity
             android:name=".MainActivity"
@@ -24,7 +26,7 @@
         <receiver android:name=".alarmreciver.ActivationAlarmServiceReceiver">
         </receiver>
 
-        <receiver android:name=".alarmreciver.AlarmNotifyActivatorReceiver">
+        <receiver android:name=".alarmreciver.AlarmNotifyRebootActivatorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
@@ -39,6 +41,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 
     <uses-permission android:name="android.permission.INTERNET" />

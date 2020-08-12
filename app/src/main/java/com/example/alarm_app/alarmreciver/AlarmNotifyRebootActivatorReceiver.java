@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat;
 
 import static com.example.alarm_app.alarmreciver.AlarmNotifyUpdateService.ID_EXTRA_NEXT_ALARM;
 
-public class AlarmNotifyActivatorReceiver extends BroadcastReceiver {
+public class AlarmNotifyRebootActivatorReceiver extends BroadcastReceiver {
 
     @SuppressLint("Receiver only for start service after reboot device")
     @Override

@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.SystemClock;
 
 import com.example.alarm_app.MainActivity;
 import com.example.alarm_app.R;
@@ -33,6 +32,7 @@ import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MINUTE;
 import static java.util.Calendar.SECOND;
 
+//TODO: Make another service for update
 public class AlarmNotifyUpdateService extends Service {
 
     public static final String CHANEL_ID = "alarm_main_chanel";
@@ -98,8 +98,8 @@ public class AlarmNotifyUpdateService extends Service {
         final PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, receiverIntent, 0);
 
         alarmMgr.setExact(
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + 5000,
+                AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + 5000,
                 alarmIntent
         );
 
