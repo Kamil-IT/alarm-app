@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 
 public class ActivationAlarmActivityService extends Service {
 
+    private MediaPlayer player;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -23,15 +25,14 @@ public class ActivationAlarmActivityService extends Service {
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(dialogIntent);
 
-        MediaPlayer player = new MediaPlayer();
+        player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_ALARM);
-        AssetFileDescriptor afd = this.getResources().openRawResourceFd(R.raw.paluch_sund);
 
+        AssetFileDescriptor afd = this.getResources().openRawResourceFd(R.raw.paluch_sund);
         try {
             player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
         } catch (IOException e) {
 //            TODO: set default music after add it
-            e.printStackTrace();
         }
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -41,6 +42,8 @@ public class ActivationAlarmActivityService extends Service {
         });
         player.prepareAsync();
 
+//        To stop
+//        player.release();
 
         return START_NOT_STICKY;
     }

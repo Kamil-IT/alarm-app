@@ -183,7 +183,7 @@ public class AlarmNotifyUpdateService extends Service {
                 .setContentIntent(pendingIntent);
     }
 
-    //    TODO: add listener when day is and and change text to bee correct to next day
+    //    TODO: add listener when day is and and change text to be correct to next day
     private String getTextWhenNextAlarmWillBe(AlarmFor14Days alarm) {
         StringBuilder strTimeNextAlarm = new StringBuilder();
 

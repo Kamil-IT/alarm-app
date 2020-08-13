@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         createConnectionWitchAlarmService();
         initAlarmNotificationAndService();
-
-//        TODO: check working annotation    @OnClick(R.id.button)
     }
 
     private void createConnectionWitchAlarmService() {

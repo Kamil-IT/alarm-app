@@ -5,12 +5,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.alarm_app.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AlarmRingingActivity extends AppCompatActivity {
+
+    private Button btnSnooze, btnStopAlarm;
+    private TextView textAlarmName, textAlarmTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,24 +31,24 @@ public class AlarmRingingActivity extends AppCompatActivity {
                         // Hide the nav bar and status bar
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_alarm_ringing);
 
-
 //        Set working on screen off
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
             KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-            if(keyguardManager!=null)
+            if (keyguardManager != null)
                 keyguardManager.requestDismissKeyguard(this, null);
-        }
-        else
-        {
+        } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                     WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         }
+
+        btnSnooze = findViewById(R.id.button_snooze);
+        btnStopAlarm = findViewById(R.id.button_stop_alarm);
+        textAlarmName = findViewById(R.id.text_alarm_name);
+        textAlarmTime = findViewById(R.id.text_alarm_time);
     }
 }

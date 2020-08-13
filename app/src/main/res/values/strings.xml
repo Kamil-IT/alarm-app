@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">alarm-app</string>
+    <string name="alarm">Alarm</string>
 
     <!--    Main strings-->
     <string name="apply">Apply</string>
@@ -51,6 +52,7 @@
     <string name="alarm_updated">Alarm updated</string>
     <string name="alarm_not_updated">Alarm not updated</string>
     <string name="next_alarms">Next alarms</string>
+    <string name="stop_alarm">Stop alarm</string>
     <string-array name="week_days">
         <item>Sun</item>
         <item>Mon</item>
