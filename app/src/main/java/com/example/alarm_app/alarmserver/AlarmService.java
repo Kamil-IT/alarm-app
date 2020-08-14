@@ -73,13 +73,13 @@ public class AlarmService extends AlarmStaticService{
                                 Gson gson = new Gson();
                                 List<AlarmDto> alarmListDto = new LinkedList<>(Arrays.asList(gson.fromJson(response.toString(), AlarmDto[].class)));
                                 checkListsAndUpdate(context, alarmListDto);
-                                Log.i("Alarms", response.toString());
+                                Log.i("Alarm server all update", response.toString());
                             }
                         },
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.e("Alarm server error", error.toString());
+                                Log.e("Alarm server all update", error.toString());
 
                             }
                         }
@@ -149,15 +149,16 @@ public class AlarmService extends AlarmStaticService{
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Log.i("Alarm deleted", response.toString());
+                                Log.i("Alarm service delete", response.toString());
                                 deleteStaticAlarmById(id);
                             }
                         },
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.e("Rest response", error.toString());
-
+                                Log.e("Alarm service delete", error.toString());
+                                deleteStaticAlarmById(id);
+                                Toast.makeText(context, R.string.alarm_delete_local, Toast.LENGTH_SHORT).show();
                             }
                         }
                 ) {
@@ -201,24 +202,25 @@ public class AlarmService extends AlarmStaticService{
                             public void onResponse(JSONObject response) {
                                 Gson gson = new Gson();
                                 AlarmDto alarmFromServer = gson.fromJson(response.toString(), AlarmDto.class);
-                                Log.i("Alarm updated", response.toString());
+                                Log.i("Alarm service update", response.toString());
                                 if (alarmOld.getId() != null) {
                                     updateStaticAlarmById(alarmOld.getId(), alarmFromServer);
                                 } else {
                                     updateStaticAlarmByTimeCreateAndIdNull(alarmOld.getTimeCreateInMillis(), alarmFromServer);
                                 }
                                 Toast.makeText(context, R.string.alarm_updated, Toast.LENGTH_SHORT).show();
-
-//                               TODO:Add static alarm and wait for connection to server or internet
-//                                    Toast.makeText(context, R.string.alarm_not_updated, Toast.LENGTH_SHORT).show();
-//                                }
                             }
                         },
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.e("Rest response", error.toString());
-
+                                Log.e("Alarm service update", error.toString());
+                                if (alarmOld.getId() != null) {
+                                    updateStaticAlarmById(alarmOld.getId(), alarmOld);
+                                } else {
+                                    updateStaticAlarmByTimeCreateAndIdNull(alarmOld.getTimeCreateInMillis(), alarmOld);
+                                }
+                                Toast.makeText(context, R.string.alarm_update_local, Toast.LENGTH_SHORT).show();
                             }
                         }
                 ) {
@@ -262,14 +264,11 @@ public class AlarmService extends AlarmStaticService{
                             public void onResponse(JSONObject response) {
                                 try {
                                     Gson gson = new Gson();
-//                                    TODO: don't delete better update
                                     AlarmDto alarm = gson.fromJson(response.toString(), AlarmDto.class);
-                                    Log.i("Alarm created", response.toString());
+                                    Log.i("Alarm service create", response.toString());
                                     addStaticAlarm(alarm);
                                     Toast.makeText(context, R.string.alarm_created, Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
-
-//                               TODO:Add static alarm and wait for connection to server or internet
                                     Toast.makeText(context, R.string.alarm_not_created, Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -277,8 +276,9 @@ public class AlarmService extends AlarmStaticService{
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.e("Rest response", error.toString());
-
+                                Log.e("Alarm service create", error.toString());
+                                addStaticAlarm(alarmDto);
+                                Toast.makeText(context, R.string.alarm_created_local, Toast.LENGTH_SHORT).show();
                             }
                         }
                 ) {

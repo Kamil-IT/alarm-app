@@ -49,7 +49,10 @@
     <string name="create_new_alarm">Create new alarm</string>
     <string name="alarm_created">Alarm created</string>
     <string name="alarm_not_created">Alarm not created</string>
+    <string name="alarm_created_local">Alarm created local</string>
     <string name="alarm_updated">Alarm updated</string>
+    <string name="alarm_delete_local">Alarm delete local</string>
+    <string name="alarm_update_local">Alarm update local</string>
     <string name="alarm_not_updated">Alarm not updated</string>
     <string name="next_alarms">Next alarms</string>
     <string name="stop_alarm">Stop alarm</string>

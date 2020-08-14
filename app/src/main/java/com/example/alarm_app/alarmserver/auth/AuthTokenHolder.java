@@ -20,6 +20,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.BASE_SERVER_URL;
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.TOKEN_PATH;
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.getBasicHeaders;
@@ -91,13 +99,13 @@ public class AuthTokenHolder {
                     @Override
                     public void onResponse(JSONObject response) {
                         saveGeneratedToken(response);
-                        Log.i("Token generated", response.toString());
+                        Log.i("Token generator", response.toString());
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Rest response", error.toString());
+                        Log.e("Token generator", error.toString());
 
                     }
                 }
@@ -120,5 +128,36 @@ public class AuthTokenHolder {
     public boolean isTokenReadyToUse() {
         return token != null && (tokenTakenTime.getTimeInMillis() + tokenValidation.getTimeInMillis() - MIN_IN_MILLIS >
                 System.currentTimeMillis());
+    }
+
+    private void handlerErrorNoInternet(final Context context){
+        //        If non connection to internet then wait for it
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Constraints constraints = new Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build();
+                OneTimeWorkRequest onetimeJob = new OneTimeWorkRequest.Builder(ReConnectionToInternet.class)
+                        .setConstraints(constraints).build();
+                WorkManager.getInstance(context).enqueue(onetimeJob);
+            }
+        });
+        thread.start();
+
+    }
+
+    public class ReConnectionToInternet extends Worker {
+
+        public ReConnectionToInternet(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+            super(context, workerParams);
+        }
+
+        @NonNull
+        @Override
+        public Result doWork() {
+            generateToken(getApplicationContext());
+            return Result.success();
+        }
     }
 }

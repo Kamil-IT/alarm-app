@@ -6,8 +6,7 @@ import android.os.Bundle;
 
 import com.example.alarm_app.alarmreciver.AlarmNotifyService;
 import com.example.alarm_app.alarmserver.AlarmService;
-import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
-import com.example.alarm_app.alarmserver.auth.Credentials;
+import com.example.alarm_app.alarmserver.updator.AlarmUpdateDataReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,18 +42,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createConnectionWitchAlarmService() {
-//        Auth
-        AuthTokenHolder.getINSTANCE()
-                //                TODO: Make it static
-                .setCredentials(new Credentials("admin", "admin"));
-        AuthTokenHolder.getINSTANCE()
-                .generateToken(this);
-
-//        Alarm service
-        AlarmService.getInstance()
-                .setSharedPreferences(this);
-        AlarmService.getInstance()
-                .updateAlarmsFromServer(this);
+        AlarmUpdateDataReceiver receiver = new AlarmUpdateDataReceiver();
+        receiver.onReceive(this, new Intent(this, AlarmUpdateDataReceiver.class));
     }
 
     private void initAlarmNotificationAndService() {

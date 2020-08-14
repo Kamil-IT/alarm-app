@@ -5,9 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.alarm_app.alarmserver.AlarmService;
-import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
-import com.example.alarm_app.alarmserver.auth.Credentials;
+import com.example.alarm_app.alarmserver.updator.AlarmUpdateDataReceiver;
 
 import androidx.core.content.ContextCompat;
 
@@ -17,18 +15,9 @@ public class AlarmNotifyRebootActivatorReceiver extends BroadcastReceiver {
     @SuppressLint("Receiver only for start service after reboot device")
     @Override
     public void onReceive(final Context context, Intent intent) {
-//        Auth
-        AuthTokenHolder.getINSTANCE()
-//                TODO: Make it static
-                .setCredentials(new Credentials("admin", "admin"));
-        AuthTokenHolder.getINSTANCE()
-                .generateToken(context);
 
-//        Alarm service
-        AlarmService.getInstance()
-                .setSharedPreferences(context);
-        AlarmService.getInstance()
-                .updateAlarmsFromServer(context);
+        AlarmUpdateDataReceiver receiver = new AlarmUpdateDataReceiver();
+        receiver.onReceive(context, new Intent(context, AlarmUpdateDataReceiver.class));
 
 //        Create service and notification
         Intent intentService = new Intent(context, AlarmNotifyService.class);

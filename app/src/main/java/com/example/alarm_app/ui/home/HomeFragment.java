@@ -61,6 +61,9 @@ public class HomeFragment extends Fragment {
                 addNextAlarmTime();
             }
         });
+
+//        TODO: add no connection to internet and make there button named retry
+
         return root;
     }
 

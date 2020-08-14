@@ -17,6 +17,7 @@ import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.AlarmStaticService;
 import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
+import com.example.alarm_app.alarmserver.updator.AlarmUpdateDataReceiver;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
@@ -80,19 +81,21 @@ public class AlarmNotifyService extends Service {
             @Override
             public void dataChanged() {
                 AlarmFor14Days nextUpcomingAlarm = getNextUpcomingAlarm();
-                if (nextUpcomingAlarm != null){
+                if (nextUpcomingAlarm != null) {
                     setAlarmMgrToNextAlarm(nextUpcomingAlarm, alarmMgr);
                 }
             }
         });
 
-        //              Repeating
-//            alarmMgr.setInexactRepeating(
-//                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                    SystemClock.elapsedRealtime() + 5000,
-//                    AlarmManager.INTERVAL_HALF_HOUR,
-//                    alarmIntent
-//            );
+//        Create updater for data from server
+        alarmMgr.setInexactRepeating(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                System.currentTimeMillis() +
+//                            TODO: this have to be set by user after add setting
+                        AlarmManager.INTERVAL_HOUR,
+                AlarmManager.INTERVAL_HALF_HOUR,
+                PendingIntent.getBroadcast(this, 0, new Intent(getBaseContext(), AlarmUpdateDataReceiver.class), 0)
+        );
 
         return START_STICKY;
     }
@@ -131,11 +134,8 @@ public class AlarmNotifyService extends Service {
             @Override
             public void dataChanged() {
                 AlarmFor14Days alarmNew = getNextUpcomingAlarm();
-                if (alarmNew != alarmOld && alarmNew != null) {
+                if (alarmNew != alarmOld) {
                     notification.setContentText(getTextWhenNextAlarmWillBe(alarmNew));
-                    startForeground(ID_FOREGROUND, notification.build());
-                } else if (alarmNew == null) {
-                    notification.setContentText(getString(R.string.notify_no_upcoming_alarms));
                     startForeground(ID_FOREGROUND, notification.build());
                 }
             }
@@ -162,34 +162,49 @@ public class AlarmNotifyService extends Service {
                 .setContentIntent(pendingIntent);
     }
 
-//    TODO: add listener when day is and and change text to be correct to next day
-//    TODO: if alarm null set to no upcoming alarms
     private String getTextWhenNextAlarmWillBe(AlarmFor14Days alarm) {
+        if (alarm == null){
+            return getString(R.string.notify_no_upcoming_alarms);
+        }
+
         StringBuilder strTimeNextAlarm = new StringBuilder();
 
-//        TODO: change it as every if have own calendar
-        Calendar endOfTime = Calendar.getInstance();
-        endOfTime.setTime(new Date());
-        endOfTime.set(HOUR, 23);
-        endOfTime.set(MINUTE, 59);
-        endOfTime.set(SECOND, 59);
-
-        if (alarm.getAlarmBe().before(endOfTime.getTime())) {
+        Calendar endOfCurrentDay = Calendar.getInstance();
+        endOfCurrentDay.setTime(new Date());
+        endOfCurrentDay.set(HOUR, 23);
+        endOfCurrentDay.set(MINUTE, 59);
+        endOfCurrentDay.set(SECOND, 59);
+        if (alarm.getAlarmBe().before(endOfCurrentDay.getTime())) {
             strTimeNextAlarm.append(getString(R.string.today));
         }
-        endOfTime.setTimeInMillis(endOfTime.getTimeInMillis() + 86400000L);
-        if (alarm.getAlarmBe().before(endOfTime.getTime())) {
+
+        Calendar endOfSecondDay = endOfCurrentDay;
+        long dayInMillis = 86400000L;
+        endOfSecondDay.setTimeInMillis(endOfCurrentDay.getTimeInMillis() + dayInMillis);
+        if (alarm.getAlarmBe().before(endOfCurrentDay.getTime())) {
             strTimeNextAlarm.append(getString(R.string.tomorrow));
         }
-        if (alarm.getAlarmBe().after(endOfTime.getTime())) {
-            endOfTime.setTime(alarm.getAlarmBe());
-            strTimeNextAlarm.append(
-                    getResources()
-                            .getStringArray(
-                                    R.array.week_days)[endOfTime.get(DAY_OF_WEEK)]
-            );
+
+        if (alarm.getAlarmBe().after(endOfCurrentDay.getTime())) {
+            Calendar endOfTheWeek = endOfSecondDay;
+            endOfTheWeek.setTimeInMillis(endOfCurrentDay.getTimeInMillis() + dayInMillis * 5);
+            if (alarm.getAlarmBe().before(endOfTheWeek.getTime())) {
+                endOfCurrentDay.setTime(alarm.getAlarmBe());
+                strTimeNextAlarm.append(
+                        getResources()
+                                .getStringArray(
+                                        R.array.week_days)[endOfCurrentDay.get(DAY_OF_WEEK)]
+                );
+            }
         }
-//        TODO: If time is longer then week add costume data
+
+        Calendar endOfTheWeek = endOfSecondDay;
+        endOfTheWeek.setTimeInMillis(endOfCurrentDay.getTimeInMillis() + dayInMillis * 5);
+        if (alarm.getAlarmBe().after(endOfTheWeek.getTime())) {
+            @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            strTimeNextAlarm.append(df.format(alarm.getAlarmBe()));
+
+        }
         strTimeNextAlarm.append(", ");
         @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("HH:mm:ss");
         strTimeNextAlarm.append(df.format(alarm.getAlarmBe()));
