@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -32,13 +33,20 @@ import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MINUTE;
 import static java.util.Calendar.SECOND;
 
-//TODO: Make another service for update
-public class AlarmNotifyUpdateService extends Service {
+public class AlarmNotifyService extends Service {
 
+    /**
+     * Notification chanel for Android Version 26
+     */
     public static final String CHANEL_ID = "alarm_main_chanel";
-
-    public static final String ID_EXTRA_NEXT_ALARM = "next_alarm";
+    /**
+     * Foreground service ID
+     */
     public static final int ID_FOREGROUND = 1;
+    /**
+     * ID for info about next alarm, which will be send to receiver intent
+     */
+    public static final String EXTRA_CURRENT_ALARM_RINGING = "alarm_current_ringing";
 
     @Override
     public void onCreate() {
@@ -59,108 +67,79 @@ public class AlarmNotifyUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        Create and start notification
+        final AlarmFor14Days alarm = getNextUpcomingAlarm();
+
+        startNotification(alarm);
+
+//        Create and set alarms ringing
+        final AlarmManager alarmMgr = (AlarmManager) getBaseContext().getSystemService(Context.ALARM_SERVICE);
+        if (alarm != null) {
+            setAlarmMgrToNextAlarm(alarm, alarmMgr);
+        }
+        AlarmService.getInstance().addListener(new AlarmStaticService.OnDataSetChanged() {
+            @Override
+            public void dataChanged() {
+                AlarmFor14Days nextUpcomingAlarm = getNextUpcomingAlarm();
+                if (nextUpcomingAlarm != null){
+                    setAlarmMgrToNextAlarm(nextUpcomingAlarm, alarmMgr);
+                }
+            }
+        });
+
+        //              Repeating
+//            alarmMgr.setInexactRepeating(
+//                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//                    SystemClock.elapsedRealtime() + 5000,
+//                    AlarmManager.INTERVAL_HALF_HOUR,
+//                    alarmIntent
+//            );
+
+        return START_STICKY;
+    }
+
+    private void setAlarmMgrToNextAlarm(AlarmFor14Days alarm, AlarmManager alarmMgr) {
+        Intent receiverIntent = new Intent(this, ActivationAlarmActivityReceiver.class);
+        Gson gson = new Gson();
+        receiverIntent.putExtra(EXTRA_CURRENT_ALARM_RINGING, gson.toJson(alarm));
+        final PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, receiverIntent, 0);
+
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis() + (alarm.getAlarmBe().getTime() - currentDate.getTime()));
+
+        alarmMgr.setExact(
+                AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                alarmIntent
+        );
+    }
+
+    private void startNotification(AlarmFor14Days alarm) {
         String contentTitle = getString(R.string.notify_next_alarm_will_be);
         String contentText = getString(R.string.notify_no_upcoming_alarms);
 
-        AlarmFor14Days alarm = null;
-        try {
-            String alarm14Json = intent.getStringExtra(ID_EXTRA_NEXT_ALARM);
-            Gson gson = new Gson();
-            alarm = gson.fromJson(alarm14Json, AlarmFor14Days.class);
+        if (alarm != null) {
             contentText = getTextWhenNextAlarmWillBe(alarm);
-        } catch (Exception ignored) {
         }
 
         final NotificationCompat.Builder notification = createNotification(contentTitle, contentText);
         startForeground(ID_FOREGROUND, notification.build());
-
 
 //        TODO: check working it when app is closed and after change date in server
         final AlarmFor14Days alarmOld = alarm;
         AlarmService.getInstance().addListener(new AlarmStaticService.OnDataSetChanged() {
             @Override
             public void dataChanged() {
-                if (AlarmService.getInstance().getSortedActiveAlarmsFor14Days().size() != 0) {
-                    AlarmFor14Days alarmNew = AlarmService.getInstance().getSortedActiveAlarmsFor14Days().get(0);
-                    if (alarmNew != alarmOld) {
-                        notification.setContentText(getTextWhenNextAlarmWillBe(alarmNew));
-                        startForeground(ID_FOREGROUND, notification.build());
-                    }
+                AlarmFor14Days alarmNew = getNextUpcomingAlarm();
+                if (alarmNew != alarmOld && alarmNew != null) {
+                    notification.setContentText(getTextWhenNextAlarmWillBe(alarmNew));
+                    startForeground(ID_FOREGROUND, notification.build());
+                } else if (alarmNew == null) {
+                    notification.setContentText(getString(R.string.notify_no_upcoming_alarms));
+                    startForeground(ID_FOREGROUND, notification.build());
                 }
             }
         });
-
-
-//        Create and set alarms ringing
-        final AlarmManager alarmMgr = (AlarmManager) getBaseContext().getSystemService(Context.ALARM_SERVICE);
-        Intent receiverIntent = new Intent(this, ActivationAlarmServiceReceiver.class);
-        final PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, receiverIntent, 0);
-
-        alarmMgr.setExact(
-                AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + 5000,
-                alarmIntent
-        );
-
-//        final Context context = this;
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(10000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                Intent dialogIntent = new Intent(context, AlarmRingingActivity.class);
-//                dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(dialogIntent);
-//            }
-//        });
-//        thread.start();
-
-
-
-//        if (alarm != null){
-//            Date currentDate = new Date();
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTimeInMillis(SystemClock.elapsedRealtime() + (alarm.getAlarmBe().getTime() - currentDate.getTime()));
-//
-//            alarmMgr.setExact(
-//                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                    calendar.getTimeInMillis(),
-//                    alarmIntent
-//            );
-//        }
-//
-//        AlarmService.getInstance().addListener(new AlarmStaticService.OnDataSetChanged() {
-//            @Override
-//            public void dataChanged() {
-//                if (AlarmService.getInstance().getSortedActiveAlarmsFor14Days().size() != 0) {
-//                    AlarmFor14Days alarmNew = AlarmService.getInstance().getSortedActiveAlarmsFor14Days().get(0);
-//                    if (alarmNew != alarmOld) {
-//                        Date currentDate = new Date();
-//                        Calendar calendar = Calendar.getInstance();
-//                        calendar.setTimeInMillis(SystemClock.elapsedRealtime() + (alarmNew.getAlarmBe().getTime() - currentDate.getTime()));
-//                        alarmMgr.setExact(
-//                                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                                calendar.getTimeInMillis(),
-//                                alarmIntent
-//                        );
-//                    }
-//                }
-//            }
-//        });
-
-
-        //        alarmMgr.setInexactRepeating(
-//                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                SystemClock.elapsedRealtime() + 5000,
-//                AlarmManager.INTERVAL_HALF_HOUR,
-//                alarmIntent
-//        );
-
-        return START_STICKY;
     }
 
     private NotificationCompat.Builder createNotification(String contentTitle, String contentText) {
@@ -183,7 +162,8 @@ public class AlarmNotifyUpdateService extends Service {
                 .setContentIntent(pendingIntent);
     }
 
-    //    TODO: add listener when day is and and change text to be correct to next day
+//    TODO: add listener when day is and and change text to be correct to next day
+//    TODO: if alarm null set to no upcoming alarms
     private String getTextWhenNextAlarmWillBe(AlarmFor14Days alarm) {
         StringBuilder strTimeNextAlarm = new StringBuilder();
 
@@ -215,6 +195,15 @@ public class AlarmNotifyUpdateService extends Service {
         strTimeNextAlarm.append(df.format(alarm.getAlarmBe()));
 
         return strTimeNextAlarm.toString();
+    }
+
+    @Nullable
+    private AlarmFor14Days getNextUpcomingAlarm() {
+        List<AlarmFor14Days> sortedActiveAlarmsFor14Days = AlarmService.getInstance().getSortedActiveAlarmsFor14Days();
+        if (sortedActiveAlarmsFor14Days.size() != 0) {
+            return sortedActiveAlarmsFor14Days.get(0);
+        }
+        return null;
     }
 
     @Nullable

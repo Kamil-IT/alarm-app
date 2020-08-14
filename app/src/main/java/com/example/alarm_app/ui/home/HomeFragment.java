@@ -54,7 +54,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         textNextAlarmWillBe = root.findViewById(R.id.text_view_next_alarm_be);
         AlarmService.getInstance().addListener(new AlarmService.OnDataSetChanged() {
             @Override
@@ -73,13 +72,13 @@ public class HomeFragment extends Fragment {
 
     private void addNextAlarmTime() {
         String strNextAlar;
-        List<AlarmDto> sortedAlarmsWithOutNotActive = AlarmService.getInstance().getSortedActiveAlarms();
+        List<AlarmDto> sortedActiveAlarms = AlarmService.getInstance().getSortedActiveAlarms();
 
-        if (sortedAlarmsWithOutNotActive.size() == 0) {
+        if (sortedActiveAlarms.size() == 0) {
             strNextAlar = getString(R.string.text_view_next_alarm_be);
         }
         else {
-            AlarmDto alarmDto = sortedAlarmsWithOutNotActive.get(0);
+            AlarmDto alarmDto = sortedActiveAlarms.get(0);
             Time time = alarmDto.getTime();
 //                    Add day of week or date
             strNextAlar = time.toString();

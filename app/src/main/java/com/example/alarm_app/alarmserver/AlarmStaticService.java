@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AlarmStaticService  extends AlarmSorting{
+public class AlarmStaticService extends AlarmSorting{
 
 //    TODO: add another class to sort alarms
 

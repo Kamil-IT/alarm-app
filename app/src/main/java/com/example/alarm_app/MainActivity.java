@@ -4,15 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.alarm_app.alarmreciver.AlarmNotifyUpdateService;
+import com.example.alarm_app.alarmreciver.AlarmNotifyService;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
 import com.example.alarm_app.alarmserver.auth.Credentials;
-import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.gson.Gson;
-
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -21,7 +17,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import static com.example.alarm_app.alarmreciver.AlarmNotifyUpdateService.ID_EXTRA_NEXT_ALARM;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,15 +73,7 @@ public class MainActivity extends AppCompatActivity {
                         i = 5;
                     }
                 }
-                Intent intentService = new Intent(mContext, AlarmNotifyUpdateService.class);
-
-                List<AlarmFor14Days> sortedAlarms = AlarmService.getInstance().getSortedActiveAlarmsFor14Days();
-                if (sortedAlarms.size() != 0) {
-                    AlarmFor14Days alarm = sortedAlarms.get(0);
-                    Gson gson = new Gson();
-                    String alarm14Json = gson.toJson(alarm);
-                    intentService.putExtra(ID_EXTRA_NEXT_ALARM, alarm14Json);
-                }
+                Intent intentService = new Intent(mContext, AlarmNotifyService.class);
                 ContextCompat.startForegroundService(mContext, intentService);
             }
         });

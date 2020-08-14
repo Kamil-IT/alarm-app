@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".alarmreciver.ActivationAlarmServiceReceiver">
+        <receiver android:name=".alarmreciver.ActivationAlarmActivityReceiver">
         </receiver>
 
         <receiver android:name=".alarmreciver.AlarmNotifyRebootActivatorReceiver">
@@ -33,8 +33,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        <service android:name=".alarmreciver.AlarmNotifyUpdateService"></service>
-        <service android:name=".alarmreciver.ActivationAlarmActivityService"/>
+        <service android:name=".alarmreciver.AlarmNotifyService"></service>
     </application>
 
 
