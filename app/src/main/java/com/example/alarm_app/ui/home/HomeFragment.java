@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        TODO: add no connection to internet and make there button named retry
+//        TODO: add info about non connection to internet and add possible to reconnect
 
         return root;
     }

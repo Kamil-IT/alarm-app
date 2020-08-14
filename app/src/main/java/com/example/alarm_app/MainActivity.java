@@ -51,15 +51,11 @@ public class MainActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 5; i++) {
-                    if (AlarmService.getInstance().getAllAlarms().size() == 0) {
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        i = 5;
+                if (AlarmService.getInstance().getAllAlarms().size() == 0) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
                 Intent intentService = new Intent(mContext, AlarmNotifyService.class);
