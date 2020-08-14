@@ -9,6 +9,7 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -63,6 +64,7 @@ public class AddUpdateAlarmActivity extends AppCompatActivity {
     private TimePicker timePicker;
     private TextView textAlarmBe, textCostume, textRingtone, textTurnOfType, textSnooze;
     private EditText textLabel;
+    private ScrollView scrollViewMain;
     private Context mContext;
 
     private TurnOffType turnOffTypeGiven;
@@ -331,10 +333,14 @@ public class AddUpdateAlarmActivity extends AppCompatActivity {
         turnOffTypeGiven = alarmDefault.getAlarmTurnOffType();
         snoozeGiven = alarmDefault.getSnooze();
         ringTypeGiven = alarmDefault.getRingType();
+
+        scrollViewMain.setFillViewport(true);
     }
 
     private void initVariables() {
         mContext = this;
+
+        scrollViewMain = findViewById(R.id.scroll_view_fragment_add_alarm);
 
         btnCostume = findViewById(R.id.button_costume);
         btnRingtone = findViewById(R.id.button_ringtone);
