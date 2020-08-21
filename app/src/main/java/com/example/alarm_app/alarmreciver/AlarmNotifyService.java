@@ -162,6 +162,7 @@ public class AlarmNotifyService extends Service {
                 .setContentIntent(pendingIntent);
     }
 
+//    TODO: test it might have some errors
     private String getTextWhenNextAlarmWillBe(AlarmFor14Days alarm) {
         if (alarm == null){
             return getString(R.string.notify_no_upcoming_alarms);

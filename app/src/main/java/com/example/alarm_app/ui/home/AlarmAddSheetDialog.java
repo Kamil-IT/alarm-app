@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.alarm_app.ModifyAlarmActivity;
 import com.example.alarm_app.R;
-import com.example.alarm_app.ui.modifyalarm.AddUpdateAlarmActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import androidx.annotation.NonNull;
@@ -47,7 +47,7 @@ public class AlarmAddSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void setOnClickListenerButtonAddNewAlarm() {
-        Intent intent = new Intent(getContext(), AddUpdateAlarmActivity.class);
+        Intent intent = new Intent(getContext(), ModifyAlarmActivity.class);
         startActivity(intent);
     }
 }

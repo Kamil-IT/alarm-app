@@ -1,4 +1,4 @@
-package com.example.alarm_app.ui.modifyalarm;
+package com.example.alarm_app;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,14 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example.alarm_app.MainActivity;
-import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.example.alarm_app.alarmserver.model.AlarmFrequencyType;
@@ -52,7 +51,7 @@ import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.THURSDA
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.TUESDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.WEDNESDAY;
 
-public class AddUpdateAlarmActivity extends AppCompatActivity {
+public class ModifyAlarmActivity extends AppCompatActivity {
 
     public static final String EXTRA_ID_ALARM_UPDATE = "alarm_to_update";
     public static final String EXTRA_ID_IS_UPDATE = "is_to_update";
@@ -90,6 +89,8 @@ public class AddUpdateAlarmActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_add_alarm);
 
         prepareDataFromIntent();

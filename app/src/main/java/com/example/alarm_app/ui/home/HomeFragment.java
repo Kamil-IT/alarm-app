@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.alarm_app.ModifyAlarmActivity;
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.AlarmStaticService;
 import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.example.alarm_app.alarmserver.model.Time;
-import com.example.alarm_app.ui.modifyalarm.AddUpdateAlarmActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -38,6 +38,13 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+//        getActivity().getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+//        ActionBar actionBar = getActivity().getActionBar();
+//        if (actionBar != null) {
+//            actionBar.hide();
+//        }
+
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -55,7 +62,7 @@ public class HomeFragment extends Fragment {
         btnAddNewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AddUpdateAlarmActivity.class);
+                Intent intent = new Intent(getContext(), ModifyAlarmActivity.class);
                 startActivity(intent);
             }
         });
@@ -78,7 +85,7 @@ public class HomeFragment extends Fragment {
                         swipeRefresh.setRefreshing(false);
                     }
                 });
-                if (isNetworkConnected(requireContext())){
+                if (isNetworkConnected(requireContext())) {
                     AlarmService.getInstance().updateAlarmsFromServer(getContext());
                 } else {
                     Toast.makeText(getContext(), R.string.error_con_to_service, Toast.LENGTH_SHORT).show();

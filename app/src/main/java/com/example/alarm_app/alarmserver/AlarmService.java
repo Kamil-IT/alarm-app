@@ -22,12 +22,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import androidx.annotation.Nullable;
 
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.ALARMS_PATH;
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.BASE_SERVER_URL;
@@ -45,9 +44,9 @@ public class AlarmService extends AlarmStaticService{
         super();
     }
 
-    @Nullable
     public List<AlarmDto> getAllAlarms() {
-        return getAllStaticAlarms();
+        if (getAllStaticAlarms() != null) return  getAllStaticAlarms();
+        else return new ArrayList<>();
     }
 
     public void updateAlarmsFromServer(final Context context) {

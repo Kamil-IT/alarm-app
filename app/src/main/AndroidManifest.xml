@@ -19,9 +19,9 @@
 
 <!--        Activities-->
         <activity
-            android:name=".ui.alarmringing.AlarmRingingActivity"
+            android:name=".AlarmRingingActivity"
             android:showOnLockScreen="true" />
-        <activity android:name=".ui.modifyalarm.AddUpdateAlarmActivity" />
+        <activity android:name=".ModifyAlarmActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
