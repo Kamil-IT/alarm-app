@@ -15,22 +15,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
-        android:id="@+id/scroll_view_fragment_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_info_next_alarm"
-        android:layout_marginTop="-9dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_info_next_alarm">
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/scroll_view_fragment_home"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/text_info_next_alarm"-->
+<!--        android:layout_marginTop="-9dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/text_info_next_alarm">-->
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycle_view_next_alarms"
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recycle_view_next_alarms"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scrollbars="vertical"/>-->
+
+<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+
+    <include layout="@layout/content_alarms_recycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </ScrollView>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_info_next_alarm"
+            android:layout_marginTop="-9dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_info_next_alarm"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

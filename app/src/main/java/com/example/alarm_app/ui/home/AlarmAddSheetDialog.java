@@ -23,7 +23,7 @@ public class AlarmAddSheetDialog extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.sheet_add_alarm, container, false);
+        View v = inflater.inflate(R.layout.dialog_add_alarm, container, false);
 
         btnAddNewAlarm = v.findViewById(R.id.button_add_new_alarm_sheet);
         btnCancel = v.findViewById(R.id.button_cancel_new_alarm_sheet);

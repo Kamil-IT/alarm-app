@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
+import com.example.alarm_app.alarmserver.AlarmStaticService;
 import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.example.alarm_app.alarmserver.model.Time;
 import com.example.alarm_app.ui.modifyalarm.AddUpdateAlarmActivity;
@@ -21,6 +23,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.isNetworkConnected;
 
 public class HomeFragment extends Fragment {
 
@@ -28,6 +33,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private FloatingActionButton btnAddNewAlarm;
     private TextView textNextAlarmWillBe;
+    private SwipeRefreshLayout swipeRefresh;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +68,26 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        swipeRefresh = root.findViewById(R.id.swipe_to_refresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                AlarmService.getInstance().addListener(new AlarmStaticService.OnDataSetChanged() {
+                    @Override
+                    public void dataChanged() {
+                        swipeRefresh.setRefreshing(false);
+                    }
+                });
+                if (isNetworkConnected(requireContext())){
+                    AlarmService.getInstance().updateAlarmsFromServer(getContext());
+                } else {
+                    Toast.makeText(getContext(), R.string.error_con_to_service, Toast.LENGTH_SHORT).show();
+                    swipeRefresh.setRefreshing(false);
+                }
+
+            }
+        });
+
 //        TODO: add info about non connection to internet and add possible to reconnect
 
         return root;
@@ -79,8 +105,7 @@ public class HomeFragment extends Fragment {
 
         if (sortedActiveAlarms.size() == 0) {
             strNextAlar = getString(R.string.text_view_next_alarm_be);
-        }
-        else {
+        } else {
             AlarmDto alarmDto = sortedActiveAlarms.get(0);
             Time time = alarmDto.getTime();
 //                    Add day of week or date
