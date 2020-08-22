@@ -12,7 +12,6 @@ import com.example.alarm_app.alarmserver.model.AlarmDto;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -75,11 +74,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
     @Override
     public int getItemCount() {
-        List<AlarmDto> allAlarms = alarmService.getAllAlarms();
-        if (allAlarms == null) {
-            return 0;
-        }
-        return allAlarms.size();
+        return alarmService.getAllAlarms().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -28,6 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.ALARMS_PATH;
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.BASE_SERVER_URL;
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.getBasicHeaders;
@@ -44,6 +46,7 @@ public class AlarmService extends AlarmStaticService{
         super();
     }
 
+    @NonNull
     public List<AlarmDto> getAllAlarms() {
         if (getAllStaticAlarms() != null) return  getAllStaticAlarms();
         else return new ArrayList<>();

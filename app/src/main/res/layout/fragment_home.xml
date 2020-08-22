@@ -25,7 +25,7 @@
                 android:layout_height="19dp"
                 android:text="@string/text_view_next_alarm"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/text_view_next_alarm_be"
@@ -36,7 +36,7 @@
                 android:text="@string/text_view_next_alarm_be"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewNextAlarm" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewNextAlarm"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
