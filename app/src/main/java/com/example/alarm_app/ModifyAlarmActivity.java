@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.ArrayRes;
 import androidx.annotation.StringRes;
@@ -90,7 +91,7 @@ public class ModifyAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_add_alarm);
 
         prepareDataFromIntent();
@@ -106,6 +107,7 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         isToUpdate = getIntent().getBooleanExtra(EXTRA_ID_IS_UPDATE, false);
         if (alarmDto != null){
             alarmDefault = alarmDto;
+            isToUpdate = true;
         }
     }
 
@@ -220,13 +222,23 @@ public class ModifyAlarmActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                List<com.example.alarm_app.alarmserver.model.Date> dates = new ArrayList<>();
+                                if (alarmFrequencyTypes.contains(SINGLE)){
+                                    Calendar currentDate = Calendar.getInstance();
+                                    currentDate.setTime(new Date());
+                                    dates.add(new com.example.alarm_app.alarmserver.model.Date(
+                                            currentDate.get(Calendar.DAY_OF_MONTH),
+                                            currentDate.get(Calendar.MONTH) + 1,
+                                            currentDate.get(Calendar.YEAR)));
+                                }
+
                                 AlarmDto alarmDto = new AlarmDto(
                                         label,
                                         time,
                                         ringType,
                                         alarmFrequencyTypes,
                                         true,
-                                        Collections.<com.example.alarm_app.alarmserver.model.Date>emptyList(),
+                                        dates,
                                         turnOffType,
                                         snooze
                                 );
@@ -236,7 +248,7 @@ public class ModifyAlarmActivity extends AppCompatActivity {
                                     alarmDto.setRingName(alarmDefault.getRingName());
                                     alarmDto.setTimeCreateInMillis(System.currentTimeMillis());
                                     AlarmService.getInstance().updateAlarm(mContext, alarmDto);
-                                }else {
+                                } else {
                                     AlarmService.getInstance().creteAlarm(mContext, alarmDto);
                                 }
                                 Intent intent = new Intent(mContext, MainActivity.class);
