@@ -34,12 +34,15 @@ public class HomeFragment extends Fragment {
     private FloatingActionButton btnAddNewAlarm;
     private TextView textNextAlarmWillBe;
     private SwipeRefreshLayout swipeRefresh;
+    private String noUpcomingAlarms;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        noUpcomingAlarms = getContext().getString(R.string.text_view_next_alarm_be);
 
 //        Recycle view all alarms
         recyclerView = root.findViewById(R.id.recycle_view_all_alarms);
@@ -103,8 +106,7 @@ public class HomeFragment extends Fragment {
         List<AlarmDto> sortedActiveAlarms = AlarmService.getInstance().getSortedActiveAlarms();
 
         if (sortedActiveAlarms.size() == 0) {
-//            TODO: Sometimes null
-            strNextAlar = getContext().getString(R.string.text_view_next_alarm_be);
+            strNextAlar = noUpcomingAlarms;
         } else {
             AlarmDto alarmDto = sortedActiveAlarms.get(0);
             Time time = alarmDto.getTime();
