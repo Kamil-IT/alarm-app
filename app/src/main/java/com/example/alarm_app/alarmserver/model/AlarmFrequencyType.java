@@ -2,9 +2,6 @@ package com.example.alarm_app.alarmserver.model;
 
 public enum AlarmFrequencyType {
 
-    //    Single
-    SINGLE(11),
-
     //    Custom
     CUSTOM(10),
 

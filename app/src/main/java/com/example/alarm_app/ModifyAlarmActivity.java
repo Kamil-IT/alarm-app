@@ -46,7 +46,6 @@ import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.CUSTOM;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.FRIDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.MONDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.SATURDAY;
-import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.SINGLE;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.SUNDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.THURSDAY;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.TUESDAY;
@@ -223,7 +222,7 @@ public class ModifyAlarmActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 List<com.example.alarm_app.alarmserver.model.Date> dates = new ArrayList<>();
-                                if (alarmFrequencyTypes.contains(SINGLE)){
+                                if (alarmFrequencyTypes.contains(CUSTOM)){
                                     Calendar currentDate = Calendar.getInstance();
                                     currentDate.setTime(new Date());
                                     dates.add(new com.example.alarm_app.alarmserver.model.Date(
@@ -391,7 +390,7 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         if (chipSat.isChecked()) alarmFrequencyTypes.add(SATURDAY);
         if (chipSun.isChecked()) alarmFrequencyTypes.add(SUNDAY);
         if (textLabel.getText().toString().length() != 0) alarmFrequencyTypes.add(CUSTOM);
-        if (alarmFrequencyTypes.size() == 0) alarmFrequencyTypes.add(SINGLE);
+        if (alarmFrequencyTypes.size() == 0) alarmFrequencyTypes.add(CUSTOM);
         return alarmFrequencyTypes;
     }
 }

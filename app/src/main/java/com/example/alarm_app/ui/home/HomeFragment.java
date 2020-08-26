@@ -103,7 +103,8 @@ public class HomeFragment extends Fragment {
         List<AlarmDto> sortedActiveAlarms = AlarmService.getInstance().getSortedActiveAlarms();
 
         if (sortedActiveAlarms.size() == 0) {
-            strNextAlar = getString(R.string.text_view_next_alarm_be);
+//            TODO: Sometimes null
+            strNextAlar = getContext().getString(R.string.text_view_next_alarm_be);
         } else {
             AlarmDto alarmDto = sortedActiveAlarms.get(0);
             Time time = alarmDto.getTime();
