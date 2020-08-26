@@ -24,7 +24,6 @@ public class AlarmSorting {
     }
 
     //    Sorting
-//      TODO check is time added to entities
     protected List<AlarmDto> getStaticAlarmsSortedByTime(List<AlarmDto> alarmsDto) {
         List<AlarmDto> alarmsToSort = alarmsDto;
         if (alarmsToSort.isEmpty() || alarmsToSort.size() == 1) return alarmsToSort;
@@ -64,7 +63,6 @@ public class AlarmSorting {
     }
 
     //    Comparators for sorting
-    //    TODO: test it
     public static class AlarmDtoComparator implements Comparator<AlarmDto> {
         //        1 -> to o1 mniejsze
         @Override

@@ -30,7 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import static java.util.Calendar.DAY_OF_WEEK;
-import static java.util.Calendar.HOUR;
+import static java.util.Calendar.HOUR_OF_DAY;
 import static java.util.Calendar.MINUTE;
 import static java.util.Calendar.SECOND;
 
@@ -162,50 +162,51 @@ public class AlarmNotifyService extends Service {
                 .setContentIntent(pendingIntent);
     }
 
-//    TODO: test it might have some errors
-    private String getTextWhenNextAlarmWillBe(AlarmFor14Days alarm) {
+    public String getTextWhenNextAlarmWillBe(AlarmFor14Days alarm) {
         if (alarm == null){
+            return getString(R.string.notify_no_upcoming_alarms);
+        }
+        else if (alarm.getAlarmBe().before(new Date())){
             return getString(R.string.notify_no_upcoming_alarms);
         }
 
         StringBuilder strTimeNextAlarm = new StringBuilder();
+        long dayInMillis = 86400000L;
 
+//        End today
         Calendar endOfCurrentDay = Calendar.getInstance();
         endOfCurrentDay.setTime(new Date());
-        endOfCurrentDay.set(HOUR, 23);
+        endOfCurrentDay.set(HOUR_OF_DAY, 23);
         endOfCurrentDay.set(MINUTE, 59);
         endOfCurrentDay.set(SECOND, 59);
+//        End tomorrow
+        Calendar endOfTomorrowDay = Calendar.getInstance();
+        endOfTomorrowDay.setTime(endOfCurrentDay.getTime());
+        endOfTomorrowDay.setTimeInMillis(endOfCurrentDay.getTimeInMillis() + dayInMillis);
+//        End Week
+        Calendar endOfWeek = Calendar.getInstance();
+        endOfWeek.setTime(endOfTomorrowDay.getTime());
+        endOfWeek.setTimeInMillis(endOfTomorrowDay.getTimeInMillis() + dayInMillis * 5);
+
+
         if (alarm.getAlarmBe().before(endOfCurrentDay.getTime())) {
             strTimeNextAlarm.append(getString(R.string.today));
         }
-
-        Calendar endOfSecondDay = endOfCurrentDay;
-        long dayInMillis = 86400000L;
-        endOfSecondDay.setTimeInMillis(endOfCurrentDay.getTimeInMillis() + dayInMillis);
-        if (alarm.getAlarmBe().before(endOfCurrentDay.getTime())) {
+        else if (alarm.getAlarmBe().before(endOfTomorrowDay.getTime())) {
             strTimeNextAlarm.append(getString(R.string.tomorrow));
         }
-
-        if (alarm.getAlarmBe().after(endOfCurrentDay.getTime())) {
-            Calendar endOfTheWeek = endOfSecondDay;
-            endOfTheWeek.setTimeInMillis(endOfCurrentDay.getTimeInMillis() + dayInMillis * 5);
-            if (alarm.getAlarmBe().before(endOfTheWeek.getTime())) {
-                endOfCurrentDay.setTime(alarm.getAlarmBe());
-                strTimeNextAlarm.append(
-                        getResources()
-                                .getStringArray(
-                                        R.array.week_days)[endOfCurrentDay.get(DAY_OF_WEEK)]
-                );
-            }
+        else if (alarm.getAlarmBe().before(endOfWeek.getTime())) {
+            endOfCurrentDay.setTime(alarm.getAlarmBe());
+            strTimeNextAlarm.append(
+                    getResources().getStringArray(
+                                    R.array.week_days)[endOfCurrentDay.get(DAY_OF_WEEK)]
+            );
         }
-
-        Calendar endOfTheWeek = endOfSecondDay;
-        endOfTheWeek.setTimeInMillis(endOfCurrentDay.getTimeInMillis() + dayInMillis * 5);
-        if (alarm.getAlarmBe().after(endOfTheWeek.getTime())) {
+        else {
             @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             strTimeNextAlarm.append(df.format(alarm.getAlarmBe()));
-
         }
+
         strTimeNextAlarm.append(", ");
         @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("HH:mm:ss");
         strTimeNextAlarm.append(df.format(alarm.getAlarmBe()));
