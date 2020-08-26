@@ -111,10 +111,13 @@ public class ModifyAlarmActivity extends AppCompatActivity {
     }
 
     private void createListenersToSimpleChoose() {
-        timePicker.setOnClickListener(new View.OnClickListener() {
+        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
-            public void onClick(View v) {
-//                TODO: Implement it as counter to alarm start
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                StringBuilder timeToStartAlarm = new StringBuilder();
+                timeToStartAlarm.append(getString(R.string.alarm_will_start_in));
+                timeToStartAlarm.append(" ");
+//                TODO: implement it like counter to start
                 textAlarmBe.setText("");
             }
         });
