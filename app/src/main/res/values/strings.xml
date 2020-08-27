@@ -58,6 +58,7 @@
     <string name="stop_alarm">Stop alarm</string>
     <string name="error_con_to_service">Error while connection to service</string>
     <string name="alarm_will_start_in">Alarm will start in</string>
+
     <string-array name="week_days">
         <item>Sun</item>
         <item>Mon</item>
@@ -89,5 +90,20 @@
         <item>30 minutes</item>
         <item>60 minutes</item>
     </string-array>
+
+<!--    Preferences-->
+    <string name="feedback_key">feedback</string>
+    <string name="feedback_title">Send feedback</string>
+    <string name="account_key">account</string>
+    <string name="account_title">Account</string>
+    <string name="account_summary_not_connected">Not connected</string>
+    <string name="auto_sync_key">auto_sync</string>
+    <string name="auto_sync_title">Enable auto sync</string>
+    <string name="auto_sync_summary">Enable or disable data sync</string>
+    <string name="sync_interval_key">sync_interval</string>
+    <string name="sync_interval_title">Sync interval</string>
+    <string name="sync_interval_summary">Define how often sync will be performed</string>
+    <string name="report_tech_issues_and_features">Report technical issues or suggest new features</string>
+
 
 </resources>

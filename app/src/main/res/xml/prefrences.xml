@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="Sync Information"
+        android:key="sync_category">
+
+        <SwitchPreferenceCompat
+            app:key="@string/auto_sync_key"
+            app:title="@string/auto_sync_title"
+            android:summary="@string/auto_sync_summary"/>
+
+        <Preference
+            app:key="@string/sync_interval_key"
+            app:title="@string/sync_interval_title"
+            app:summary="@string/sync_interval_summary"
+            app:dependency="@string/auto_sync_key"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Account Information"
+        android:key="account_category">
+
+        <Preference
+            app:key="@string/account_key"
+            app:title="@string/account_title"
+            app:summary="@string/account_summary_not_connected" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Feedback"
+        android:key="feedback_category">
+
+        <Preference
+            app:key="@string/feedback_key"
+            app:title="@string/feedback_title"
+            app:summary="@string/report_tech_issues_and_features"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
