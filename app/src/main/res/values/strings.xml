@@ -92,17 +92,27 @@
     </string-array>
 
 <!--    Preferences-->
+    <string name="feedback_category_key">feedback_category</string>
+    <string name="feedback_category_title">feedback</string>
     <string name="feedback_key">feedback</string>
     <string name="feedback_title">Send feedback</string>
+
+    <string name="account_category_title">Account Information</string>
+    <string name="account_category_key">account_category</string>
     <string name="account_key">account</string>
     <string name="account_title">Account</string>
     <string name="account_summary_not_connected">Not connected</string>
+
     <string name="auto_sync_key">auto_sync</string>
+    <string name="auto_sync_category_key">sync_category</string>
     <string name="auto_sync_title">Enable auto sync</string>
+    <string name="auto_sync_category_title">Sync Information</string>
     <string name="auto_sync_summary">Enable or disable data sync</string>
+
     <string name="sync_interval_key">sync_interval</string>
     <string name="sync_interval_title">Sync interval</string>
     <string name="sync_interval_summary">Define how often sync will be performed</string>
+
     <string name="report_tech_issues_and_features">Report technical issues or suggest new features</string>
 
 

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="Sync Information"
-        android:key="sync_category">
+        android:title="@string/auto_sync_category_title"
+        android:key="@string/auto_sync_category_key">
 
         <SwitchPreferenceCompat
             app:key="@string/auto_sync_key"
@@ -20,8 +20,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Account Information"
-        android:key="account_category">
+        android:title="@string/account_category_title"
+        android:key="@string/account_category_key">
 
         <Preference
             app:key="@string/account_key"
@@ -31,8 +31,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Feedback"
-        android:key="feedback_category">
+        android:title="@string/feedback_category_title"
+        android:key="@string/feedback_category_key">
 
         <Preference
             app:key="@string/feedback_key"
