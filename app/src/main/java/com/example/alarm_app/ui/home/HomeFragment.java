@@ -1,5 +1,6 @@
 package com.example.alarm_app.ui.home;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,11 +12,14 @@ import android.widget.Toast;
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.AlarmStaticService;
-import com.example.alarm_app.alarmserver.model.AlarmDto;
-import com.example.alarm_app.alarmserver.model.Time;
+import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
 import com.example.alarm_app.ui.ModifyAlarmActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -26,6 +30,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.isNetworkConnected;
+import static java.util.Calendar.DAY_OF_WEEK;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.SECOND;
 
 public class HomeFragment extends Fragment {
 
@@ -66,7 +74,9 @@ public class HomeFragment extends Fragment {
         AlarmService.getInstance().addListener(new AlarmService.OnDataSetChanged() {
             @Override
             public void dataChanged() {
-                addNextAlarmTime();
+                if (getContext() != null){
+                    addNextAlarmTime();
+                }
             }
         });
 
@@ -103,16 +113,65 @@ public class HomeFragment extends Fragment {
 
     private void addNextAlarmTime() {
         String strNextAlar;
-        List<AlarmDto> sortedActiveAlarms = AlarmService.getInstance().getSortedActiveAlarms();
+        List<AlarmFor14Days> sortedActiveAlarms = AlarmService.getInstance().getSortedActiveAlarmsFor14Days();
 
         if (sortedActiveAlarms.size() == 0) {
             strNextAlar = noUpcomingAlarms;
         } else {
-            AlarmDto alarmDto = sortedActiveAlarms.get(0);
-            Time time = alarmDto.getTime();
-//                    Add day of week or date
-            strNextAlar = time.toString();
+            strNextAlar = getTextWhenNextAlarmWillBe(sortedActiveAlarms.get(0));
         }
         textNextAlarmWillBe.setText(strNextAlar);
+    }
+
+    public String getTextWhenNextAlarmWillBe(AlarmFor14Days alarm) {
+        if (alarm == null){
+            return getString(R.string.notify_no_upcoming_alarms);
+        }
+        else if (alarm.getAlarmBe().before(new Date())){
+            return getString(R.string.notify_no_upcoming_alarms);
+        }
+
+        StringBuilder strTimeNextAlarm = new StringBuilder();
+        long dayInMillis = 86400000L;
+
+//        End today
+        Calendar endOfCurrentDay = Calendar.getInstance();
+        endOfCurrentDay.setTime(new Date());
+        endOfCurrentDay.set(HOUR_OF_DAY, 23);
+        endOfCurrentDay.set(MINUTE, 59);
+        endOfCurrentDay.set(SECOND, 59);
+//        End tomorrow
+        Calendar endOfTomorrowDay = Calendar.getInstance();
+        endOfTomorrowDay.setTime(endOfCurrentDay.getTime());
+        endOfTomorrowDay.setTimeInMillis(endOfCurrentDay.getTimeInMillis() + dayInMillis);
+//        End Week
+        Calendar endOfWeek = Calendar.getInstance();
+        endOfWeek.setTime(endOfTomorrowDay.getTime());
+        endOfWeek.setTimeInMillis(endOfTomorrowDay.getTimeInMillis() + dayInMillis * 5);
+
+
+        if (alarm.getAlarmBe().before(endOfCurrentDay.getTime())) {
+            strTimeNextAlarm.append(getContext().getString(R.string.today));
+        }
+        else if (alarm.getAlarmBe().before(endOfTomorrowDay.getTime())) {
+            strTimeNextAlarm.append(getContext().getString(R.string.tomorrow));
+        }
+        else if (alarm.getAlarmBe().before(endOfWeek.getTime())) {
+            endOfCurrentDay.setTime(alarm.getAlarmBe());
+            strTimeNextAlarm.append(
+                    getContext().getResources().getStringArray(
+                            R.array.week_days)[endOfCurrentDay.get(DAY_OF_WEEK)]
+            );
+        }
+        else {
+            @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            strTimeNextAlarm.append(df.format(alarm.getAlarmBe()));
+        }
+
+        strTimeNextAlarm.append(", ");
+        @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        strTimeNextAlarm.append(df.format(alarm.getAlarmBe()));
+
+        return strTimeNextAlarm.toString();
     }
 }

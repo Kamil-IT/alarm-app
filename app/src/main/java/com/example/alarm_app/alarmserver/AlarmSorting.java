@@ -111,7 +111,17 @@ public class AlarmSorting {
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(currentTime);
                 if (type.getId() == dayOfCurrentWeek) {
-                    dates.add(new java.util.Date());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(new java.util.Date(currentTime));
+                    calendar.set(Calendar.HOUR_OF_DAY, alarm.getTime().getHours());
+                    calendar.set(Calendar.MINUTE, alarm.getTime().getMinutes());
+                    calendar.set(Calendar.SECOND, alarm.getTime().getSeconds());
+                    if (calendar.getTime().before(new java.util.Date(currentTime))){
+                        dates.add(new java.util.Date(currentTime + 86400000 * 7));
+                    }
+                    else {
+                        dates.add(new java.util.Date(currentTime));
+                    }
                 } else if (type.getId() > dayOfCurrentWeek) {
                     cal.add(Calendar.DAY_OF_MONTH, (int) (type.getId() - dayOfCurrentWeek));
                     dates.add(cal.getTime());
@@ -130,11 +140,6 @@ public class AlarmSorting {
                 calendar.set(Calendar.HOUR_OF_DAY, alarmTime.getHours());
                 calendar.set(Calendar.MINUTE, alarmTime.getMinutes());
                 calendar.set(Calendar.SECOND, alarmTime.getSeconds());
-
-                Calendar calToCheckCorrect = Calendar.getInstance();
-                if (calToCheckCorrect.get(Calendar.DAY_OF_MONTH) != calendar.get(Calendar.DAY_OF_MONTH)) {
-                    calendar.set(Calendar.DAY_OF_MONTH, calendarCurrentTime.get(Calendar.DAY_OF_MONTH));
-                }
 
                 datesToReturn.add(calendar.getTime());
             }

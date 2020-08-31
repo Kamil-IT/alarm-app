@@ -69,8 +69,6 @@ public class AlarmNextRecyclerViewAdapter extends RecyclerView.Adapter<AlarmNext
             @Override
             public void onClick(View v) {
                 alarm.setActive(holder.checkBoxIsActive.isChecked());
-//                TODO: disable next alarm add it after create service for keeping all alarms
-//                alarmService.updateAlarm(mContext, alarm);
             }
         });
     }
