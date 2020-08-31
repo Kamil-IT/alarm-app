@@ -6,19 +6,15 @@ import android.content.Intent;
 
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.auth.AuthTokenHolder;
-import com.example.alarm_app.alarmserver.auth.Credentials;
+import com.example.alarm_app.alarmserver.auth.CredentialsHolder;
 
 public class AlarmUpdateDataReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-//        TODO: if credentials changed, generate new token
-        //        Auth
-        AuthTokenHolder.getINSTANCE()
-                //                TODO: Make it static
-                .setCredentials(new Credentials("admin", "admin"));
-
+//        Auth
+        CredentialsHolder.getInstance().setShearPreferences(context);
         if (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
             AuthTokenHolder.getINSTANCE()
                     .generateToken(context);

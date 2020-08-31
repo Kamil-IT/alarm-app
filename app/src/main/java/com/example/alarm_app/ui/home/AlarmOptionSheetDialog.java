@@ -7,18 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.alarm_app.ModifyAlarmActivity;
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.model.AlarmDto;
+import com.example.alarm_app.ui.ModifyAlarmActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.Gson;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import static com.example.alarm_app.ModifyAlarmActivity.EXTRA_ID_ALARM_UPDATE;
-import static com.example.alarm_app.ModifyAlarmActivity.EXTRA_ID_IS_UPDATE;
+import static com.example.alarm_app.ui.ModifyAlarmActivity.EXTRA_ID_ALARM_UPDATE;
+import static com.example.alarm_app.ui.ModifyAlarmActivity.EXTRA_ID_IS_UPDATE;
 
 public class AlarmOptionSheetDialog extends BottomSheetDialogFragment {
 

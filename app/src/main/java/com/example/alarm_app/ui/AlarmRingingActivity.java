@@ -1,4 +1,4 @@
-package com.example.alarm_app;
+package com.example.alarm_app.ui;
 
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
 import com.google.gson.Gson;

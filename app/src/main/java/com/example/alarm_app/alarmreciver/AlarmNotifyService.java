@@ -28,6 +28,7 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 
 import static java.util.Calendar.DAY_OF_WEEK;
 import static java.util.Calendar.HOUR_OF_DAY;
@@ -88,14 +89,29 @@ public class AlarmNotifyService extends Service {
         });
 
 //        Create updater for data from server
-        alarmMgr.setInexactRepeating(
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                System.currentTimeMillis() +
-//                            TODO: this have to be set by user after add setting
-                        AlarmManager.INTERVAL_HOUR,
-                AlarmManager.INTERVAL_HALF_HOUR,
-                PendingIntent.getBroadcast(this, 0, new Intent(getBaseContext(), AlarmUpdateDataReceiver.class), 0)
-        );
+        if (PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.auto_sync_key), false)){
+            long interval = AlarmManager.INTERVAL_HALF_HOUR / 30
+                    * PreferenceManager
+                    .getDefaultSharedPreferences(this)
+                    .getInt(getString(R.string.sync_interval_key), 30);
+
+            alarmMgr.setInexactRepeating(
+                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    System.currentTimeMillis() + interval,
+                    interval,
+                    PendingIntent.getBroadcast(this, 0, new Intent(getBaseContext(), AlarmUpdateDataReceiver.class), 0)
+            );
+        }
+        else {
+            alarmMgr.setInexactRepeating(
+                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR,
+                    AlarmManager.INTERVAL_HALF_HOUR,
+                    PendingIntent.getBroadcast(this, 0, new Intent(getBaseContext(), AlarmUpdateDataReceiver.class), 0)
+            );
+        }
 
         return START_STICKY;
     }

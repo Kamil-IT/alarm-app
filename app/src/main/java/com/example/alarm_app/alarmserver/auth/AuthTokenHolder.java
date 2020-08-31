@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.alarm_app.alarmserver.AlarmService;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -39,7 +40,6 @@ public class AuthTokenHolder {
     private static final int MIN_IN_MILLIS = 60000;
     private Calendar tokenValidation;
 
-    private Credentials credentials;
     private Calendar tokenTakenTime;
     private String token;
 
@@ -48,6 +48,14 @@ public class AuthTokenHolder {
         tokenValidation.setTimeInMillis(MIN_IN_MILLIS * 30);
         tokenTakenTime = Calendar.getInstance();
         tokenTakenTime.setTimeInMillis(System.currentTimeMillis() - MIN_IN_MILLIS * 30);
+
+        CredentialsHolder.getInstance().addCredentialsChangedListener(new CredentialsHolder.CredentialsChangedListener() {
+            @Override
+            public void OnCredentialChanged(Context context) {
+                generateToken(context);
+                AlarmService.getInstance().dataChanged();
+            }
+        });
     }
 
     public static AuthTokenHolder getINSTANCE() {
@@ -58,20 +66,12 @@ public class AuthTokenHolder {
         return tokenValidation;
     }
 
-    public Credentials getCredentials() {
-        return credentials;
-    }
-
     public Calendar getTokenTakenTime() {
         return tokenTakenTime;
     }
 
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
-    }
-
     public Map<String, String> getTokenAsAuthMap() {
-        if (!isTokenReadyToUse()){
+        if (!isTokenReadyToUse()) {
             throw new IllegalArgumentException("Token isn't ready to use");
         }
         Map<String, String> header = new HashMap<>();
@@ -84,12 +84,10 @@ public class AuthTokenHolder {
 
         JSONObject jsonToSend = null;
         try {
-            jsonToSend = new JSONObject(credentials.getJsonUsernamePassword());
+            jsonToSend = new JSONObject(CredentialsHolder.getInstance().getJsonUsernamePassword());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        final StringBuilder responseToReturn = new StringBuilder();
 
         JsonObjectRequest objectRequest = new JsonObjectRequest(
                 Request.Method.POST,
@@ -106,7 +104,6 @@ public class AuthTokenHolder {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("Token generator", error.toString());
-
                     }
                 }
         ) {
@@ -130,7 +127,7 @@ public class AuthTokenHolder {
                 System.currentTimeMillis());
     }
 
-    private void handlerErrorNoInternet(final Context context){
+    private void handlerErrorNoInternet(final Context context) {
         //        If non connection to internet then wait for it
         Thread thread = new Thread(new Runnable() {
             @Override

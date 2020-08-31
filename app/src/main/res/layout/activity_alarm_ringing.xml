@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlarmRingingActivity">
+    tools:context=".ui.AlarmRingingActivity">
 
 <!--    TODO: after user get 3 buttons on bottom cannot click snooze-->
 

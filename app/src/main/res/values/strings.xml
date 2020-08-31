@@ -114,6 +114,18 @@
     <string name="sync_interval_summary">Define how often sync will be performed</string>
 
     <string name="report_tech_issues_and_features">Report technical issues or suggest new features</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="sing_in">Sing in</string>
+    <string name="to_apply_changed_settings_restart_device">To apply changed settings restart device</string>
+    <string-array name="sync_interval_time">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hour</item>
+        <item>6 hour</item>
+        <item>12 hour</item>
+    </string-array>
 
 
 </resources>
