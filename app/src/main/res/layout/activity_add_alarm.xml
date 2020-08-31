@@ -153,17 +153,23 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/button_turn_off_type" />
 
-                <EditText
-                    android:id="@+id/label"
-                    android:layout_width="200dp"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:background="@color/cardview_shadow_start_color"
-                    android:hint="@string/label"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/button_snooze"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:padding="10dp">
+                    <EditText
+                        android:id="@+id/label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/label"
+                        android:inputType="text"
+                        android:autofillHints="textEmailAddress"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/text_turn_of_type"
