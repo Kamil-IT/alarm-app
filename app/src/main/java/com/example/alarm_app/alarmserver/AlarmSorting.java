@@ -22,8 +22,6 @@ public class AlarmSorting {
 
     public static final long WEEK_IN_MILLIS = 604800000L;
 
-//    TODO: PROBLEMS witch sorting alarm in night :)
-
     public AlarmSorting() {
     }
 

@@ -232,13 +232,21 @@ public class ModifyAlarmActivity extends AppCompatActivity {
                         if (alarmFrequencyTypes.contains(CUSTOM) && textCostume.getText().toString().length() == 0) {
                             Calendar currentDate = Calendar.getInstance();
                             currentDate.setTime(new Date());
-                            dates.add(new com.example.alarm_app.alarmserver.model.Date(
-                                    currentDate.get(Calendar.DAY_OF_MONTH),
-                                    currentDate.get(Calendar.MONTH) + 1,
-                                    currentDate.get(Calendar.YEAR)));
-                        }
-//                                Checked is costume date
-                        if (!finalCostumeDate.equals("")) {
+                            currentDate.set(Calendar.HOUR_OF_DAY, time.getHours());
+                            currentDate.set(Calendar.MINUTE, time.getMinutes());
+                            currentDate.set(Calendar.SECOND, time.getSeconds());
+                            if (currentDate.getTime().before(new Date())){
+                                dates.add(new com.example.alarm_app.alarmserver.model.Date(
+                                        currentDate.get(Calendar.DAY_OF_MONTH) + 1,
+                                        currentDate.get(Calendar.MONTH) + 1,
+                                        currentDate.get(Calendar.YEAR)));
+                            } else {
+                                dates.add(new com.example.alarm_app.alarmserver.model.Date(
+                                        currentDate.get(Calendar.DAY_OF_MONTH),
+                                        currentDate.get(Calendar.MONTH) + 1,
+                                        currentDate.get(Calendar.YEAR)));
+                            }
+                        } else if (!finalCostumeDate.equals("")) {
                             dates.add(new com.example.alarm_app.alarmserver.model.Date(
                                     Integer.valueOf(finalCostumeDate.substring(0, 2)),
                                     Integer.valueOf(finalCostumeDate.substring(3, 5)),
@@ -285,6 +293,8 @@ public class ModifyAlarmActivity extends AppCompatActivity {
                 stringBuilder.append(getResources().getStringArray(
                         R.array.week_days)[(int) frequencyType.getId() - 1])
                         .append(" ");
+            } else if (frequencyType == CUSTOM){
+                stringBuilder.append(getBaseContext().getString(R.string.single)).append(" ");
             }
         }
         infoAboutValues.add("Alarm frequency types: " + stringBuilder.toString());

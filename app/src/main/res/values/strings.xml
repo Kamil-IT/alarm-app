@@ -58,6 +58,7 @@
     <string name="stop_alarm">Stop alarm</string>
     <string name="error_con_to_service">Error while connection to service</string>
     <string name="alarm_will_start_in">Alarm will start in</string>
+    <string name="single">Single</string>
 
     <string-array name="week_days">
         <item>Sun</item>
