@@ -59,7 +59,6 @@ public class AlarmNextRecyclerViewAdapter extends RecyclerView.Adapter<AlarmNext
         holder.checkBoxIsActive.setChecked(alarm.getActive());
         holder.checkBoxIsActive.setVisibility(View.GONE);
         holder.textAlarmTime.setText(time.toString());
-//        TODO: add costumes message when create enum for it
         holder.textDaysWhenAlarmPlay.setText(df.format(alarm.getAlarmBe()));
         holder.textDesc.setText(alarm.getName());
         holder.btnOption.setVisibility(View.GONE);

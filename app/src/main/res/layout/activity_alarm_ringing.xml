@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.AlarmRingingActivity">
 
-<!--    TODO: after user get 3 buttons on bottom cannot click snooze-->
-
     <Button
         android:id="@+id/button_snooze"
         android:layout_width="match_parent"

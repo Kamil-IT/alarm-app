@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_next_alarm_black_24dp"
         android:title="@string/title_next_alarm" />
 
-<!--    TODO: add it future-->
+<!--    TODO: add it in future-->
 <!--    <item-->
 <!--        android:id="@+id/navigation_timer"-->
 <!--        android:icon="@drawable/ic_timer_black_24dp"-->

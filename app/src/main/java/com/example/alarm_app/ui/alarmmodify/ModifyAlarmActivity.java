@@ -119,16 +119,15 @@ public class ModifyAlarmActivity extends AppCompatActivity {
     }
 
     private void createListenersToSimpleChoose() {
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                StringBuilder timeToStartAlarm = new StringBuilder();
-                timeToStartAlarm.append(getString(R.string.alarm_will_start_in));
-                timeToStartAlarm.append(" ");
-//                TODO: implement it like counter to start
-                textAlarmBe.setText("");
-            }
-        });
+//        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+//            @Override
+//            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+//                StringBuilder timeToStartAlarm = new StringBuilder();
+//                timeToStartAlarm.append(getString(R.string.alarm_will_start_in));
+//                timeToStartAlarm.append(" ");
+//                textAlarmBe.setText("");
+//            }
+//        });
 
         btnTurnOfType.setVisibility(View.GONE);
         textTurnOfType.setVisibility(View.GONE);
@@ -278,7 +277,6 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         List<String> infoAboutValues = new ArrayList<>();
         infoAboutValues.add("Time: " + time);
         infoAboutValues.add("Custom date: " + costumeDate);
-//               TODO: Make readable for human
         StringBuilder stringBuilder = new StringBuilder();
         for (AlarmFrequencyType frequencyType :
                 alarmFrequencyTypes) {
@@ -353,8 +351,6 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         textSnooze.setText(getResources().getStringArray(R.array.snooze_duration)[(int) alarmDefault.getSnooze().getId()]);
         textRingtone.setText(getResources().getStringArray(R.array.ringtone_types)[(int) alarmDefault.getRingType().getId()]);
 
-//        TODo: Make alarm frquency type, date
-
         if (alarmDefault.getAlarmFrequencyType().contains(MONDAY)) chipMon.setChecked(true);
         if (alarmDefault.getAlarmFrequencyType().contains(TUESDAY)) chipTue.setChecked(true);
         if (alarmDefault.getAlarmFrequencyType().contains(WEDNESDAY)) chipWed.setChecked(true);
@@ -364,11 +360,12 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         if (alarmDefault.getAlarmFrequencyType().contains(SUNDAY)) chipSun.setChecked(true);
 
         if (alarmDefault.getAlarmFrequencyType().contains(CUSTOM)) {
-//            TODO: make data from default alarm dates show like respone from rest
-
-//            if (alarmDefault.getAlarmFrequencyCostume().size() != 0){
-//
-//            }
+            if (alarmDefault.getAlarmFrequencyCostume().size() != 0){
+                com.example.alarm_app.alarmserver.model.Date date = alarmDefault.getAlarmFrequencyCostume().get(0);
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(date.getYear(), date.getMonth(), date.getDay());
+                textCostume.setText(dateFormatter.format(calendar.getTime()));
+            }
         }
 
 
@@ -382,6 +379,7 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         ringTypeGiven = alarmDefault.getRingType();
 
         scrollViewMain.setFillViewport(true);
+        textAlarmBe.setText("");
     }
 
     private void initVariables() {
