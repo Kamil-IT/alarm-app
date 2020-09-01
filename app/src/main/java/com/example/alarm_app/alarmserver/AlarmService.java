@@ -34,10 +34,9 @@ import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.ALARMS_P
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.BASE_SERVER_URL;
 import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.getBasicHeaders;
 
-public class AlarmService extends AlarmStaticService{
+public class AlarmService extends AlarmStaticService {
 
-    //    TODO: PROBLEMS witch change offline mode to online mode
-
+    List<String> idAlarmsToDelete = new ArrayList<>();
 
     public static final AlarmService INSTANCE = new AlarmService();
 
@@ -51,21 +50,32 @@ public class AlarmService extends AlarmStaticService{
 
     @NonNull
     public List<AlarmDto> getAllAlarms() {
-        if (getAllStaticAlarms() != null) return  getAllStaticAlarms();
+        if (getAllStaticAlarms() != null) return getAllStaticAlarms();
         else return new ArrayList<>();
     }
 
     public void updateAlarmsFromServer(final Context context) {
         final RequestQueue requestQueue = Volley.newRequestQueue(context);
 
+        for (String id :
+                idAlarmsToDelete) {
+            deleteById(context, id);
+        }
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
+                if (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                    }
+                    if (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
+                        Log.i("Alarm server all update", "Token isn't ready to use");
+                        notifyNotGeneratedToken(context);
+                        Thread.currentThread().interrupt();
+                        return;
                     }
                 }
                 JsonArrayRequest objectRequest = new JsonArrayRequest(
@@ -95,6 +105,7 @@ public class AlarmService extends AlarmStaticService{
                         headers.putAll(AuthTokenHolder.getINSTANCE().getTokenAsAuthMap());
                         return headers;
                     }
+
                 };
 
 
@@ -139,11 +150,20 @@ public class AlarmService extends AlarmStaticService{
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
+                if (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                    }
+                    if (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
+                        Log.e("Alarm service delete", "Token isn't ready to use");
+                        deleteStaticAlarmById(id);
+                        Toast.makeText(context, R.string.alarm_delete_local, Toast.LENGTH_SHORT).show();
+                        idAlarmsToDelete.add(id);
+                        notifyNotGeneratedToken(context);
+                        Thread.currentThread().interrupt();
+                        return;
                     }
                 }
 
@@ -164,6 +184,7 @@ public class AlarmService extends AlarmStaticService{
                                 Log.e("Alarm service delete", error.toString());
                                 deleteStaticAlarmById(id);
                                 Toast.makeText(context, R.string.alarm_delete_local, Toast.LENGTH_SHORT).show();
+                                idAlarmsToDelete.add(id);
                             }
                         }
                 ) {
@@ -182,19 +203,16 @@ public class AlarmService extends AlarmStaticService{
         thread.start();
     }
 
+    public void deleteStaticByTimeCreate(long time) {
+        super.deleteStaticAlarmByTimeAndIdNull(time);
+    }
+
     public void updateAlarm(final Context context, final AlarmDto alarmDto) {
         final RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
                 JSONObject jsonToSend = getJsonObject(alarmDto);
                 final AlarmDto alarmOld = alarmDto;
 
@@ -241,7 +259,18 @@ public class AlarmService extends AlarmStaticService{
                 requestQueue.add(objectRequest);
             }
         });
-        thread.start();
+        if (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
+            Log.e("Alarm service update", "Token isn't ready to use");
+            notifyNotGeneratedToken(context);
+            if (alarmDto.getId() != null) {
+                updateStaticAlarmById(alarmDto.getId(), alarmDto);
+            } else {
+                updateStaticAlarmByTimeCreateAndIdNull(alarmDto.getTimeCreateInMillis(), alarmDto);
+            }
+            Toast.makeText(context, R.string.alarm_update_local, Toast.LENGTH_SHORT).show();
+        } else {
+            thread.start();
+        }
     }
 
     public void creteAlarm(final Context context, final AlarmDto alarmDto) {
@@ -251,11 +280,19 @@ public class AlarmService extends AlarmStaticService{
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                if (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+                    if (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
+                        Log.e("Alarm service create", "Token isn't ready to use");
+                        notifyNotGeneratedToken(context);
+                        addStaticAlarm(alarmDto);
+                        Toast.makeText(context, R.string.alarm_created_local, Toast.LENGTH_SHORT).show();
+                        Thread.currentThread().interrupt();
+                        return;
                     }
                 }
                 JSONObject jsonToSend = getJsonObject(alarmDto);
@@ -298,7 +335,14 @@ public class AlarmService extends AlarmStaticService{
                 requestQueue.add(objectRequest);
             }
         });
-        thread.start();
+        if (!AuthTokenHolder.getINSTANCE().isTokenReadyToUse()) {
+            Log.e("Alarm service create", "Token isn't ready to use");
+            addStaticAlarm(alarmDto);
+            Toast.makeText(context, R.string.alarm_created_local, Toast.LENGTH_SHORT).show();
+            notifyNotGeneratedToken(context);
+        } else {
+            thread.start();
+        }
     }
 
     private JSONObject getJsonObject(AlarmDto alarmDto) {
@@ -321,7 +365,7 @@ public class AlarmService extends AlarmStaticService{
         return alarmsToSort;
     }
 
-    public List<AlarmFor14Days> getSortedActiveAlarmsFor14Days(){
+    public List<AlarmFor14Days> getSortedActiveAlarmsFor14Days() {
         List<AlarmFor14Days> alarmsToSort = new LinkedList<>();
         for (AlarmFor14Days alarm : getStaticAlarmsSortedByTimeFor14Days(getAllStaticAlarms())) {
             if (alarm.getActive() == true) alarmsToSort.add(alarm);
@@ -329,8 +373,12 @@ public class AlarmService extends AlarmStaticService{
         return alarmsToSort;
     }
 
-    public AlarmFor14Days getNextStaticAlarm10sAfterActivation(){
+    public AlarmFor14Days getNextStaticAlarm10sAfterActivation() {
         return getNextStaticAlarm10sBefore(getAllStaticAlarms());
+    }
+
+    private void notifyNotGeneratedToken(Context context){
+        AuthTokenHolder.getINSTANCE().generateToken(context);
     }
 
 

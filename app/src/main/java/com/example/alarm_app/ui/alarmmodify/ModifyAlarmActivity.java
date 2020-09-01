@@ -255,11 +255,12 @@ public class ModifyAlarmActivity extends AppCompatActivity {
                                 turnOffType,
                                 snooze
                         );
+                        alarmDto.setTimeCreateInMillis(System.currentTimeMillis());
                         if (isToUpdate) {
                             alarmDto.setId(alarmDefault.getId());
                             alarmDto.setDescription(alarmDefault.getDescription());
                             alarmDto.setRingName(alarmDefault.getRingName());
-                            alarmDto.setTimeCreateInMillis(System.currentTimeMillis());
+                            alarmDto.setTimeCreateInMillis(alarmDefault.getTimeCreateInMillis());
                             AlarmService.getInstance().updateAlarm(mContext, alarmDto);
                         } else {
                             AlarmService.getInstance().creteAlarm(mContext, alarmDto);

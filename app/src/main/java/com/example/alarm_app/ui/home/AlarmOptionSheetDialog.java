@@ -68,7 +68,11 @@ public class AlarmOptionSheetDialog extends BottomSheetDialogFragment {
     }
 
     public void setButtonDeleteAlarmOnClickListener() {
-        AlarmService.getInstance().deleteById(getContext(), alarm.getId());
+        if (alarm.getId() != null && !"".equals(alarm.getId())){
+            AlarmService.getInstance().deleteById(getContext(), alarm.getId());
+        } else {
+            AlarmService.getInstance().deleteStaticByTimeCreate(alarm.getTimeCreateInMillis());
+        }
     }
 
     public void setButtonCancelAlarmOnClickListener() {
