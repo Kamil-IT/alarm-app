@@ -325,4 +325,10 @@ public class AlarmService extends AlarmStaticService{
         }
         return alarmsToSort;
     }
+
+    public AlarmFor14Days getNextStaticAlarm10sAfterActivation(){
+        return getNextStaticAlarm10sBefore(getAllStaticAlarms());
+    }
+
+
 }

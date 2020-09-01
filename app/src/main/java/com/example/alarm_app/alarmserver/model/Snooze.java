@@ -16,4 +16,16 @@ public enum Snooze {
     Snooze(long id) { this.id = id; };
 
     public long getId() { return id;}
+
+    public long getTimeInMillisecond() {
+        if (id == 0) return 60000;
+        else if (id == 1) return 60000 * 2;
+        else if (id == 2) return 60000 * 3;
+        else if (id == 3) return 60000 * 4;
+        else if (id == 4) return 60000 * 5;
+        else if (id == 5) return 60000 * 10;
+        else if (id == 6) return 60000 * 15;
+        else if (id == 7) return 60000 * 30;
+        else return 60000 * 60;
+    }
 }

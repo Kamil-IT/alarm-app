@@ -13,6 +13,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+
 import static com.example.alarm_app.alarmserver.AlarmSorting.AlarmDtoComparator.getDatesWhenAlarmPlayWeek;
 import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.CUSTOM;
 
@@ -196,5 +198,34 @@ public class AlarmSorting {
             }
         }
         return alarms;
+    }
+
+    @Nullable
+    protected AlarmFor14Days getNextStaticAlarm10sBefore(List<AlarmDto> alarmsDto) {
+        List<AlarmFor14Days> alarmsSorting = new ArrayList<>();
+        long weekInMillis = WEEK_IN_MILLIS;
+
+        for (AlarmDto alarm : alarmsDto) {
+//            Get alarm dates when play
+            List<java.util.Date> alarmPlayNext = getDatesWhenAlarmPlayWeek(alarm, System.currentTimeMillis() - 10000);
+//            Sort dates
+            Collections.sort(alarmPlayNext, new AlarmDtoComparator.DateUtilSort());
+//            Add all variables
+            for (java.util.Date date : alarmPlayNext) {
+                if (date.after(new java.util.Date(System.currentTimeMillis() - 10000))) {
+                    alarmsSorting.add(new AlarmFor14Days(
+                            alarm.getId(),
+                            alarm.getName(),
+                            alarm.getAlarmTurnOffType(),
+                            alarm.getSnooze(),
+                            alarm.getActive(),
+                            date
+                    ));
+                }
+            }
+        }
+        Collections.sort(alarmsSorting, new AlarmsWithTimeFor14DaysSort());
+        if (alarmsSorting.size() == 0) return null;
+        else return alarmsSorting.get(0);
     }
 }

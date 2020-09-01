@@ -119,7 +119,8 @@ public class AlarmNotifyService extends Service {
     private void setAlarmMgrToNextAlarm(AlarmFor14Days alarm, AlarmManager alarmMgr) {
         Intent receiverIntent = new Intent(this, ActivationAlarmActivityReceiver.class);
         Gson gson = new Gson();
-        receiverIntent.putExtra(EXTRA_CURRENT_ALARM_RINGING, gson.toJson(alarm));
+        final String jsonString = gson.toJson(alarm);
+        receiverIntent.putExtra(EXTRA_CURRENT_ALARM_RINGING, jsonString);
         final PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, receiverIntent, 0);
 
         Date currentDate = new Date();
