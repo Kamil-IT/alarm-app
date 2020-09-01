@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.alarm_app.R;
-import com.example.alarm_app.ui.ModifyAlarmActivity;
+import com.example.alarm_app.ui.alarmmodify.ModifyAlarmActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import androidx.annotation.NonNull;

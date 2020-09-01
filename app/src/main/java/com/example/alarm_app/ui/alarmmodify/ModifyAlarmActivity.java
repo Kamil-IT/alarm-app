@@ -1,4 +1,4 @@
-package com.example.alarm_app.ui;
+package com.example.alarm_app.ui.alarmmodify;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -31,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -88,6 +89,11 @@ public class ModifyAlarmActivity extends AppCompatActivity {
             Snooze.MIN_5
     );
 
+    @SuppressLint("SimpleDateFormat")
+    DateFormat dateFormatter = new SimpleDateFormat("dd, MMM yyyy");
+    @SuppressLint("SimpleDateFormat")
+    DateFormat dateFormatterToService = new SimpleDateFormat("dd-MM-yyyy");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +112,7 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         Gson gson = new Gson();
         AlarmDto alarmDto = gson.fromJson(getIntent().getStringExtra(EXTRA_ID_ALARM_UPDATE), AlarmDto.class);
         isToUpdate = getIntent().getBooleanExtra(EXTRA_ID_IS_UPDATE, false);
-        if (alarmDto != null){
+        if (alarmDto != null) {
             alarmDefault = alarmDto;
             isToUpdate = true;
         }
@@ -124,12 +130,14 @@ public class ModifyAlarmActivity extends AppCompatActivity {
             }
         });
 
-        btnTurnOfType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAlertDialogWithItems(R.array.alarm_turn_off_type, R.string.turn_off_type, textTurnOfType).show();
-            }
-        });
+        btnTurnOfType.setVisibility(View.GONE);
+        textTurnOfType.setVisibility(View.GONE);
+//        btnTurnOfType.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                createAlertDialogWithItems(R.array.alarm_turn_off_type, R.string.turn_off_type, textTurnOfType).show();
+//            }
+//        });
         btnSnooze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +178,7 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         btnCostume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                         .setTitleText(R.string.costume)
                         .build();
@@ -179,91 +188,112 @@ public class ModifyAlarmActivity extends AppCompatActivity {
                         Calendar instance = Calendar.getInstance();
                         instance.setTimeInMillis(selection);
                         Date time = instance.getTime();
-                        @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("dd, MMM yyyy");
-
-                        textCostume.setText(formatter.format(time));
+                        textCostume.setText(dateFormatter.format(time));
                     }
                 });
                 datePicker.show(getSupportFragmentManager(), getString(R.string.costume));
             }
         });
 
+        final Context context = this;
         btnAddNewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                TODO: add possible to add costume alarm
 
                 final Time time = new Time(timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
                 final List<AlarmFrequencyType> alarmFrequencyTypes = getFrequencyTypesFromView();
                 final RingType ringType = ringTypeGiven;
                 final TurnOffType turnOffType = turnOffTypeGiven;
-//                TODO: make converter
                 final Snooze snooze = snoozeGiven;
                 final String label = textLabel.getText().toString();
+                String costumeDate;
+                try {
+                    costumeDate = dateFormatterToService.format(
+                            Objects.requireNonNull(
+                                    dateFormatter.parse(
+                                            textCostume.getText().toString())));
+                } catch (ParseException e) {
+                    costumeDate = "";
+                }
 
                 if (alarmFrequencyTypes.isEmpty() && textCostume.getText().length() != 0) {
                     throw new IllegalArgumentException("alarmFrequencyTypes.isEmpty() have to be empty or textCostume.getText().length() != 0");
                 }
-                List<String> infoAboutValues = new ArrayList<>();
-                infoAboutValues.add("Time: " + time);
-                infoAboutValues.add("Alarm frequency types: " + alarmFrequencyTypes);
-                infoAboutValues.add("Ring Type: " + textRingtone.getText().toString());
-                infoAboutValues.add("Turn Off Type: " + textTurnOfType.getText().toString());
-                infoAboutValues.add("Snooze: " + textSnooze.getText().toString());
-                infoAboutValues.add("Label: " + label);
 
-                int positiveButtonText = R.string.create;
-                int titleText = R.string.create_new_alarm;
-                if (isToUpdate){
-                    positiveButtonText = R.string.update;
-                    titleText = R.string.update;
-                }
-                new MaterialAlertDialogBuilder(mContext)
-                        .setItems(infoAboutValues.toArray(new CharSequence[0]), null)
-                        .setNegativeButton(R.string.cancel, null)
-                        .setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                List<com.example.alarm_app.alarmserver.model.Date> dates = new ArrayList<>();
-                                if (alarmFrequencyTypes.contains(CUSTOM)){
-                                    Calendar currentDate = Calendar.getInstance();
-                                    currentDate.setTime(new Date());
-                                    dates.add(new com.example.alarm_app.alarmserver.model.Date(
-                                            currentDate.get(Calendar.DAY_OF_MONTH),
-                                            currentDate.get(Calendar.MONTH) + 1,
-                                            currentDate.get(Calendar.YEAR)));
-                                }
+                final String finalCostumeDate = costumeDate;
+                DialogAlarmSummary dialogAlarmSummary = new DialogAlarmSummary(
+                        context,
+                        getInfoAboutValues(time, alarmFrequencyTypes, label, finalCostumeDate),
+                        isToUpdate) {
+                    @Override
+                    public void onClickedPositiveButton(DialogInterface dialog, int which) {
+                        super.onClickedPositiveButton(dialog, which);
+                        List<com.example.alarm_app.alarmserver.model.Date> dates = new ArrayList<>();
+//                                Checked is costume
+                        if (alarmFrequencyTypes.contains(CUSTOM) && textCostume.getText().toString().length() == 0) {
+                            Calendar currentDate = Calendar.getInstance();
+                            currentDate.setTime(new Date());
+                            dates.add(new com.example.alarm_app.alarmserver.model.Date(
+                                    currentDate.get(Calendar.DAY_OF_MONTH),
+                                    currentDate.get(Calendar.MONTH) + 1,
+                                    currentDate.get(Calendar.YEAR)));
+                        }
+//                                Checked is costume date
+                        if (!finalCostumeDate.equals("")) {
+                            dates.add(new com.example.alarm_app.alarmserver.model.Date(
+                                    Integer.valueOf(finalCostumeDate.substring(0, 2)),
+                                    Integer.valueOf(finalCostumeDate.substring(3, 5)),
+                                    Integer.valueOf(finalCostumeDate.substring(6))));
+                        }
 
-                                AlarmDto alarmDto = new AlarmDto(
-                                        label,
-                                        time,
-                                        ringType,
-                                        alarmFrequencyTypes,
-                                        true,
-                                        dates,
-                                        turnOffType,
-                                        snooze
-                                );
-                                if (isToUpdate){
-                                    alarmDto.setId(alarmDefault.getId());
-                                    alarmDto.setDescription(alarmDefault.getDescription());
-                                    alarmDto.setRingName(alarmDefault.getRingName());
-                                    alarmDto.setTimeCreateInMillis(System.currentTimeMillis());
-                                    AlarmService.getInstance().updateAlarm(mContext, alarmDto);
-                                } else {
-                                    AlarmService.getInstance().creteAlarm(mContext, alarmDto);
-                                }
-                                Intent intent = new Intent(mContext, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        })
-                        .setTitle(titleText)
-                        .create()
-                        .show();
+                        AlarmDto alarmDto = new AlarmDto(
+                                label,
+                                time,
+                                ringType,
+                                alarmFrequencyTypes,
+                                true,
+                                dates,
+                                turnOffType,
+                                snooze
+                        );
+                        if (isToUpdate) {
+                            alarmDto.setId(alarmDefault.getId());
+                            alarmDto.setDescription(alarmDefault.getDescription());
+                            alarmDto.setRingName(alarmDefault.getRingName());
+                            alarmDto.setTimeCreateInMillis(System.currentTimeMillis());
+                            AlarmService.getInstance().updateAlarm(mContext, alarmDto);
+                        } else {
+                            AlarmService.getInstance().creteAlarm(mContext, alarmDto);
+                        }
+                        Intent intent = new Intent(mContext, MainActivity.class);
+                        startActivity(intent);
+                    }
+                };
+                dialogAlarmSummary.show();
             }
         });
+    }
+
+    private List<String> getInfoAboutValues(Time time, List<AlarmFrequencyType> alarmFrequencyTypes, String label, String costumeDate) {
+        List<String> infoAboutValues = new ArrayList<>();
+        infoAboutValues.add("Time: " + time);
+        infoAboutValues.add("Custom date: " + costumeDate);
+//               TODO: Make readable for human
+        StringBuilder stringBuilder = new StringBuilder();
+        for (AlarmFrequencyType frequencyType :
+                alarmFrequencyTypes) {
+            if (frequencyType.getId() <= 7) {
+                stringBuilder.append(getResources().getStringArray(
+                        R.array.week_days)[(int) frequencyType.getId() - 1])
+                        .append(" ");
+            }
+        }
+        infoAboutValues.add("Alarm frequency types: " + stringBuilder.toString());
+        infoAboutValues.add("Ring Type: " + textRingtone.getText().toString());
+        infoAboutValues.add("Turn Off Type: " + textTurnOfType.getText().toString());
+        infoAboutValues.add("Snooze: " + textSnooze.getText().toString());
+        infoAboutValues.add("Label: " + label);
+        return infoAboutValues;
     }
 
     private AlertDialog createAlertDialogWithItems(@ArrayRes final int arrayItemsId, @StringRes final int titleId, final TextView textView) {
@@ -325,24 +355,24 @@ public class ModifyAlarmActivity extends AppCompatActivity {
 
 //        TODo: Make alarm frquency type, date
 
-        if(alarmDefault.getAlarmFrequencyType().contains(MONDAY)) chipMon.setChecked(true);
-        if(alarmDefault.getAlarmFrequencyType().contains(TUESDAY)) chipTue.setChecked(true);
-        if(alarmDefault.getAlarmFrequencyType().contains(WEDNESDAY)) chipWed.setChecked(true);
-        if(alarmDefault.getAlarmFrequencyType().contains(THURSDAY)) chipThu.setChecked(true);
-        if(alarmDefault.getAlarmFrequencyType().contains(FRIDAY)) chipFri.setChecked(true);
-        if(alarmDefault.getAlarmFrequencyType().contains(SATURDAY)) chipSat.setChecked(true);
-        if(alarmDefault.getAlarmFrequencyType().contains(SUNDAY)) chipSun.setChecked(true);
+        if (alarmDefault.getAlarmFrequencyType().contains(MONDAY)) chipMon.setChecked(true);
+        if (alarmDefault.getAlarmFrequencyType().contains(TUESDAY)) chipTue.setChecked(true);
+        if (alarmDefault.getAlarmFrequencyType().contains(WEDNESDAY)) chipWed.setChecked(true);
+        if (alarmDefault.getAlarmFrequencyType().contains(THURSDAY)) chipThu.setChecked(true);
+        if (alarmDefault.getAlarmFrequencyType().contains(FRIDAY)) chipFri.setChecked(true);
+        if (alarmDefault.getAlarmFrequencyType().contains(SATURDAY)) chipSat.setChecked(true);
+        if (alarmDefault.getAlarmFrequencyType().contains(SUNDAY)) chipSun.setChecked(true);
 
-        if (alarmDefault.getAlarmFrequencyType().contains(CUSTOM)){
+        if (alarmDefault.getAlarmFrequencyType().contains(CUSTOM)) {
 //            TODO: make data from default alarm dates show like respone from rest
-//            Calendar instance = Calendar.getInstance();
-//            instance.setTimeInMillis(selection);
-//            Date time = instance.getTime();
-//            @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("dd, MMM yyyy"); cvgf fdz dfzdf zfd
+
+//            if (alarmDefault.getAlarmFrequencyCostume().size() != 0){
+//
+//            }
         }
 
 
-        if (alarmDefault.getTime() != null){
+        if (alarmDefault.getTime() != null) {
             timePicker.setCurrentHour(alarmDefault.getTime().getHours());
             timePicker.setCurrentMinute(alarmDefault.getTime().getMinutes());
         }
@@ -394,7 +424,7 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         if (chipFri.isChecked()) alarmFrequencyTypes.add(FRIDAY);
         if (chipSat.isChecked()) alarmFrequencyTypes.add(SATURDAY);
         if (chipSun.isChecked()) alarmFrequencyTypes.add(SUNDAY);
-        if (textLabel.getText().toString().length() != 0) alarmFrequencyTypes.add(CUSTOM);
+        if (textCostume.getText().toString().length() != 0) alarmFrequencyTypes.add(CUSTOM);
         if (alarmFrequencyTypes.size() == 0) alarmFrequencyTypes.add(CUSTOM);
         return alarmFrequencyTypes;
     }

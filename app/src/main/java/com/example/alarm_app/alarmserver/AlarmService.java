@@ -36,6 +36,9 @@ import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.getBasic
 
 public class AlarmService extends AlarmStaticService{
 
+    //    TODO: PROBLEMS witch change offline mode to online mode
+
+
     public static final AlarmService INSTANCE = new AlarmService();
 
     public static AlarmService getInstance() {

@@ -13,7 +13,7 @@ import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.AlarmStaticService;
 import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
-import com.example.alarm_app.ui.ModifyAlarmActivity;
+import com.example.alarm_app.ui.alarmmodify.ModifyAlarmActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DateFormat;

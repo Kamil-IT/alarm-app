@@ -21,7 +21,7 @@
         <activity
             android:name=".ui.AlarmRingingActivity"
             android:showOnLockScreen="true" />
-        <activity android:name=".ui.ModifyAlarmActivity" />
+        <activity android:name=".ui.alarmmodify.ModifyAlarmActivity" />
         <activity android:name=".ui.LoginActivity" />
         <activity
             android:name=".MainActivity"
