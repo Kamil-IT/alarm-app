@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Intent intentService = new Intent(mContext, AlarmNotifyService.class);
                 ContextCompat.startForegroundService(mContext, intentService);
+
             }
         });
         thread.start();

@@ -1,4 +1,4 @@
-package com.example.alarm_app.ui;
+package com.example.alarm_app.ui.ringing;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmreciver.ActivationAlarmActivityReceiver;
 import com.example.alarm_app.alarmserver.AlarmService;
+import com.example.alarm_app.alarmserver.model.RingType;
 import com.example.alarm_app.alarmserver.model.Snooze;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class AlarmRingingActivity extends AppCompatActivity {
     public static final String SNOOZE_ACTIVE_CODE = "snooze_counter";
     public static final String ALARM_NAME_CODE = "alarm_name";
     public static final String ALARM_SNOOZE_NAME_CODE = "alarm_snooze_name";
+    public static final String ALARM_RING_TYPE_CODE = "alarm_ring_type";
     private MediaPlayer player;
     private Boolean snoozeActive = false;
     private boolean isSnoozeClicked = false;
@@ -87,11 +89,11 @@ public class AlarmRingingActivity extends AppCompatActivity {
 //        Init Media player
         player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_ALARM);
-        AssetFileDescriptor afd = this.getResources().openRawResourceFd(R.raw.paluch_sund);
+        AssetFileDescriptor afd = this.getResources().openRawResourceFd(getRingTypeOfCurrentAlarmRinging().getMusicRes());
         try {
             player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-        } catch (IOException e) {
-//            TODO: set default music after add it
+        } catch (IOException ignored) {
+
         }
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -121,7 +123,7 @@ public class AlarmRingingActivity extends AppCompatActivity {
                 if (player != null) {
                     player.release();
                 }
-                notifySnoozeActive(getNameOfCurrentAlarmRinging(), getSnoozeOfCurrentAlarmRinging());
+                notifySnoozeActive(getNameOfCurrentAlarmRinging(), getSnoozeOfCurrentAlarmRinging(), getRingTypeOfCurrentAlarmRinging());
                 isSnoozeClicked = true;
                 finish();
             }
@@ -147,16 +149,18 @@ public class AlarmRingingActivity extends AppCompatActivity {
         editor.remove(SNOOZE_ACTIVE_CODE);
         editor.remove(ALARM_NAME_CODE);
         editor.remove(ALARM_SNOOZE_NAME_CODE);
+        editor.remove(ALARM_RING_TYPE_CODE);
         editor.apply();
     }
 
-    private void notifySnoozeActive(String name, Snooze snooze) {
+    private void notifySnoozeActive(String name, Snooze snooze, RingType ringType) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
 
         editor.putBoolean(SNOOZE_ACTIVE_CODE, true);
 
         editor.putString(ALARM_NAME_CODE, name);
         editor.putString(ALARM_SNOOZE_NAME_CODE, snooze.name());
+        editor.putString(ALARM_RING_TYPE_CODE, ringType.toString());
         editor.apply();
     }
 
@@ -181,6 +185,17 @@ public class AlarmRingingActivity extends AppCompatActivity {
             return Snooze.valueOf(defSharedPref.getString(ALARM_SNOOZE_NAME_CODE, "MIN_1"));
         }
     }
+
+    private RingType getRingTypeOfCurrentAlarmRinging(){
+        SharedPreferences defSharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        snoozeActive = defSharedPref.getBoolean(SNOOZE_ACTIVE_CODE, false);
+        if (!snoozeActive){
+            return AlarmService.getInstance().getNextStaticAlarm10sAfterActivation().getRingType();
+        } else {
+            return RingType.valueOf(defSharedPref.getString(ALARM_RING_TYPE_CODE, RingType.ALARM_CLASSIC.toString()));
+        }
+    }
+
 
     @Override
     protected void onStop() {

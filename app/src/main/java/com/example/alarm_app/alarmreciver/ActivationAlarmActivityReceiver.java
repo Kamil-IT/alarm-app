@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.alarm_app.ui.AlarmRingingActivity;
+import com.example.alarm_app.ui.ringing.AlarmRingingActivity;
 
 public class ActivationAlarmActivityReceiver extends BroadcastReceiver {
 

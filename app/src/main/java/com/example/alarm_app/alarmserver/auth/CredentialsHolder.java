@@ -92,6 +92,10 @@ public class CredentialsHolder {
         checkIsCredentialsCorrect();
     }
 
+    public void setCredentials(Credentials credentials, Context context){
+        setCredentials(credentials.getUsername(), credentials.getPassword(), context);
+    }
+
     private void checkIsCredentialsCorrect() {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 

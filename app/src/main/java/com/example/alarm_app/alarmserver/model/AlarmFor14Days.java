@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class AlarmFor14Days {
 
+//    TODO: Add ringType
+
     private String idMainAlarm;
 
     private String name;
@@ -14,6 +16,8 @@ public class AlarmFor14Days {
     private TurnOffType alarmTurnOffType;
 
     private Snooze snooze;
+
+    private RingType ringType;
 
     private Boolean isActive;
 
@@ -28,12 +32,13 @@ public class AlarmFor14Days {
         this.isActive = isActive;
     }
 
-    public AlarmFor14Days(String idMainAlarm, String name, TurnOffType alarmTurnOffType, Snooze snooze, Boolean isActive, Date next14DaysPlay) {
+    public AlarmFor14Days(String idMainAlarm, String name, TurnOffType alarmTurnOffType, Snooze snooze, Boolean isActive, Date alarmBe, RingType ringType) {
         this.idMainAlarm = idMainAlarm;
         this.name = name;
-        this.alarmBe = next14DaysPlay;
+        this.alarmBe = alarmBe;
         this.alarmTurnOffType = alarmTurnOffType;
         this.snooze = snooze;
+        this.ringType = ringType;
         this.isActive = isActive;
     }
 
@@ -85,6 +90,14 @@ public class AlarmFor14Days {
         isActive = active;
     }
 
+    public RingType getRingType() {
+        return ringType;
+    }
+
+    public void setRingType(RingType ringType) {
+        this.ringType = ringType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,12 +108,13 @@ public class AlarmFor14Days {
                 Objects.equals(alarmBe, alarm.alarmBe) &&
                 alarmTurnOffType == alarm.alarmTurnOffType &&
                 snooze == alarm.snooze &&
+                ringType == alarm.ringType &&
                 Objects.equals(isActive, alarm.isActive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idMainAlarm, name, alarmBe, alarmTurnOffType, snooze, isActive);
+        return Objects.hash(idMainAlarm, name, alarmBe, alarmTurnOffType, snooze, ringType, isActive);
     }
 
     @Override
@@ -111,6 +125,7 @@ public class AlarmFor14Days {
                 ", alarmBe=" + alarmBe +
                 ", alarmTurnOffType=" + alarmTurnOffType +
                 ", snooze=" + snooze +
+                ", ringType=" + ringType +
                 ", isActive=" + isActive +
                 '}';
     }

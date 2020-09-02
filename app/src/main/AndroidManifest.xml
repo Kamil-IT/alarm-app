@@ -19,10 +19,11 @@
 
 <!--        Activities-->
         <activity
-            android:name=".ui.AlarmRingingActivity"
+            android:name=".ui.ringing.AlarmRingingActivity"
             android:showOnLockScreen="true" />
         <activity android:name=".ui.alarmmodify.ModifyAlarmActivity" />
-        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.account.LoginActivity" />
+        <activity android:name=".ui.account.SingUpActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.auth.CredentialsHolder;
-import com.example.alarm_app.ui.LoginActivity;
+import com.example.alarm_app.ui.account.LoginActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import androidx.appcompat.app.AlertDialog;

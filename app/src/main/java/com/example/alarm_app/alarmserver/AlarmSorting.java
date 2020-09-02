@@ -55,7 +55,8 @@ public class AlarmSorting {
                             alarm.getAlarmTurnOffType(),
                             alarm.getSnooze(),
                             alarm.getActive(),
-                            date
+                            date,
+                            alarm.getRingType()
                     ));
                 }
             }
@@ -219,7 +220,8 @@ public class AlarmSorting {
                             alarm.getAlarmTurnOffType(),
                             alarm.getSnooze(),
                             alarm.getActive(),
-                            date
+                            date,
+                            alarm.getRingType()
                     ));
                 }
             }

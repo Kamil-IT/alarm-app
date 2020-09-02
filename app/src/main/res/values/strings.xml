@@ -76,9 +76,11 @@
     </string-array>
     <string-array name="ringtone_types">
         <item>Birds</item>
-        <item>Costume</item>
+        <item>Costume ~ Alarm Classic</item>
         <item>Ocean</item>
         <item>Rooster</item>
+        <item>Alarm Classic</item>
+        <item>Siren</item>
     </string-array>
     <string-array name="snooze_duration">
         <item>1 minute</item>
@@ -119,6 +121,9 @@
     <string name="username">Username</string>
     <string name="sing_in">Sing in</string>
     <string name="to_apply_changed_settings_restart_device">To apply changed settings restart device</string>
+    <string name="sing_up">Sing up</string>
+    <string name="e_mail">E-mail</string>
+    <string name="pref_previously_started">first_run</string>
     <string-array name="sync_interval_time">
         <item>15 minutes</item>
         <item>30 minutes</item>

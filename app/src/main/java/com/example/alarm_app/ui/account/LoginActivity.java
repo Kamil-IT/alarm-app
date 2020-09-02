@@ -1,6 +1,7 @@
-package com.example.alarm_app.ui;
+package com.example.alarm_app.ui.account;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -17,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText textPassword, textUsername;
-    private Button btnLogin;
+    private Button btnLogin, btnSingUp;
 
 
     @Override
@@ -27,9 +28,10 @@ public class LoginActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_login);
 
-        textUsername = findViewById(R.id.txtUserName);
-        textPassword = findViewById(R.id.txtPassword);
-        btnLogin = findViewById(R.id.btnLogin);
+        textUsername = findViewById(R.id.txt_user_name);
+        textPassword = findViewById(R.id.txt_password);
+        btnLogin = findViewById(R.id.btn_login);
+        btnSingUp = findViewById(R.id.btn_sing_up);
 
         if (CredentialsHolder.getInstance().getUsername() != null){
             textUsername.setText(CredentialsHolder.getInstance().getUsername());
@@ -44,6 +46,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 CredentialsHolder.getInstance().setCredentials(username, password, context);
                 finish();
+            }
+        });
+
+        btnSingUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(), SingUpActivity.class);
+                startActivity(intent);
             }
         });
     }
