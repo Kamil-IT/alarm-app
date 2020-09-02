@@ -77,11 +77,9 @@ public class ModifyAlarmActivity extends AppCompatActivity {
             null,
             "",
             "",
-            "",
             null,
             0L,
             RingType.BIRDS,
-            null,
             Collections.<AlarmFrequencyType>emptyList(),
             true,
             Collections.<com.example.alarm_app.alarmserver.model.Date>emptyList(),
@@ -267,7 +265,6 @@ public class ModifyAlarmActivity extends AppCompatActivity {
                         if (isToUpdate) {
                             alarmDto.setId(alarmDefault.getId());
                             alarmDto.setDescription(alarmDefault.getDescription());
-                            alarmDto.setRingName(alarmDefault.getRingName());
                             alarmDto.setTimeCreateInMillis(alarmDefault.getTimeCreateInMillis());
                             AlarmService.getInstance().updateAlarm(mContext, alarmDto);
                         } else {

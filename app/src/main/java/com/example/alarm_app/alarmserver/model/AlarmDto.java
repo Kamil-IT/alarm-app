@@ -10,19 +10,11 @@ public class AlarmDto {
     private String name;
     private String description;
 
-    private String userId;
-
     private Time time;
 
     private Long timeCreateInMillis;
 
     private RingType ringType;
-
-    /**
-     * Only not null if ringType = costume
-     */
-    private String ringName;
-
 
     private List<AlarmFrequencyType> alarmFrequencyType;
 
@@ -41,15 +33,13 @@ public class AlarmDto {
     public AlarmDto() {
     }
 
-    public AlarmDto(String id, String name, String description, String userId, Time time, Long timeCreateInMillis, RingType ringType, String ringName, List<AlarmFrequencyType> alarmFrequencyType, Boolean isActive, List<Date> alarmFrequencyCostume, TurnOffType alarmTurnOffType, Snooze snooze) {
+    public AlarmDto(String id, String name, String description, Time time, Long timeCreateInMillis, RingType ringType, List<AlarmFrequencyType> alarmFrequencyType, Boolean isActive, List<Date> alarmFrequencyCostume, TurnOffType alarmTurnOffType, Snooze snooze) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.userId = userId;
         this.time = time;
         this.timeCreateInMillis = timeCreateInMillis;
         this.ringType = ringType;
-        this.ringName = ringName;
         this.alarmFrequencyType = alarmFrequencyType;
         this.isActive = isActive;
         this.alarmFrequencyCostume = alarmFrequencyCostume;
@@ -100,14 +90,6 @@ public class AlarmDto {
         this.description = description;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public Time getTime() {
         return time;
     }
@@ -130,14 +112,6 @@ public class AlarmDto {
 
     public void setRingType(RingType ringType) {
         this.ringType = ringType;
-    }
-
-    public String getRingName() {
-        return ringName;
-    }
-
-    public void setRingName(String ringName) {
-        this.ringName = ringName;
     }
 
     public List<AlarmFrequencyType> getAlarmFrequencyType() {
@@ -180,18 +154,18 @@ public class AlarmDto {
         return Objects.equals(id, alarmDto.id) &&
                 Objects.equals(name, alarmDto.name) &&
                 Objects.equals(description, alarmDto.description) &&
-                Objects.equals(userId, alarmDto.userId) &&
                 Objects.equals(time, alarmDto.time) &&
                 Objects.equals(timeCreateInMillis, alarmDto.timeCreateInMillis) &&
-                Objects.equals(ringType, alarmDto.ringType) &&
-                Objects.equals(ringName, alarmDto.ringName) &&
+                ringType == alarmDto.ringType &&
                 Objects.equals(alarmFrequencyType, alarmDto.alarmFrequencyType) &&
+                Objects.equals(isActive, alarmDto.isActive) &&
                 Objects.equals(alarmFrequencyCostume, alarmDto.alarmFrequencyCostume) &&
-                Objects.equals(alarmTurnOffType, alarmDto.alarmTurnOffType);
+                alarmTurnOffType == alarmDto.alarmTurnOffType &&
+                snooze == alarmDto.snooze;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, userId, time, timeCreateInMillis, ringType, ringName, alarmFrequencyType, alarmFrequencyCostume, alarmTurnOffType);
+        return Objects.hash(id, name, description, time, timeCreateInMillis, ringType, alarmFrequencyType, isActive, alarmFrequencyCostume, alarmTurnOffType, snooze);
     }
 }
