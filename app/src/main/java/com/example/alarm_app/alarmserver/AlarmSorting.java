@@ -67,7 +67,7 @@ public class AlarmSorting {
 
     //    Comparators for sorting
     public static class AlarmDtoComparator implements Comparator<AlarmDto> {
-        //        1 -> to o1 mniejsze
+        //        1 -> to o1 smaller
         @Override
         public int compare(AlarmDto o1, AlarmDto o2) {
             List<java.util.Date> o1DatesAlarmPlayed = getDatesWhenAlarmPlayWeek(o1, System.currentTimeMillis());

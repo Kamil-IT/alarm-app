@@ -18,7 +18,7 @@ public enum RingType {
     RingType(long id, @RawRes int musicRes) {
         this.id = id;
         this.musicRes = musicRes;
-    };
+    }
 
     public long getId() { return id;}
 

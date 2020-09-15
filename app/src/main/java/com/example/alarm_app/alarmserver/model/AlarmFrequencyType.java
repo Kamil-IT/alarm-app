@@ -18,7 +18,7 @@ public enum AlarmFrequencyType {
 
     private final long id;
 
-    AlarmFrequencyType(long id) { this.id = id; };
+    AlarmFrequencyType(long id) { this.id = id; }
 
     public long getId() { return id;}
 }

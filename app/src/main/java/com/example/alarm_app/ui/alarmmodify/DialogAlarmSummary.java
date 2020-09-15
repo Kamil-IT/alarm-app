@@ -41,9 +41,7 @@ public class DialogAlarmSummary extends MaterialAlertDialogBuilder {
     }
 
     /**
-     * Method override
-     * @param dialog
-     * @param which
+     * Method to override
      */
     public void onClickedPositiveButton(DialogInterface dialog, int which) {
         dialog.dismiss();

@@ -7,7 +7,7 @@ public enum TurnOffType {
 
     private final long id;
 
-    TurnOffType(long id) { this.id = id; };
+    TurnOffType(long id) { this.id = id; }
 
     public long getId() { return id;}
 }

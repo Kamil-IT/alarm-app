@@ -13,7 +13,7 @@ public enum Snooze {
 
     private final long id;
 
-    Snooze(long id) { this.id = id; };
+    Snooze(long id) { this.id = id; }
 
     public long getId() { return id;}
 
