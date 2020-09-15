@@ -5,8 +5,6 @@ import java.util.Objects;
 
 public class AlarmFor14Days {
 
-//    TODO: Add ringType
-
     private String idMainAlarm;
 
     private String name;

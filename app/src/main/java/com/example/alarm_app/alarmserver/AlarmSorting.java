@@ -45,7 +45,7 @@ public class AlarmSorting {
             List<java.util.Date> alarmPlayNext = getDatesWhenAlarmPlayWeek(alarm, System.currentTimeMillis());
             alarmPlayNext.addAll(getDatesWhenAlarmPlayWeek(alarm, System.currentTimeMillis() + weekInMillis));
 //            Sort dates
-            Collections.sort(alarmPlayNext, new AlarmDtoComparator.DateUtilSort());
+            Collections.sort(alarmPlayNext, AlarmDtoComparator.DateUtilSort.getInstance());
 //            Add all variables
             for (java.util.Date date : alarmPlayNext) {
                 if (date.after(new java.util.Date())) {
@@ -73,13 +73,13 @@ public class AlarmSorting {
             List<java.util.Date> o1DatesAlarmPlayed = getDatesWhenAlarmPlayWeek(o1, System.currentTimeMillis());
             List<java.util.Date> o2DatesAlarmPlayed = getDatesWhenAlarmPlayWeek(o2, System.currentTimeMillis());
 
-            Collections.sort(o1DatesAlarmPlayed, new DateUtilSort());
-            Collections.sort(o2DatesAlarmPlayed, new DateUtilSort());
+            Collections.sort(o1DatesAlarmPlayed, DateUtilSort.getInstance());
+            Collections.sort(o2DatesAlarmPlayed, DateUtilSort.getInstance());
 
             if (o1DatesAlarmPlayed.size() == 0) return 1;
             else if (o2DatesAlarmPlayed.size() == 0) return -1;
 
-            DateUtilSort dateUtilSort = new DateUtilSort();
+            DateUtilSort dateUtilSort = DateUtilSort.getInstance();
             return dateUtilSort.compare(o1DatesAlarmPlayed.get(0), o2DatesAlarmPlayed.get(0));
         }
 
@@ -162,6 +162,15 @@ public class AlarmSorting {
 
         public static class DateUtilSort implements Comparator<java.util.Date> {
 
+            private static final DateUtilSort INSTANCE = new DateUtilSort();
+
+            private DateUtilSort() {
+            }
+
+            public static DateUtilSort getInstance() {
+                return INSTANCE;
+            }
+
             @Override
             public int compare(java.util.Date o1, java.util.Date o2) {
                 if (o1.after(o2)) return 1;
@@ -175,7 +184,7 @@ public class AlarmSorting {
 
         @Override
         public int compare(AlarmFor14Days o1, AlarmFor14Days o2) {
-            AlarmDtoComparator.DateUtilSort dateUtilSort = new AlarmDtoComparator.DateUtilSort();
+            AlarmDtoComparator.DateUtilSort dateUtilSort = AlarmDtoComparator.DateUtilSort.getInstance();
             return dateUtilSort.compare(o1.getAlarmBe(), o2.getAlarmBe());
         }
     }
@@ -210,7 +219,7 @@ public class AlarmSorting {
 //            Get alarm dates when play
             List<java.util.Date> alarmPlayNext = getDatesWhenAlarmPlayWeek(alarm, System.currentTimeMillis() - 10000);
 //            Sort dates
-            Collections.sort(alarmPlayNext, new AlarmDtoComparator.DateUtilSort());
+            Collections.sort(alarmPlayNext, AlarmDtoComparator.DateUtilSort.getInstance());
 //            Add all variables
             for (java.util.Date date : alarmPlayNext) {
                 if (date.after(new java.util.Date(System.currentTimeMillis() - 10000))) {

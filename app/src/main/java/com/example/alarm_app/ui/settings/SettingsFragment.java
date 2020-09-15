@@ -1,19 +1,24 @@
 package com.example.alarm_app.ui.settings;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.alarm_app.R;
-import com.example.alarm_app.alarmserver.auth.CredentialsHolder;
 import com.example.alarm_app.ui.account.LoginActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -24,9 +29,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private Preference btnSyncInterval, btnAccount, btnSendFeedback;
     private SwitchPreferenceCompat switchAutoSync;
 
+    private SettingsViewModel settingsViewModel;
+
+    private Observer<String> observerSummaryAccount = new Observer<String>() {
+        @Override
+        public void onChanged(String s) {
+            btnAccount.setSummary(s);
+        }
+    };
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        settingsViewModel = new ViewModelProvider(this)
+                .get(SettingsViewModel.class);
         setPreferencesFromResource(R.xml.prefrences, rootKey);
 
         initVariables();
@@ -34,6 +49,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         addListeners();
         accountWorking();
 
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        settingsViewModel.getAccountSummaryLiveData().observe(getViewLifecycleOwner(), observerSummaryAccount);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     private void addListeners() {
@@ -102,25 +123,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return false;
             }
         });
-        if (PreferenceManager
-                .getDefaultSharedPreferences(getContext())
-                .getBoolean(CredentialsHolder.IS_CONNECT_CODE, false)) {
-            btnAccount.setSummary("Connected to account with username: " + CredentialsHolder.getInstance().getUsername());
-        } else {
-            btnAccount.setSummary(R.string.account_summary_not_connected);
-        }
-        CredentialsHolder.getInstance().addCredentialsChangedListener(new CredentialsHolder.CredentialsChangedListener() {
-            @Override
-            public void OnCredentialChanged(Context context) {
-                if (PreferenceManager
-                        .getDefaultSharedPreferences(context)
-                        .getBoolean(CredentialsHolder.IS_CONNECT_CODE, false)) {
-                    btnAccount.setSummary("Connected to account with username: " + CredentialsHolder.getInstance().getUsername());
-                } else {
-                    btnAccount.setSummary(R.string.account_summary_not_connected);
-                }
-            }
-        });
     }
 
     private void initVariables() {
@@ -128,5 +130,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         btnAccount = findPreference(getString(R.string.account_key));
         btnSendFeedback = findPreference(getString(R.string.feedback_key));
         switchAutoSync = findPreference(getString(R.string.auto_sync_key));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        settingsViewModel.getAccountSummaryLiveData().removeObserver(observerSummaryAccount);
     }
 }

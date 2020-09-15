@@ -112,5 +112,6 @@ public class HomeFragment extends Fragment {
         homeViewModel.getTimeOfNextAlarmLiveData().removeObserver(observerNextAlarmText);
         homeViewModel.getIsDataRefreshLiveData().removeObserver(observerIsDataRefreshed);
         homeViewModel.getDataChanged().removeObserver(observerDataChangedAdapter);
+        btnAddNewAlarm.setOnClickListener(null);
     }
 }

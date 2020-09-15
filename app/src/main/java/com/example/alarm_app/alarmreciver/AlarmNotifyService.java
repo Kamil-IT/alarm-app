@@ -81,6 +81,7 @@ public class AlarmNotifyService extends Service {
         if (alarm != null) {
             setAlarmMgrToNextAlarm(alarm, alarmMgr);
         }
+
         listenerSetAlarmManager = new AlarmStaticService.OnDataSetChanged() {
             @Override
             public void dataChanged() {

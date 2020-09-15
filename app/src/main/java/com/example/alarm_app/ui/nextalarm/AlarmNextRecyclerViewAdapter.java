@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
-import com.example.alarm_app.alarmserver.AlarmStaticService;
 import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
 import com.example.alarm_app.alarmserver.model.Time;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,19 +28,10 @@ public class AlarmNextRecyclerViewAdapter extends RecyclerView.Adapter<AlarmNext
     private Context mContext;
     private FragmentManager fragmentManager;
 
-    private AlarmStaticService.OnDataSetChanged listenerOnDataSetChanged = new AlarmService.OnDataSetChanged() {
-        @Override
-        public void dataChanged() {
-            notifyDataSetChanged();
-        }
-    };
-
     public AlarmNextRecyclerViewAdapter(Context mContext, FragmentManager fragmentManager) {
         this.mContext = mContext;
         this.fragmentManager = fragmentManager;
         this.alarmService = AlarmService.getInstance();
-
-        alarmService.addListener(listenerOnDataSetChanged);
     }
 
     @NonNull
@@ -104,6 +94,5 @@ public class AlarmNextRecyclerViewAdapter extends RecyclerView.Adapter<AlarmNext
     @Override
     public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
-        AlarmService.getInstance().removeListener(listenerOnDataSetChanged);
     }
 }

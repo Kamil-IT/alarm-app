@@ -71,5 +71,9 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
 }

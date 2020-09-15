@@ -1,19 +1,54 @@
 package com.example.alarm_app.ui.nextalarm;
 
-import androidx.lifecycle.LiveData;
+import android.content.Context;
+
+import com.example.alarm_app.alarmserver.AlarmService;
+import com.example.alarm_app.alarmserver.AlarmStaticService;
+
+import org.jetbrains.annotations.NotNull;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import static com.example.alarm_app.alarmserver.ConnectionToAlarmServer.isNetworkConnected;
+
 public class NextAlarmViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private MutableLiveData<Boolean> isDataRefreshLiveData;
+    private MutableLiveData<Boolean> dataChanged;
 
     public NextAlarmViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        isDataRefreshLiveData = new MutableLiveData<>();
+        dataChanged = new MutableLiveData<>();
+        dataChanged.setValue(true);
+        AlarmService.getInstance().addListener(new AlarmStaticService.OnDataSetChanged() {
+            @Override
+            public void dataChanged() {
+                dataChanged.setValue(!dataChanged.getValue());
+            }
+        });
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public MutableLiveData<Boolean> getDataChanged() {
+        return dataChanged;
+    }
+
+    public void OnSwipeRefresh(@NotNull Context context){
+        AlarmService.getInstance().addListener(new AlarmStaticService.OnDataSetChanged() {
+            @Override
+            public void dataChanged() {
+                isDataRefreshLiveData.setValue(true);
+            }
+        });
+
+        if (isNetworkConnected(context)) {
+            AlarmService.getInstance().updateAlarmsFromServer(context);
+        } else {
+            isDataRefreshLiveData.setValue(false);
+        }
+    }
+
+    public MutableLiveData<Boolean> getIsDataRefreshLiveData() {
+        return isDataRefreshLiveData;
     }
 }
