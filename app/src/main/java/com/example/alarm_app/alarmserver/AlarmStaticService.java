@@ -133,6 +133,10 @@ public class AlarmStaticService extends AlarmSorting {
         listeners.add(listener);
     }
 
+    public void removeListener(AlarmService.OnDataSetChanged listener) {
+        listeners.remove(listener);
+    }
+
     public interface OnDataSetChanged {
         void dataChanged();
     }

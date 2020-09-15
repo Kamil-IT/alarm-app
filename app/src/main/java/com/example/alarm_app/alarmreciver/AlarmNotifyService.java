@@ -50,6 +50,9 @@ public class AlarmNotifyService extends Service {
      */
     public static final String EXTRA_CURRENT_ALARM_RINGING = "alarm_current_ringing";
 
+    private AlarmStaticService.OnDataSetChanged listenerSetAlarmManager;
+    private AlarmStaticService.OnDataSetChanged listenerSetNotificationText;
+
     @Override
     public void onCreate() {
         //        Create chanel
@@ -78,7 +81,7 @@ public class AlarmNotifyService extends Service {
         if (alarm != null) {
             setAlarmMgrToNextAlarm(alarm, alarmMgr);
         }
-        AlarmService.getInstance().addListener(new AlarmStaticService.OnDataSetChanged() {
+        listenerSetAlarmManager = new AlarmStaticService.OnDataSetChanged() {
             @Override
             public void dataChanged() {
                 AlarmFor14Days nextUpcomingAlarm = getNextUpcomingAlarm();
@@ -86,7 +89,9 @@ public class AlarmNotifyService extends Service {
                     setAlarmMgrToNextAlarm(nextUpcomingAlarm, alarmMgr);
                 }
             }
-        });
+        };
+
+        AlarmService.getInstance().addListener(listenerSetAlarmManager);
 
 //        Create updater for data from server
         if (PreferenceManager
@@ -147,7 +152,7 @@ public class AlarmNotifyService extends Service {
 
 //        TODO: check working it when app is closed and after change date in server
         final AlarmFor14Days alarmOld = alarm;
-        AlarmService.getInstance().addListener(new AlarmStaticService.OnDataSetChanged() {
+        listenerSetNotificationText = new AlarmStaticService.OnDataSetChanged() {
             @Override
             public void dataChanged() {
                 AlarmFor14Days alarmNew = getNextUpcomingAlarm();
@@ -156,7 +161,8 @@ public class AlarmNotifyService extends Service {
                     startForeground(ID_FOREGROUND, notification.build());
                 }
             }
-        });
+        };
+        AlarmService.getInstance().addListener(listenerSetNotificationText);
     }
 
     private NotificationCompat.Builder createNotification(String contentTitle, String contentText) {
@@ -244,5 +250,12 @@ public class AlarmNotifyService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AlarmService.getInstance().removeListener(listenerSetAlarmManager);
+        AlarmService.getInstance().removeListener(listenerSetNotificationText);
     }
 }

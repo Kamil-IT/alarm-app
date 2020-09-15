@@ -28,13 +28,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         this.mContext = mContext;
         this.fragmentManager = fragmentManager;
         this.alarmService = AlarmService.getInstance();
-
-        alarmService.addListener(new AlarmService.OnDataSetChanged() {
-            @Override
-            public void dataChanged() {
-                notifyDataSetChanged();
-            }
-        });
     }
 
     @NonNull

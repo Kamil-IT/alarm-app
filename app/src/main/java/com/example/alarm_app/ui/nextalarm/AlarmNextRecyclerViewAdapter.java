@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
+import com.example.alarm_app.alarmserver.AlarmStaticService;
 import com.example.alarm_app.alarmserver.model.AlarmFor14Days;
 import com.example.alarm_app.alarmserver.model.Time;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,17 +29,19 @@ public class AlarmNextRecyclerViewAdapter extends RecyclerView.Adapter<AlarmNext
     private Context mContext;
     private FragmentManager fragmentManager;
 
+    private AlarmStaticService.OnDataSetChanged listenerOnDataSetChanged = new AlarmService.OnDataSetChanged() {
+        @Override
+        public void dataChanged() {
+            notifyDataSetChanged();
+        }
+    };
+
     public AlarmNextRecyclerViewAdapter(Context mContext, FragmentManager fragmentManager) {
         this.mContext = mContext;
         this.fragmentManager = fragmentManager;
         this.alarmService = AlarmService.getInstance();
 
-        alarmService.addListener(new AlarmService.OnDataSetChanged() {
-            @Override
-            public void dataChanged() {
-                notifyDataSetChanged();
-            }
-        });
+        alarmService.addListener(listenerOnDataSetChanged);
     }
 
     @NonNull
@@ -96,5 +99,11 @@ public class AlarmNextRecyclerViewAdapter extends RecyclerView.Adapter<AlarmNext
             checkBoxIsActive = itemView.findViewById(R.id.check_box_is_active);
             btnOption = itemView.findViewById(R.id.floating_action_button_option);
         }
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        AlarmService.getInstance().removeListener(listenerOnDataSetChanged);
     }
 }

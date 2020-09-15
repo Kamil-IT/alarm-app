@@ -24,6 +24,12 @@ public class NextAlarmFragment extends Fragment {
     private NextAlarmViewModel nextAlarmViewModel;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
+    private AlarmStaticService.OnDataSetChanged listenerRefresh = new AlarmStaticService.OnDataSetChanged() {
+        @Override
+        public void dataChanged() {
+            swipeRefresh.setRefreshing(false);
+        }
+    };
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,12 +49,7 @@ public class NextAlarmFragment extends Fragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                AlarmService.getInstance().addListener(new AlarmStaticService.OnDataSetChanged() {
-                    @Override
-                    public void dataChanged() {
-                        swipeRefresh.setRefreshing(false);
-                    }
-                });
+                AlarmService.getInstance().addListener(listenerRefresh);
                 if (isNetworkConnected(requireContext())){
                     AlarmService.getInstance().updateAlarmsFromServer(getContext());
                 } else {
@@ -60,5 +61,11 @@ public class NextAlarmFragment extends Fragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AlarmService.getInstance().removeListener(listenerRefresh);
     }
 }
