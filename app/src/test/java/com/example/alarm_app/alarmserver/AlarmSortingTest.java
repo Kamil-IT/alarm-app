@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 
 public class AlarmSortingTest {
 
-//    List<AlarmFor14Days> alarmFor14Days;
     List<AlarmDto> alarms = new ArrayList<>();
 
     @Before
@@ -34,11 +33,9 @@ public class AlarmSortingTest {
                 "minutes+5",
                 "",
                 "",
-                "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
                 0L,
                 RingType.BIRDS,
-                null,
                 Collections.singletonList(AlarmFrequencyType.CUSTOM),
                 true,
                 Collections.singletonList(new Date(
@@ -54,11 +51,9 @@ public class AlarmSortingTest {
                 "hour+5",
                 "",
                 "",
-                "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
                 0L,
                 RingType.BIRDS,
-                null,
                 Collections.singletonList(AlarmFrequencyType.CUSTOM),
                 true,
                 Collections.singletonList(new Date(
@@ -74,11 +69,9 @@ public class AlarmSortingTest {
                 "minutes-5",
                 "",
                 "",
-                "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
                 0L,
                 RingType.BIRDS,
-                null,
                 Collections.singletonList(AlarmFrequencyType.CUSTOM),
                 true,
                 Collections.singletonList(new Date(
@@ -93,11 +86,9 @@ public class AlarmSortingTest {
                 "minutes-5",
                 "",
                 "",
-                "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
                 0L,
                 RingType.BIRDS,
-                null,
                 Collections.singletonList(AlarmFrequencyType.MONDAY),
                 true,
                 Collections.singletonList(new Date(
@@ -132,9 +123,9 @@ public class AlarmSortingTest {
 
 
         AlarmDto alarmFirst = new AlarmDto(
-                "1", "", "", "",
+                "1", "", "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
-                0L, RingType.BIRDS, null,
+                0L, RingType.BIRDS,
                 Collections.singletonList(AlarmFrequencyType.CUSTOM),
                 true,
                 Collections.singletonList(new Date(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))),
@@ -144,9 +135,9 @@ public class AlarmSortingTest {
 
         calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 2);
         AlarmDto alarmSecond = new AlarmDto(
-                "2", "", "", "",
+                "2", "", "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
-                0L, RingType.BIRDS, null,
+                0L, RingType.BIRDS,
                 Collections.singletonList(AlarmFrequencyType.CUSTOM),
                 true,
                 Collections.singletonList(new Date(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))),
@@ -156,9 +147,9 @@ public class AlarmSortingTest {
 
         calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 2);
         AlarmDto alarm3 = new AlarmDto(
-                "3", "", "", "",
+                "3", "", "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
-                0L, RingType.BIRDS, null,
+                0L, RingType.BIRDS,
                 Collections.singletonList(AlarmFrequencyType.CUSTOM),
                 true,
                 Collections.singletonList(new Date(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))),
@@ -187,9 +178,9 @@ public class AlarmSortingTest {
         calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 5);
 
         List<java.util.Date> datesWhenAlarmPlayWeek = AlarmSorting.AlarmDtoComparator.getDatesWhenAlarmPlayWeek(new AlarmDto(
-                "", "", "", "",
+                "", "", "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
-                0L, RingType.BIRDS, null,
+                0L, RingType.BIRDS,
                 Collections.singletonList(AlarmFrequencyType.CUSTOM),
                 true,
                 Collections.singletonList(new Date(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR))),
@@ -215,9 +206,9 @@ public class AlarmSortingTest {
         alarmFrequencyType.add(AlarmFrequencyType.SUNDAY);
 
         List<java.util.Date> datesWhenAlarmPlayWeek = AlarmSorting.AlarmDtoComparator.getDatesWhenAlarmPlayWeek(new AlarmDto(
-                "", "", "", "",
+                "", "", "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
-                0L, RingType.BIRDS, null,
+                0L, RingType.BIRDS,
                 alarmFrequencyType,
                 true,
                 Collections.<Date>emptyList(),
@@ -245,9 +236,9 @@ public class AlarmSortingTest {
         calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) - 5);
 
         List<java.util.Date> datesWhenAlarmPlayWeek = AlarmSorting.AlarmDtoComparator.getDatesWhenAlarmPlayWeek(new AlarmDto(
-                "", "", "", "",
+                "", "", "",
                 new Time(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)),
-                0L, RingType.BIRDS, null,
+                0L, RingType.BIRDS,
                 new ArrayList<AlarmFrequencyType>(),
                 true,
                 Collections.<Date>emptyList(),
@@ -271,7 +262,7 @@ public class AlarmSortingTest {
 
         List<java.util.Date> dates = Arrays.asList(dateCurrent, dateBefore, dateAfter);
 
-        Collections.sort(dates, new AlarmSorting.AlarmDtoComparator.DateUtilSort());
+        Collections.sort(dates, AlarmSorting.AlarmDtoComparator.DateUtilSort.getInstance());
 
         assertEquals(3, dates.size());
         assertEquals(dateBefore.toString(), dates.get(0).toString());
