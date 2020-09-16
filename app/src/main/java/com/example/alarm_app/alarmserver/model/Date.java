@@ -2,6 +2,8 @@ package com.example.alarm_app.alarmserver.model;
 
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
+
 public class Date {
 
     private Integer day;
@@ -54,5 +56,25 @@ public class Date {
     @Override
     public int hashCode() {
         return Objects.hash(day, month, year);
+    }
+
+
+    @NonNull
+    @Override
+    public String toString() {
+        StringBuilder response = new StringBuilder();
+
+        if (day < 10) response.append("0").append(day);
+        else response.append(day);
+        response.append("-");
+
+        if (month < 10) response.append("0").append(month);
+        else response.append(month);
+        response.append("-");
+
+        if (year < 10) response.append("0").append(year);
+        else response.append(year);
+
+        return response.toString();
     }
 }

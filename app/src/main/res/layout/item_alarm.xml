@@ -48,11 +48,14 @@
         android:id="@+id/text_view_alarm_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="205dp"
         android:text="name"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/floating_action_button_option"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout"
-        app:layout_constraintTop_toTopOf="@+id/floating_action_button_option" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/floating_action_button_option"
+        app:layout_constraintVertical_bias="0.16000003" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button_option"
@@ -60,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        app:backgroundTint="#ffffff"
+        app:backgroundTint="@color/colorAccent"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

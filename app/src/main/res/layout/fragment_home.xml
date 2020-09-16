@@ -30,6 +30,7 @@
             android:layout_marginTop="4dp"
             android:text="@string/text_view_next_alarm_be"
             android:textStyle="bold"
+            android:textColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewNextAlarm" />
     </androidx.constraintlayout.widget.ConstraintLayout>

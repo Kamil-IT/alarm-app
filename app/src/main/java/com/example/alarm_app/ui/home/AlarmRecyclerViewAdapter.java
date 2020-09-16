@@ -1,6 +1,7 @@
 package com.example.alarm_app.ui.home;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import com.example.alarm_app.R;
 import com.example.alarm_app.alarmserver.AlarmService;
 import com.example.alarm_app.alarmserver.model.AlarmDto;
+import com.example.alarm_app.alarmserver.model.Date;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -17,6 +19,14 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.FRIDAY;
+import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.MONDAY;
+import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.SATURDAY;
+import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.SUNDAY;
+import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.THURSDAY;
+import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.TUESDAY;
+import static com.example.alarm_app.alarmserver.model.AlarmFrequencyType.WEDNESDAY;
 
 public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
 
@@ -44,7 +54,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         holder.checkBoxIsActive.setActivated(true);
         holder.checkBoxIsActive.setChecked(alarm.getActive());
         holder.textAlarmTime.setText(alarm.getTime().toString());
-        holder.textDaysWhenAlarmPlay.setText(alarm.getAlarmFrequencyType().toString());
+        holder.textDaysWhenAlarmPlay.setText(getDaysWhenAlarmPlay(holder.itemView.getContext().getResources(), alarm));
         holder.textDesc.setText(alarm.getName());
         holder.btnOption.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +64,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
             }
         });
 
-
         holder.checkBoxIsActive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +71,33 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 alarmService.updateAlarm(mContext, alarm);
             }
         });
+    }
+
+    private String getDaysWhenAlarmPlay(Resources resources, AlarmDto alarm) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (alarm.getAlarmFrequencyType().contains(MONDAY))
+            stringBuilder.append(resources.getStringArray(R.array.week_days)[(int) MONDAY.getId() - 1] ).append(", ");
+        if (alarm.getAlarmFrequencyType().contains(TUESDAY))
+            stringBuilder.append(resources.getStringArray(R.array.week_days)[(int) TUESDAY.getId() - 1] ).append(", ");
+        if (alarm.getAlarmFrequencyType().contains(WEDNESDAY))
+            stringBuilder.append(resources.getStringArray(R.array.week_days)[(int) WEDNESDAY.getId() - 1] ).append(", ");
+        if (alarm.getAlarmFrequencyType().contains(THURSDAY))
+            stringBuilder.append(resources.getStringArray(R.array.week_days)[(int) THURSDAY.getId() - 1] ).append(", ");
+        if (alarm.getAlarmFrequencyType().contains(FRIDAY))
+            stringBuilder.append(resources.getStringArray(R.array.week_days)[(int) FRIDAY.getId() - 1] ).append(", ");
+        if (alarm.getAlarmFrequencyType().contains(SATURDAY))
+            stringBuilder.append(resources.getStringArray(R.array.week_days)[(int) SATURDAY.getId() - 1] ).append(", ");
+        if (alarm.getAlarmFrequencyType().contains(SUNDAY))
+            stringBuilder.append(resources.getStringArray(R.array.week_days)[(int) SUNDAY.getId() - 1] ).append(", ");
+
+        if (alarm.getAlarmFrequencyCostume() != null){
+            for (Date date :
+                    alarm.getAlarmFrequencyCostume()) {
+                stringBuilder.append(date.toString()).append(", ");
+            }
+        }
+
+        return stringBuilder.toString().substring(0, stringBuilder.toString().length() -2);
     }
 
     @Override

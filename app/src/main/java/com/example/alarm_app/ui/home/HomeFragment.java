@@ -53,8 +53,12 @@ public class HomeFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_home, container, false);
         final Context context = requireContext();
 
-//        Recycle view all alarms
         recyclerView = root.findViewById(R.id.recycle_view_all_alarms);
+        btnAddNewAlarm = root.findViewById(R.id.button_add_new_alarm);
+        swipeRefresh = root.findViewById(R.id.swipe_to_refresh);
+
+
+//        Recycle view all alarms
         final AlarmRecyclerViewAdapter adapter = new AlarmRecyclerViewAdapter(
                 inflater.getContext(), getParentFragmentManager());
         recyclerView.setAdapter(adapter);
@@ -69,7 +73,6 @@ public class HomeFragment extends Fragment {
 
 
 //        Add alarm sheet
-        btnAddNewAlarm = root.findViewById(R.id.button_add_new_alarm);
         btnAddNewAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +84,6 @@ public class HomeFragment extends Fragment {
         textNextAlarmWillBe = root.findViewById(R.id.text_view_next_alarm_be);
         homeViewModel.getTimeOfNextAlarmLiveData().observe(getViewLifecycleOwner(), observerNextAlarmText);
 
-        swipeRefresh = root.findViewById(R.id.swipe_to_refresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
