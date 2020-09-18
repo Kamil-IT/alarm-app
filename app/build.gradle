@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
-        applicationId "com.example.alarm_app"
-        minSdkVersion 19
+        applicationId "com.devcivil.alarm_app"
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -47,6 +47,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.work:work-runtime:2.4.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.android.support:support-compat:29.0.0'
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"

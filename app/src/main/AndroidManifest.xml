@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.alarm_app">
+    package="com.devcivil.alarm_app">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -20,13 +20,13 @@
 
 <!--        Activities-->
         <activity
-            android:name=".ui.ringing.AlarmRingingActivity"
+            android:name="com.devcivil.alarm_app.ui.ringing.AlarmRingingActivity"
             android:showOnLockScreen="true" />
-        <activity android:name=".ui.alarmmodify.ModifyAlarmActivity" />
-        <activity android:name=".ui.account.LoginActivity" />
-        <activity android:name=".ui.account.SingUpActivity" />
+        <activity android:name="com.devcivil.alarm_app.ui.alarmmodify.ModifyAlarmActivity" />
+        <activity android:name="com.devcivil.alarm_app.ui.account.LoginActivity" />
+        <activity android:name="com.devcivil.alarm_app.ui.account.SingUpActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.devcivil.alarm_app.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,17 +36,17 @@
         </activity>
 
 <!--        Receivers-->
-        <receiver android:name=".alarmreciver.ActivationAlarmActivityReceiver" />
-        <receiver android:name=".alarmreciver.AlarmNotifyRebootActivatorReceiver">
+        <receiver android:name="com.devcivil.alarm_app.alarmreciver.ActivationAlarmActivityReceiver" />
+        <receiver android:name="com.devcivil.alarm_app.alarmreciver.AlarmNotifyRebootActivatorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".alarmserver.updator.AlarmUpdateDataReceiver" />
+        <receiver android:name="com.devcivil.alarm_app.alarmserver.updator.AlarmUpdateDataReceiver" />
 
 <!--        Services-->
-        <service android:name=".alarmreciver.AlarmNotifyService" />
+        <service android:name="com.devcivil.alarm_app.alarmreciver.AlarmNotifyService" />
     </application>
 
 </manifest>
