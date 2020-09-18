@@ -48,7 +48,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         addListeners();
         accountWorking();
-
     }
 
     @Override
@@ -115,6 +114,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void accountWorking() {
+        btnAccount.setSummary(settingsViewModel.getAccountSummaryLiveData().getValue());
         btnAccount.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

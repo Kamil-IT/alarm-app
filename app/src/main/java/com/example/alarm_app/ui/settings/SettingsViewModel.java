@@ -18,21 +18,27 @@ public class SettingsViewModel extends AndroidViewModel {
     public SettingsViewModel(@NonNull final Application application) {
         super(application);
         accountSummaryLiveData = new MutableLiveData<>();
+        setAccountSummaryLiveData(application);
         CredentialsHolder.getInstance().addCredentialsChangedListener(new CredentialsHolder.CredentialsChangedListener() {
             @Override
             public void OnCredentialChanged(Context context) {
-                if (PreferenceManager
-                        .getDefaultSharedPreferences(context)
-                        .getBoolean(CredentialsHolder.IS_CONNECT_CODE, false)) {
-                    accountSummaryLiveData.setValue("Connected to account with username: " + CredentialsHolder.getInstance().getUsername());
-                } else {
-                    accountSummaryLiveData.setValue(application.getString(R.string.account_summary_not_connected));
-                }
+                setAccountSummaryLiveData(application);
             }
         });
+    }
+
+    private void setAccountSummaryLiveData(@NonNull Application application) {
+        if (PreferenceManager
+                .getDefaultSharedPreferences(application.getApplicationContext())
+                .getBoolean(CredentialsHolder.IS_CONNECT_CODE, false)) {
+            accountSummaryLiveData.setValue("Connected to account with username: " + CredentialsHolder.getInstance().getUsername());
+        } else {
+            accountSummaryLiveData.setValue(application.getString(R.string.account_summary_not_connected));
+        }
     }
 
     public MutableLiveData<String> getAccountSummaryLiveData() {
         return accountSummaryLiveData;
     }
+
 }
