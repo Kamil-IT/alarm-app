@@ -105,7 +105,7 @@ public class AlarmStaticService extends AlarmSorting {
     protected void deleteStaticAlarmByTimeAndIdNull(long timeCreate) {
         for (int i = 0; i < alarmsDto.size(); i++) {
             if (timeCreate == alarmsDto.get(i).getTimeCreateInMillis() &&
-                    alarmsDto.get(i).getId() == null) {
+                    (alarmsDto.get(i).getId() == null || "".equals(alarmsDto.get(i).getId()))) {
                 alarmsDto.remove(i);
                 break;
             }

@@ -177,7 +177,7 @@ public class HomeViewModel extends AndroidViewModel {
     public void previousStart(Context context){
         AlarmService.getInstance().creteAlarm(context,
                 new AlarmDto(
-                        "",
+                        null,
                         "Time to school",
                         "Wake up to school",
                         new Time(7,0,0),
