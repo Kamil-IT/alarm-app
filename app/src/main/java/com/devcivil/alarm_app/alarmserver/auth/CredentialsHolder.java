@@ -158,6 +158,10 @@ public class CredentialsHolder {
         return credentials.getJsonUsernamePassword();
     }
 
+    public boolean isCredentialsGiven(){
+        return getUsername() != null && getPassword() != null;
+    }
+
     private void credentialChanged(Context context){
         for (CredentialsChangedListener listener :
                 credentialsChangedListeners) {

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import com.devcivil.alarm_app.R;
 import com.devcivil.alarm_app.alarmserver.AlarmService;
 import com.devcivil.alarm_app.alarmserver.AlarmStaticService;
+import com.devcivil.alarm_app.alarmserver.auth.CredentialsHolder;
 import com.devcivil.alarm_app.alarmserver.model.AlarmDto;
 import com.devcivil.alarm_app.alarmserver.model.AlarmFor14Days;
 import com.devcivil.alarm_app.alarmserver.model.Date;
@@ -93,7 +94,7 @@ public class HomeViewModel extends AndroidViewModel {
             }
         });
 
-        if (isNetworkConnected(context)) {
+        if (isNetworkConnected(context) && CredentialsHolder.getInstance().isCredentialsGiven()) {
             AlarmService.getInstance().updateAlarmsFromServer(context);
         } else {
             isDataRefreshLiveData.setValue(false);
