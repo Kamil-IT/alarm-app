@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">alarm-app</string>
+    <string name="app_name">Alarm</string>
     <string name="alarm">Alarm</string>
 
     <!--    Main strings-->
