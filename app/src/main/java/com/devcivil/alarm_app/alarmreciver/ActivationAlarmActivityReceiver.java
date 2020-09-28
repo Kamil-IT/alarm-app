@@ -19,5 +19,26 @@ public class ActivationAlarmActivityReceiver extends BroadcastReceiver {
         dialogIntent.putExtra(EXTRA_CURRENT_ALARM_RINGING, intent.getStringExtra(EXTRA_CURRENT_ALARM_RINGING));
 
         context.startActivity(dialogIntent);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            if (!Settings.canDrawOverlays(context)){
+//                Toast.makeText(context, "No permission to write on the screen", Toast.LENGTH_LONG).show();
+//                Log.e("Permit", "write on the screen: " + Settings.canDrawOverlays(context));
+//            }
+//
+//            WindowManager mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+//            WindowManager.LayoutParams mLayoutParams = new WindowManager.LayoutParams(
+//                    ViewGroup.LayoutParams.MATCH_PARENT,
+//                    ViewGroup.LayoutParams.MATCH_PARENT,
+//                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+//                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
+//                    PixelFormat.TRANSLUCENT);
+//            mLayoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
+//            View view = LayoutInflater.from(context).inflate(R.layout.activity_alarm_ringing, null, false);
+//            mWindowManager.addView(view, mLayoutParams);
+//
+//        } else {
+//            context.startActivity(dialogIntent);
+//        }
     }
 }

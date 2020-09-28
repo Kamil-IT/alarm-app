@@ -1,14 +1,18 @@
 package com.devcivil.alarm_app;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Window;
 
 import com.devcivil.alarm_app.alarmreciver.AlarmNotifyService;
 import com.devcivil.alarm_app.alarmserver.AlarmService;
 import com.devcivil.alarm_app.alarmserver.updator.AlarmUpdateDataReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -20,6 +24,7 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 25;
     private Context mContext;
 
     @Override
@@ -44,6 +49,38 @@ public class MainActivity extends AppCompatActivity {
 
         createConnectionWitchAlarmService();
         initAlarmNotificationAndService();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Show alert dialog to the user saying a separate permission is needed
+            // Launch the settings activity if the user prefers
+            // TODO: Add warning when user don't permit and how can do it
+            if (!Settings.canDrawOverlays(this)) {
+
+
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Alarm working")
+                        .setMessage("Set in settings display over other apps to Allowed (this app named Alarm)")
+                        .setPositiveButton("Do it now!", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+                                //  It have to work like this
+                                //  ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},1);
+                            }
+                        })
+                        .setNegativeButton("Do it later by your self", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .create()
+                .show();
+            }
+        }
     }
 
     private void createConnectionWitchAlarmService() {
