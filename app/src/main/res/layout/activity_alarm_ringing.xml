@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ringing.AlarmRingingActivity">
+    tools:context=".ui.ringing.AlarmRingingActivity"
+    android:background="#FFFFFF">
 
     <Button
         android:id="@+id/button_snooze"
@@ -16,7 +17,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.526"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="#FFFFFF"/>
 
     <Button
         android:id="@+id/button_stop_alarm"
@@ -26,7 +30,10 @@
         android:text="@string/stop_alarm"
         app:layout_constraintBottom_toTopOf="@+id/button_snooze"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="#FFFFFF"/>
 
     <TextView
         android:id="@+id/text_alarm_name"

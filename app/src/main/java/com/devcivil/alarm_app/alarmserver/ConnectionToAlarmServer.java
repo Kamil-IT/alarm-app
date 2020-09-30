@@ -24,7 +24,7 @@ import androidx.annotation.Nullable;
 
 public class ConnectionToAlarmServer {
 
-    public static final String BASE_SERVER_URL = "http://alarmrestapi-env-1.eba-zvyzw6aw.eu-central-1.elasticbeanstalk.com/";
+    public static final String BASE_SERVER_URL = "http://alarmrestapi.eu-central-1.elasticbeanstalk.com/";
 
     //     Authentication
     public static final String TOKEN_PATH = "api/auth";
