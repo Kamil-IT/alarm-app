@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 
 import com.devcivil.alarm_app.MainActivity;
 import com.devcivil.alarm_app.R;
@@ -51,6 +52,7 @@ public class AlarmNotifyService extends Service {
 
     private AlarmStaticService.OnDataSetChanged listenerSetAlarmManager;
     private AlarmStaticService.OnDataSetChanged listenerSetNotificationText;
+    private AlarmService.OnDataSetChanged notificationWhenChangedListener;
 
     @Override
     public void onCreate() {
@@ -146,8 +148,19 @@ public class AlarmNotifyService extends Service {
         if (alarm != null) {
             contentText = getTextWhenNextAlarmWillBe(alarm);
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                !Settings.canDrawOverlays(AlarmNotifyService.this)){
+                contentText = getString(R.string.missing_permission_display_over_apps);
+        }
 
         final NotificationCompat.Builder notification = createNotification(contentTitle, contentText);
+        notificationWhenChangedListener = new AlarmStaticService.OnDataSetChanged() {
+            @Override
+            public void dataChanged() {
+                notification.setWhen(System.currentTimeMillis());
+            }
+        };
+        AlarmService.getInstance().addListener(notificationWhenChangedListener);
         startForeground(ID_FOREGROUND, notification.build());
 
 //        TODO: check working it when app is closed and after change date in server
@@ -156,9 +169,16 @@ public class AlarmNotifyService extends Service {
             @Override
             public void dataChanged() {
                 AlarmFor14Days alarmNew = getNextUpcomingAlarm();
-                if (alarmNew != alarmOld) {
-                    notification.setContentText(getTextWhenNextAlarmWillBe(alarmNew));
-                    startForeground(ID_FOREGROUND, notification.build());
+                if (alarmNew != alarmOld){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        if (Settings.canDrawOverlays(AlarmNotifyService.this)){
+                            notification.setContentText(getTextWhenNextAlarmWillBe(alarmNew));
+                            startForeground(ID_FOREGROUND, notification.build());
+                        }
+                    } else {
+                        notification.setContentText(getTextWhenNextAlarmWillBe(alarmNew));
+                        startForeground(ID_FOREGROUND, notification.build());
+                    }
                 }
             }
         };
@@ -180,7 +200,7 @@ public class AlarmNotifyService extends Service {
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
                 .setNotificationSilent()
-                .setShowWhen(false)
+                .setShowWhen(true)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(pendingIntent);
     }
@@ -257,5 +277,6 @@ public class AlarmNotifyService extends Service {
         super.onDestroy();
         AlarmService.getInstance().removeListener(listenerSetAlarmManager);
         AlarmService.getInstance().removeListener(listenerSetNotificationText);
+        AlarmService.getInstance().removeListener(notificationWhenChangedListener);
     }
 }
