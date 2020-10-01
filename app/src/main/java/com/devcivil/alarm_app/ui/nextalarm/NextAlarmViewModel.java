@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.devcivil.alarm_app.alarmserver.AlarmService;
 import com.devcivil.alarm_app.alarmserver.AlarmStaticService;
+import com.devcivil.alarm_app.alarmserver.auth.CredentialsHolder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +42,7 @@ public class NextAlarmViewModel extends ViewModel {
             }
         });
 
-        if (isNetworkConnected(context)) {
+        if (isNetworkConnected(context) && CredentialsHolder.getInstance().isCredentialsGiven()) {
             AlarmService.getInstance().updateAlarmsFromServer(context);
         } else {
             isDataRefreshLiveData.setValue(false);
