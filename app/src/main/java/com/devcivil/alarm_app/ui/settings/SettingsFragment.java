@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,7 +98,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Android app Alarm");
-                intent.putExtra(Intent.EXTRA_TEXT, "Hello...");
+                intent.putExtra(Intent.EXTRA_TEXT, "Hello Dev civil, \n"
+                        + "Product: " + Build.PRODUCT + "\n"
+                        + "Device: " + Build.DEVICE + "\n"
+                        + "Model: " + Build.MODEL + "\n"
+                        + "SDK: " + Build.VERSION.SDK_INT + "\n"
+                );
                 intent.setData(Uri.parse("mailto:kkwolny@vp.pl"));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
