@@ -112,6 +112,7 @@ public class ActivationAlarmActivityReceiver extends BroadcastReceiver {
 //        Init Media player
         player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_ALARM);
+        player.setLooping(true);
         AssetFileDescriptor afd = context.getResources().openRawResourceFd(getRingTypeOfCurrentAlarmRinging(context).getMusicRes());
         try {
             player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());

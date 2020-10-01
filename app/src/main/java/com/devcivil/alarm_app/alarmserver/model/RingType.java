@@ -10,7 +10,7 @@ public enum RingType {
     OCEAN(2, R.raw.ocean),
     ROOSTER(3, R.raw.roster),
     ALARM_CLASSIC(4, R.raw.alarm_clock),
-    SIREN(5, R.raw.alarm_clock);
+    SIREN(5, R.raw.siren);
 
     private final long id;
     private final int musicRes;
