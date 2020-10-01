@@ -1,6 +1,7 @@
 package com.devcivil.alarm_app.alarmreciver;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -66,13 +67,18 @@ public class ActivationAlarmActivityReceiver extends BroadcastReceiver {
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED,
                     PixelFormat.TRANSLUCENT);
             mLayoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
 
             viewRinging = getAlarmRingingView(context);
 
+            OnAlarmStartRingingActivityHandler.getINSTANCE().notifyAlarmStartRinging(context);
+
+//            TODO: Add to settings tubleshotings
+
             mWindowManager.addView(viewRinging, mLayoutParams);
+
 
         } else {
             context.startActivity(dialogIntent);
@@ -87,7 +93,6 @@ public class ActivationAlarmActivityReceiver extends BroadcastReceiver {
 
     private View getAlarmRingingView(final Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.activity_alarm_ringing, null, false);
-
 
         //        Init button, labels text
         Button btnSnooze = view.findViewById(R.id.button_snooze);
@@ -141,6 +146,7 @@ public class ActivationAlarmActivityReceiver extends BroadcastReceiver {
                 notifySnoozeActive(context, getNameOfCurrentAlarmRinging(context), getSnoozeOfCurrentAlarmRinging(context), getRingTypeOfCurrentAlarmRinging(context));
                 isSnoozeClicked = true;
                 mWindowManager.removeViewImmediate(viewRinging);
+                OnAlarmStartRingingActivityHandler.getINSTANCE().killActivity();
             }
         });
 
@@ -152,6 +158,7 @@ public class ActivationAlarmActivityReceiver extends BroadcastReceiver {
                 }
                 notifyAlarmEnd(context);
                 mWindowManager.removeViewImmediate(viewRinging);
+                OnAlarmStartRingingActivityHandler.getINSTANCE().killActivity();
             }
         });
 
@@ -211,6 +218,37 @@ public class ActivationAlarmActivityReceiver extends BroadcastReceiver {
             return AlarmService.getInstance().getNextStaticAlarm10sAfterActivation().getRingType();
         } else {
             return RingType.valueOf(defSharedPref.getString(ALARM_RING_TYPE_CODE, RingType.ALARM_CLASSIC.toString()));
+        }
+    }
+
+    public static class OnAlarmStartRingingActivityHandler {
+
+        private static final OnAlarmStartRingingActivityHandler INSTANCE = new OnAlarmStartRingingActivityHandler();
+
+        private Activity activity;
+
+        private OnAlarmStartRingingActivityHandler() {
+        }
+
+        public static OnAlarmStartRingingActivityHandler getINSTANCE() {
+            return INSTANCE;
+        }
+
+        public void notifyAlarmStartRinging(Context context){
+            Intent intentEmptyActivity = new Intent(context, EmptyFullScreenActivity.class);
+            intentEmptyActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intentEmptyActivity);
+        }
+
+        public void notifyActivityStartWorking(Activity activity){
+            this.activity = activity;
+        }
+
+        public void killActivity(){
+            if (activity != null){
+                activity.finish();
+            }
+            this.activity = null;
         }
     }
 }

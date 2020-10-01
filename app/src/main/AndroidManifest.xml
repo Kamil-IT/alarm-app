@@ -36,6 +36,16 @@
         <activity android:name="com.devcivil.alarm_app.ui.alarmmodify.ModifyAlarmActivity" />
         <activity android:name="com.devcivil.alarm_app.ui.account.LoginActivity" />
         <activity android:name="com.devcivil.alarm_app.ui.account.SingUpActivity" />
+        <activity android:name="com.devcivil.alarm_app.alarmreciver.EmptyFullScreenActivity"
+            android:allowTaskReparenting="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:permission="android.permission.USE_SIP"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""/>
+
+<!--        Activity settings-->
+        <activity android:name="com.devcivil.alarm_app.ui.settings.troubleshooting.xiaomi.XiaomiAlarmRingingNotShowOnLockScreenActivity" />
 
 <!--        Receivers-->
         <receiver android:name="com.devcivil.alarm_app.alarmreciver.ActivationAlarmActivityReceiver" />

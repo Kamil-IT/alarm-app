@@ -106,6 +106,12 @@
     <string name="account_title">Account</string>
     <string name="account_summary_not_connected">Not connected</string>
 
+    <string name="troubleshooting_category_title">Troubleshooting</string>
+    <string name="troubleshooting_category_key">troubleshooting_category</string>
+    <string name="troubleshooting_xiaomi_key">xiaomi_miui</string>
+    <string name="troubleshooting_xiaomi_title">Xiaomi (MIUI)</string>
+    <string name="troubleshooting_xiaomi_summary">Possible errors in Xiaomi phones/tablets</string>
+
     <string name="auto_sync_key">auto_sync</string>
     <string name="auto_sync_category_key">sync_category</string>
     <string name="auto_sync_title">Enable auto sync</string>
@@ -132,6 +138,13 @@
         <item>6 hour</item>
         <item>12 hour</item>
     </string-array>
+
+<!--    Preferences troubleshooting-->
+
+    <string name="troubleshooting_xiaomi_lock_screen_key">xiaomi_lock_screen</string>
+    <string name="troubleshooting_xiaomi_lock_screen_title">Lock screen</string>
+    <string name="troubleshooting_xiaomi_lock_screen_summary">Alarm ringing don\'t show on lock screen</string>
+    <string name="xiaami_error_summary">When alarm rinnging activity not show over lock screen you have to enable this permission</string>
 
 
 </resources>

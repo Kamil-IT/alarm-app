@@ -31,6 +31,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/troubleshooting_category_title"
+        android:key="@string/troubleshooting_category_key">
+
+        <Preference
+            app:key="@string/troubleshooting_xiaomi_key"
+            app:title="@string/troubleshooting_xiaomi_title"
+            app:summary="@string/troubleshooting_xiaomi_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/feedback_category_title"
         android:key="@string/feedback_category_key">
 

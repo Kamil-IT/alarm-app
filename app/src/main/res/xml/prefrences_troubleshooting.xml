@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:key="@string/troubleshooting_xiaomi_lock_screen_key"
+        app:title="@string/troubleshooting_xiaomi_lock_screen_title"
+        app:summary="@string/troubleshooting_xiaomi_lock_screen_summary"
+        app:dependency="@string/troubleshooting_xiaomi_lock_screen_key"/>
+
+</PreferenceScreen>

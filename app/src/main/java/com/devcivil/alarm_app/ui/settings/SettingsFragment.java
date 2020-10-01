@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.devcivil.alarm_app.R;
 import com.devcivil.alarm_app.ui.account.LoginActivity;
+import com.devcivil.alarm_app.ui.settings.troubleshooting.xiaomi.XiaomiAlarmRingingNotShowOnLockScreenActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import androidx.annotation.NonNull;
@@ -26,7 +27,7 @@ import androidx.preference.SwitchPreferenceCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private Preference btnSyncInterval, btnAccount, btnSendFeedback;
+    private Preference btnSyncInterval, btnAccount, btnSendFeedback, btnTroubleSXioami;
     private SwitchPreferenceCompat switchAutoSync;
 
     private SettingsViewModel settingsViewModel;
@@ -111,6 +112,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+
+        btnTroubleSXioami.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(getContext(), XiaomiAlarmRingingNotShowOnLockScreenActivity.class));
+                return false;
+            }
+        });
     }
 
     private void accountWorking() {
@@ -130,6 +139,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         btnAccount = findPreference(getString(R.string.account_key));
         btnSendFeedback = findPreference(getString(R.string.feedback_key));
         switchAutoSync = findPreference(getString(R.string.auto_sync_key));
+        btnTroubleSXioami = findPreference(getString(R.string.troubleshooting_xiaomi_key));
     }
 
     @Override
