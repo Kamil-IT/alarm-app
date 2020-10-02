@@ -75,8 +75,6 @@ public class ActivationAlarmActivityReceiver extends BroadcastReceiver {
 
             OnAlarmStartRingingActivityHandler.getINSTANCE().notifyAlarmStartRinging(context);
 
-//            TODO: Add to settings tubleshotings
-
             mWindowManager.addView(viewRinging, mLayoutParams);
 
 

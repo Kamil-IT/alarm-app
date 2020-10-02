@@ -103,12 +103,6 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-//        textNextAlarmWillBe.setText(homeViewModel.getTimeOfNextAlarmLiveData().getValue());
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         homeViewModel.getTimeOfNextAlarmLiveData().removeObserver(observerNextAlarmText);

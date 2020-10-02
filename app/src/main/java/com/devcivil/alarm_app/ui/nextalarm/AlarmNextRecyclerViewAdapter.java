@@ -16,6 +16,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -44,8 +45,10 @@ public class AlarmNextRecyclerViewAdapter extends RecyclerView.Adapter<AlarmNext
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final AlarmFor14Days alarm = alarmService.getSortedActiveAlarmsFor14Days().get(position);
-        Time time = new Time(alarm.getAlarmBe().getHours(),
-                alarm.getAlarmBe().getMinutes(), alarm.getAlarmBe().getSeconds());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(alarm.getAlarmBe());
+        Time time = new Time(calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         @SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
         holder.checkBoxIsActive.setActivated(true);

@@ -10,7 +10,7 @@ import com.devcivil.alarm_app.R;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 public class StopwatchFragment extends Fragment {
 
@@ -29,7 +29,7 @@ public class StopwatchFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(StopwatchViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(StopwatchViewModel.class);
     }
 
 }

@@ -10,7 +10,7 @@
         android:id="@+id/constraint_layout_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#37000000">
+        android:background="@color/background_item">
 
         <TextView
             android:id="@+id/text_view_title"

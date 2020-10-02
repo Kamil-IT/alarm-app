@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AlarmRingingDialogRecycleView extends RecyclerView.Adapter<AlarmRingingDialogRecycleView.ViewHolder> {
+public class AlarmRingingDialogViewAdapter extends RecyclerView.Adapter<AlarmRingingDialogViewAdapter.ViewHolder> {
 
     @Nullable
     private OnClickRingtoneListener onClickRingtoneListener;
@@ -24,12 +24,14 @@ public class AlarmRingingDialogRecycleView extends RecyclerView.Adapter<AlarmRin
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_alarm_ringing, viewGroup, false);
-        return new AlarmRingingDialogRecycleView.ViewHolder(view);
+        return new AlarmRingingDialogViewAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int i) {
         final RingType ringType = RingType.getById(i);
+
+        if (ringType == null) return;
 
         holder.txtTitle.setText(holder.itemView.getResources().getTextArray(R.array.ringtone_types)[(int) ringType.getId()]);
 

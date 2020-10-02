@@ -17,7 +17,7 @@ public class XiaomiAlarmRingingNotShowOnLockScreenActivity extends AppCompatActi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null) getSupportActionBar().hide();
 
         setContentView(R.layout.fragment_ringing_not_show_on_lock_screen);
     }

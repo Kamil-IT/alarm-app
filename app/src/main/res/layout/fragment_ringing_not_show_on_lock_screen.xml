@@ -7,7 +7,7 @@
     tools:context=".ui.settings.troubleshooting.xiaomi.XiaomiAlarmRingingNotShowOnLockScreenActivity">
 
     <ImageView
-        android:id="@+id/image_view_screanshot"
+        android:id="@+id/image_view_screenshot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -15,14 +15,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_summary"
         tools:srcCompat="@tools:sample/avatars"
-        android:src="@drawable/xioami_lock_screen_alarm_ringing_error"/>
+        android:src="@drawable/xiaomi_lock_screen_alarm_ringing_error"/>
 
     <TextView
         android:id="@+id/text_view_summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="@string/xiaami_error_summary"
+        android:text="@string/xiaomi_error_summary"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_title" />

@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 public class TimerFragment extends Fragment {
 
@@ -21,7 +21,7 @@ public class TimerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         timerViewModel =
-                ViewModelProviders.of(this).get(TimerViewModel.class);
+                new ViewModelProvider(this).get(TimerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
         timerViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

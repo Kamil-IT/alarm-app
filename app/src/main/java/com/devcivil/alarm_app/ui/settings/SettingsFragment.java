@@ -28,7 +28,7 @@ import androidx.preference.SwitchPreferenceCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private Preference btnSyncInterval, btnAccount, btnSendFeedback, btnTroubleSXioami;
+    private Preference btnSyncInterval, btnAccount, btnSendFeedback, btnTroubleSXiaomi;
     private SwitchPreferenceCompat switchAutoSync;
 
     private SettingsViewModel settingsViewModel;
@@ -62,7 +62,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         btnSyncInterval.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                AlertDialog alertDialog = new MaterialAlertDialogBuilder(getContext())
+                AlertDialog alertDialog = new MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.sync_interval_title)
                         .setNegativeButton(R.string.cancel, null)
                         .setItems(R.array.sync_interval_time, new DialogInterface.OnClickListener() {
@@ -119,7 +119,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        btnTroubleSXioami.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        btnTroubleSXiaomi.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 startActivity(new Intent(getContext(), XiaomiAlarmRingingNotShowOnLockScreenActivity.class));
@@ -145,7 +145,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         btnAccount = findPreference(getString(R.string.account_key));
         btnSendFeedback = findPreference(getString(R.string.feedback_key));
         switchAutoSync = findPreference(getString(R.string.auto_sync_key));
-        btnTroubleSXioami = findPreference(getString(R.string.troubleshooting_xiaomi_key));
+        btnTroubleSXiaomi = findPreference(getString(R.string.troubleshooting_xiaomi_key));
     }
 
     @Override

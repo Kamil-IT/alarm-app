@@ -144,7 +144,7 @@
     <string name="troubleshooting_xiaomi_lock_screen_key">xiaomi_lock_screen</string>
     <string name="troubleshooting_xiaomi_lock_screen_title">Lock screen</string>
     <string name="troubleshooting_xiaomi_lock_screen_summary">Alarm ringing don\'t show on lock screen</string>
-    <string name="xiaami_error_summary">When alarm rinnging activity not show over lock screen you have to enable this permission</string>
+    <string name="xiaomi_error_summary">When alarm rinnging activity not show over lock screen you have to enable this permission</string>
 
 
     <string name="missing_permission_display_over_apps">Missing permission \'Display over other apps\'</string>

@@ -154,8 +154,8 @@ public class ModifyAlarmActivity extends AppCompatActivity {
                         .create();
                 View view = getLayoutInflater().inflate(R.layout.content_alarm_ringing_recycler, null);
                 RecyclerView recycleViewSounds = view.findViewById(R.id.recycle_view_all_sounds);
-                AlarmRingingDialogRecycleView adapter = new AlarmRingingDialogRecycleView();
-                adapter.setOnClickRingtoneListener(new AlarmRingingDialogRecycleView.OnClickRingtoneListener() {
+                AlarmRingingDialogViewAdapter adapter = new AlarmRingingDialogViewAdapter();
+                adapter.setOnClickRingtoneListener(new AlarmRingingDialogViewAdapter.OnClickRingtoneListener() {
                     @Override
                     public void onClick(RingType ringType) {
                         ringTypeGiven = ringType;
