@@ -2,6 +2,7 @@ package com.devcivil.alarm_app.alarmserver.model;
 
 import com.devcivil.alarm_app.R;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RawRes;
 
 public enum RingType {
@@ -20,7 +21,27 @@ public enum RingType {
         this.musicRes = musicRes;
     }
 
-    public long getId() { return id;}
+    public long getId() {
+        return id;
+    }
 
-    public int getMusicRes() { return musicRes; }
+    public int getMusicRes() {
+        return musicRes;
+    }
+
+    @Nullable
+    public static RingType getById(long id) {
+        for (RingType ringType :
+                RingType.values()) {
+            if (ringType.id == id) {
+                return ringType;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static RingType getById(int id){
+        return getById(Long.valueOf(id));
+    }
 }

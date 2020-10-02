@@ -44,6 +44,8 @@ import androidx.annotation.ArrayRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static com.devcivil.alarm_app.alarmserver.model.AlarmFrequencyType.CUSTOM;
 import static com.devcivil.alarm_app.alarmserver.model.AlarmFrequencyType.FRIDAY;
@@ -91,6 +93,8 @@ public class ModifyAlarmActivity extends AppCompatActivity {
     DateFormat dateFormatter = new SimpleDateFormat("dd, MMM yyyy");
     @SuppressLint("SimpleDateFormat")
     DateFormat dateFormatterToService = new SimpleDateFormat("dd-MM-yyyy");
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +148,26 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         btnRingtone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAlertDialogWithItems(R.array.ringtone_types, R.string.ringtone, textRingtone).show();
+                final AlertDialog alertDialog = new MaterialAlertDialogBuilder(mContext)
+                        .setTitle(R.string.ringtone)
+                        .setNegativeButton(R.string.cancel, null)
+                        .create();
+                View view = getLayoutInflater().inflate(R.layout.content_alarm_ringing_recycler, null);
+                RecyclerView recycleViewSounds = view.findViewById(R.id.recycle_view_all_sounds);
+                AlarmRingingDialogRecycleView adapter = new AlarmRingingDialogRecycleView();
+                adapter.setOnClickRingtoneListener(new AlarmRingingDialogRecycleView.OnClickRingtoneListener() {
+                    @Override
+                    public void onClick(RingType ringType) {
+                        ringTypeGiven = ringType;
+                        textRingtone.setText(getResources().getStringArray(R.array.ringtone_types)[ (int) ringType.getId()]);
+                        alertDialog.dismiss();
+                    }
+                });
+                recycleViewSounds.setAdapter(adapter);
+                recycleViewSounds.setLayoutManager(new LinearLayoutManager(ModifyAlarmActivity.this));
+                alertDialog.setView(view);
+
+                alertDialog.show();
             }
         });
 
@@ -434,4 +457,8 @@ public class ModifyAlarmActivity extends AppCompatActivity {
         if (alarmFrequencyTypes.size() == 0) alarmFrequencyTypes.add(CUSTOM);
         return alarmFrequencyTypes;
     }
+
+
+
+
 }

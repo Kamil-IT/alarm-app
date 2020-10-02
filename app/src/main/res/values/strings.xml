@@ -45,7 +45,7 @@
     <string name="snooze">Snooze</string>
     <string name="costume">Costume</string>
     <string name="turn_off_type">Turn off type</string>
-    <string name="ringtone">ringtone</string>
+    <string name="ringtone">Ringtone</string>
     <string name="create_new_alarm">Create new alarm</string>
     <string name="alarm_created">Alarm created</string>
     <string name="alarm_not_created">Alarm not created</string>
@@ -148,6 +148,8 @@
 
 
     <string name="missing_permission_display_over_apps">Missing permission \'Display over other apps\'</string>
+    <string name="play">Play</string>
+    <string name="stop">Stop</string>
 
 
 </resources>
