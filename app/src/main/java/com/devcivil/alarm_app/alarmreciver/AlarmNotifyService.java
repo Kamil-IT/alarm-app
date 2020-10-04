@@ -17,7 +17,6 @@ import com.devcivil.alarm_app.R;
 import com.devcivil.alarm_app.alarmserver.AlarmService;
 import com.devcivil.alarm_app.alarmserver.AlarmStaticService;
 import com.devcivil.alarm_app.alarmserver.model.AlarmFor14Days;
-import com.devcivil.alarm_app.alarmserver.updator.AlarmUpdateDataReceiver;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
@@ -28,7 +27,6 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.preference.PreferenceManager;
 
 import static java.util.Calendar.DAY_OF_WEEK;
 import static java.util.Calendar.HOUR_OF_DAY;
@@ -95,30 +93,8 @@ public class AlarmNotifyService extends Service {
 
         AlarmService.getInstance().addListener(listenerSetAlarmManager);
 
-//        Create updater for data from server
-        if (PreferenceManager
-                .getDefaultSharedPreferences(this)
-                .getBoolean(getString(R.string.auto_sync_key), false)){
-            long interval = AlarmManager.INTERVAL_HALF_HOUR / 30
-                    * PreferenceManager
-                    .getDefaultSharedPreferences(this)
-                    .getInt(getString(R.string.sync_interval_key), 30);
-
-            alarmMgr.setInexactRepeating(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    System.currentTimeMillis() + interval,
-                    interval,
-                    PendingIntent.getBroadcast(this, 0, new Intent(getBaseContext(), AlarmUpdateDataReceiver.class), 0)
-            );
-        }
-        else {
-            alarmMgr.setInexactRepeating(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR,
-                    AlarmManager.INTERVAL_HALF_HOUR,
-                    PendingIntent.getBroadcast(this, 0, new Intent(getBaseContext(), AlarmUpdateDataReceiver.class), 0)
-            );
-        }
+        //        Create updater for data from server
+        AlarmSyncService.startService(this);
 
         return START_STICKY;
     }

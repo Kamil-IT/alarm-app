@@ -59,6 +59,7 @@
 
 <!--        Services-->
         <service android:name="com.devcivil.alarm_app.alarmreciver.AlarmNotifyService" />
+        <service android:name="com.devcivil.alarm_app.alarmreciver.AlarmSyncService" />
     </application>
 
 </manifest>

@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.devcivil.alarm_app.R;
+import com.devcivil.alarm_app.alarmreciver.AlarmSyncService;
 import com.devcivil.alarm_app.ui.account.LoginActivity;
 import com.devcivil.alarm_app.ui.settings.troubleshooting.xiaomi.XiaomiAlarmRingingNotShowOnLockScreenActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -83,7 +83,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                                         editor.putInt(getString(R.string.sync_interval_key), interval);
                                         editor.apply();
-                                        Toast.makeText(getContext(), R.string.to_apply_changed_settings_restart_device, Toast.LENGTH_SHORT).show();
+                                        AlarmSyncService.syncTimeUpdated(getContext());
                                     }
                                 }
                         )
@@ -114,7 +114,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         switchAutoSync.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Toast.makeText(getContext(), R.string.to_apply_changed_settings_restart_device, Toast.LENGTH_SHORT).show();
+                AlarmSyncService.syncTimeUpdated(getContext());
                 return true;
             }
         });

@@ -9,8 +9,8 @@ android {
         applicationId 'com.devcivil.alarm_app'
         minSdkVersion 21
         targetSdkVersion findProperty("android.highestSdkVersion") as Integer
-        versionCode 7
-        versionName "1.0"
+        versionCode 8
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
