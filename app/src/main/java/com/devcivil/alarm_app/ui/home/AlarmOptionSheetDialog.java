@@ -17,8 +17,8 @@ import com.google.gson.Gson;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import static com.devcivil.alarm_app.ui.alarmmodify.ModifyAlarmActivity.EXTRA_ID_ALARM_UPDATE;
-import static com.devcivil.alarm_app.ui.alarmmodify.ModifyAlarmActivity.EXTRA_ID_IS_UPDATE;
+import static com.devcivil.alarm_app.ui.alarmmodify.ModifyAlarmVewModel.EXTRA_ID_ALARM_UPDATE;
+import static com.devcivil.alarm_app.ui.alarmmodify.ModifyAlarmVewModel.EXTRA_ID_IS_UPDATE;
 
 public class AlarmOptionSheetDialog extends BottomSheetDialogFragment {
 

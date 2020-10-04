@@ -10,12 +10,17 @@ import android.widget.TextView;
 import com.devcivil.alarm_app.R;
 import com.devcivil.alarm_app.alarmserver.model.RingType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AlarmRingingDialogViewAdapter extends RecyclerView.Adapter<AlarmRingingDialogViewAdapter.ViewHolder> {
+
+    private List<MediaPlayer> mediaPlayers = new ArrayList<>();
 
     @Nullable
     private OnClickRingtoneListener onClickRingtoneListener;
@@ -35,20 +40,28 @@ public class AlarmRingingDialogViewAdapter extends RecyclerView.Adapter<AlarmRin
 
         holder.txtTitle.setText(holder.itemView.getResources().getTextArray(R.array.ringtone_types)[(int) ringType.getId()]);
 
-        final MediaPlayer player = MediaPlayer.create(holder.itemView.getContext(), ringType.getMusicRes());
+        holder.player = MediaPlayer.create(holder.itemView.getContext(), ringType.getMusicRes());
+        mediaPlayers.add(holder.player);
         final Boolean[] isPlay = {true};
         holder.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isPlay[0]){
-                    player.start();
+                if (isPlay[0]) {
+                    holder.player.start();
                     holder.btnPlay.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_stop_white_24dp, 0);
                     holder.btnPlay.setText(R.string.stop);
+                    holder.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            holder.btnPlay.setText(R.string.play);
+                            holder.btnPlay.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_play_arrow_white_24dp, 0);
+                            isPlay[0] = true;
+                        }
+                    });
                     isPlay[0] = false;
-                }
-                else {
-                    if (player.isPlaying()){
-                        player.pause();
+                } else {
+                    if (holder.player.isPlaying()) {
+                        holder.player.pause();
                     }
                     holder.btnPlay.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_play_arrow_white_24dp, 0);
                     holder.btnPlay.setText(R.string.play);
@@ -60,7 +73,7 @@ public class AlarmRingingDialogViewAdapter extends RecyclerView.Adapter<AlarmRin
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onClickRingtoneListener != null){
+                if (onClickRingtoneListener != null) {
                     onClickRingtoneListener.onClick(ringType);
                 }
             }
@@ -72,8 +85,31 @@ public class AlarmRingingDialogViewAdapter extends RecyclerView.Adapter<AlarmRin
         return RingType.values().length;
     }
 
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder.player != null) {
+            if (holder.player.isPlaying()) {
+                holder.player.release();
+            }
+        }
+    }
+
+    public void killAllAlarms() {
+        for (MediaPlayer player :
+                mediaPlayers) {
+            if (player != null) {
+                if (player.isPlaying()){
+                    player.release();
+                }
+            }
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        private MediaPlayer player;
         private Button btnPlay;
         private TextView txtTitle;
         private ConstraintLayout layout;

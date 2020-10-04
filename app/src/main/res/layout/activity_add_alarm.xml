@@ -209,14 +209,16 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <Button
                 android:id="@+id/button_add_new_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
                 android:layout_margin="16dp"
+                android:text="@string/add"
                 android:backgroundTint="@color/colorAccent"
-                app:srcCompat="@drawable/ic_add_alarm_black_24dp" />
+                android:drawableEnd="@drawable/ic_add_alarm_black_24dp"
+                />
         </LinearLayout>
 
         </RelativeLayout>
