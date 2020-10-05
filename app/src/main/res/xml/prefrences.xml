@@ -39,6 +39,11 @@
             app:title="@string/troubleshooting_xiaomi_title"
             app:summary="@string/troubleshooting_xiaomi_summary" />
 
+        <Preference
+            app:key="@string/troubleshooting_autostart_key"
+            app:title="@string/troubleshooting_autostart_title"
+            app:summary="@string/troubleshooting_autostart_summary" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

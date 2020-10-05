@@ -10,7 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion findProperty("android.highestSdkVersion") as Integer
         versionCode 8
-        versionName "1.1"
+        versionName "1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

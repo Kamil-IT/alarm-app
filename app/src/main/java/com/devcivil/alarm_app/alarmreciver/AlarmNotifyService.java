@@ -94,7 +94,7 @@ public class AlarmNotifyService extends Service {
         AlarmService.getInstance().addListener(listenerSetAlarmManager);
 
         //        Create updater for data from server
-        AlarmSyncService.startService(this);
+        AlarmSyncService.startServiceIfSyncEnabledOrAlarm(this);
 
         return START_STICKY;
     }

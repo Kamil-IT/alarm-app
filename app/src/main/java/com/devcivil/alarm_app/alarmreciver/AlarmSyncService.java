@@ -60,6 +60,16 @@ public class AlarmSyncService extends Service {
 //        }
     }
 
+    public static void startServiceIfSyncEnabledOrAlarm(Context context){
+        if (PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getBoolean(context.getString(R.string.auto_sync_key), false)){
+            AlarmNotifyService.startService(context);
+        } else if (AlarmService.getInstance().getSortedActiveAlarmsFor14Days().size() == 0){
+            AlarmNotifyService.stopService(context);
+        }
+    }
+
     public static void stopService(Context context){
         Intent syncService = new Intent(context, AlarmSyncService.class);
         context.stopService(syncService);

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.devcivil.alarm_app.R;
 import com.devcivil.alarm_app.alarmreciver.AlarmSyncService;
 import com.devcivil.alarm_app.ui.account.LoginActivity;
+import com.devcivil.alarm_app.ui.settings.troubleshooting.autostart.AutoStartEnabler;
 import com.devcivil.alarm_app.ui.settings.troubleshooting.xiaomi.XiaomiAlarmRingingNotShowOnLockScreenActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -28,7 +29,7 @@ import androidx.preference.SwitchPreferenceCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private Preference btnSyncInterval, btnAccount, btnSendFeedback, btnTroubleSXiaomi;
+    private Preference btnSyncInterval, btnAccount, btnSendFeedback, btnTroubleSXiaomi, btnTroubleSAutoStart;
     private SwitchPreferenceCompat switchAutoSync;
 
     private SettingsViewModel settingsViewModel;
@@ -126,6 +127,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return false;
             }
         });
+
+        btnTroubleSAutoStart.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AutoStartEnabler.enable(requireContext());
+                return false;
+            }
+        });
     }
 
     private void accountWorking() {
@@ -146,6 +155,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         btnSendFeedback = findPreference(getString(R.string.feedback_key));
         switchAutoSync = findPreference(getString(R.string.auto_sync_key));
         btnTroubleSXiaomi = findPreference(getString(R.string.troubleshooting_xiaomi_key));
+        btnTroubleSAutoStart = findPreference(getString(R.string.troubleshooting_autostart_key));
     }
 
     @Override

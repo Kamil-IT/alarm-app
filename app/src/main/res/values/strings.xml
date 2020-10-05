@@ -112,6 +112,9 @@
     <string name="troubleshooting_xiaomi_key">xiaomi_miui</string>
     <string name="troubleshooting_xiaomi_title">Xiaomi (MIUI)</string>
     <string name="troubleshooting_xiaomi_summary">Possible errors in Xiaomi phones/tablets</string>
+    <string name="troubleshooting_autostart_key">autostart</string>
+    <string name="troubleshooting_autostart_title">Autostart</string>
+    <string name="troubleshooting_autostart_summary">Enable autostart after reboot device</string>
 
     <string name="auto_sync_key">auto_sync</string>
     <string name="auto_sync_category_key">sync_category</string>
