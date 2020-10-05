@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import com.devcivil.alarm_app.R;
+import com.devcivil.alarm_app.alarmserver.AlarmService;
 import com.devcivil.alarm_app.alarmserver.updator.AlarmUpdateDataReceiver;
 
 import androidx.annotation.Nullable;
@@ -59,7 +60,16 @@ public class AlarmSyncService extends Service {
 //        }
     }
 
-    public static void syncTimeUpdated(Context context){
-        startService(context);
+    public static void stopService(Context context){
+        Intent syncService = new Intent(context, AlarmSyncService.class);
+        context.stopService(syncService);
+    }
+
+    public static void syncTimeUpdated(Context context, boolean isAutoSyncEnabled){
+        if (isAutoSyncEnabled){
+            AlarmNotifyService.startService(context);
+        } else if (AlarmService.getInstance().getSortedActiveAlarmsFor14Days().size() == 0){
+            AlarmNotifyService.stopService(context);
+        }
     }
 }

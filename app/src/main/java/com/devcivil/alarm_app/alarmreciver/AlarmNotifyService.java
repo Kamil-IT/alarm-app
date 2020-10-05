@@ -255,4 +255,18 @@ public class AlarmNotifyService extends Service {
         AlarmService.getInstance().removeListener(listenerSetNotificationText);
         AlarmService.getInstance().removeListener(notificationWhenChangedListener);
     }
+
+    public static void startService(Context context){
+        Intent notifyService = new Intent(context, AlarmNotifyService.class);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            context.startForegroundService(notifyService);
+//        } else{
+        context.startService(notifyService);
+//        }
+    }
+
+    public static void stopService(Context context){
+        Intent notifyService = new Intent(context, AlarmNotifyService.class);
+        context.stopService(notifyService);
+    }
 }

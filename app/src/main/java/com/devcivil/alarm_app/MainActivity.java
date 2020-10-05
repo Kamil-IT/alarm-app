@@ -1,5 +1,6 @@
 package com.devcivil.alarm_app;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.view.Window;
 
 import com.devcivil.alarm_app.alarmreciver.AlarmNotifyService;
 import com.devcivil.alarm_app.alarmserver.AlarmService;
+import com.devcivil.alarm_app.alarmserver.AlarmStaticService;
 import com.devcivil.alarm_app.alarmserver.updator.AlarmUpdateDataReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -20,6 +22,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,12 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 25;
     private Context mContext;
 
+    private AlarmStaticService.OnDataSetChanged listenerNotificationHealth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (getSupportActionBar() != null) getSupportActionBar().hide();
-
 
 
         setContentView(R.layout.activity_main);
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         })
                         .create()
-                .show();
+                        .show();
             }
         }
     }
@@ -101,16 +105,46 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                Intent intentService = new Intent(mContext, AlarmNotifyService.class);
-                ContextCompat.startForegroundService(mContext, intentService);
-
+                if (AlarmService.getInstance().getSortedActiveAlarmsFor14Days().size() != 0) {
+                    Intent intentService = new Intent(mContext, AlarmNotifyService.class);
+                    ContextCompat.startForegroundService(mContext, intentService);
+                }
             }
         });
         thread.start();
+
+        listenerNotificationHealth = new AlarmStaticService.OnDataSetChanged() {
+            @Override
+            public void dataChanged() {
+                if (AlarmService.getInstance().getSortedActiveAlarmsFor14Days().size() != 0 || PreferenceManager
+                        .getDefaultSharedPreferences(mContext)
+                        .getBoolean(getString(R.string.auto_sync_key), false)) {
+                    if (!isMyServiceRunning(AlarmNotifyService.class)) {
+                        Intent intentService = new Intent(mContext, AlarmNotifyService.class);
+                        ContextCompat.startForegroundService(mContext, intentService);
+                    }
+                } else if (isMyServiceRunning(AlarmNotifyService.class)) {
+                    Intent intentService = new Intent(mContext, AlarmNotifyService.class);
+                    stopService(intentService);
+                }
+            }
+        };
+        AlarmService.getInstance().addListener(listenerNotificationHealth);
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     protected void onDestroy() {
+        AlarmService.getInstance().removeListener(listenerNotificationHealth);
         super.onDestroy();
         finish();
     }

@@ -69,7 +69,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                                        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
                                         SharedPreferences.Editor editor = defaultSharedPreferences.edit();
                                         int interval;
                                         if (which == 0) interval = 15;
@@ -82,8 +82,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
 
                                         editor.putInt(getString(R.string.sync_interval_key), interval);
-                                        editor.apply();
-                                        AlarmSyncService.syncTimeUpdated(getContext());
+                                        editor.commit();
+                                        AlarmSyncService.syncTimeUpdated(getContext(), true);
                                     }
                                 }
                         )
@@ -114,7 +114,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         switchAutoSync.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                AlarmSyncService.syncTimeUpdated(getContext());
+                AlarmSyncService.syncTimeUpdated(getContext(), (Boolean) newValue);
                 return true;
             }
         });
