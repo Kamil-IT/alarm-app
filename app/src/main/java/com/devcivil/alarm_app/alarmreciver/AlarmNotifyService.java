@@ -1,6 +1,7 @@
 package com.devcivil.alarm_app.alarmreciver;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -102,7 +103,7 @@ public class AlarmNotifyService extends Service {
         AlarmService.getInstance().addListener(listenerSetAlarmManager);
 
         //        Create updater for data from server
-        AlarmSyncService.startServiceIfSyncEnabledOrAlarm(this);
+        AlarmSyncService.startServiceIfSyncEnabled(this);
 
         return START_STICKY;
     }
@@ -276,5 +277,16 @@ public class AlarmNotifyService extends Service {
     public static void stopService(Context context){
         Intent notifyService = new Intent(context, AlarmNotifyService.class);
         context.stopService(notifyService);
+    }
+
+    public static boolean isThisServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        int i = 0;
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (AlarmNotifyService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

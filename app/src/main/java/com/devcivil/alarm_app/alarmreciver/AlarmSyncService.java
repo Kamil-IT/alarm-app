@@ -1,5 +1,6 @@
 package com.devcivil.alarm_app.alarmreciver;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -24,7 +25,7 @@ public class AlarmSyncService extends Service {
         //        Create updater for data from server
         if (PreferenceManager
                 .getDefaultSharedPreferences(this)
-                .getBoolean(getString(R.string.auto_sync_key), false)){
+                .getBoolean(getString(R.string.auto_sync_key), false)) {
             long interval = AlarmManager.INTERVAL_HALF_HOUR / 30
                     * PreferenceManager
                     .getDefaultSharedPreferences(this)
@@ -36,8 +37,7 @@ public class AlarmSyncService extends Service {
                     interval,
                     PendingIntent.getBroadcast(this, 0, new Intent(getBaseContext(), AlarmUpdateDataReceiver.class), 0)
             );
-        }
-        else {
+        } else {
             stopSelf();
         }
 
@@ -51,35 +51,47 @@ public class AlarmSyncService extends Service {
         return null;
     }
 
-    public static void startService(Context context){
+    public static void startService(Context context) {
         Intent syncService = new Intent(context, AlarmSyncService.class);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            context.startForegroundService(syncService);
 //        } else{
-            context.startService(syncService);
+        context.startService(syncService);
 //        }
     }
 
-    public static void startServiceIfSyncEnabledOrAlarm(Context context){
-        if (PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .getBoolean(context.getString(R.string.auto_sync_key), false)){
-            AlarmNotifyService.startService(context);
-        } else if (AlarmService.getInstance().getSortedActiveAlarmsFor14Days().size() == 0){
-            AlarmNotifyService.stopService(context);
+    public static void startServiceIfSyncEnabled(Context context) {
+        if (!isThisServiceRunning(context) && PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(context.getString(R.string.auto_sync_key), false)) {
+            AlarmSyncService.startService(context);
         }
     }
 
-    public static void stopService(Context context){
+    public static void stopService(Context context) {
         Intent syncService = new Intent(context, AlarmSyncService.class);
         context.stopService(syncService);
     }
 
-    public static void syncTimeUpdated(Context context, boolean isAutoSyncEnabled){
-        if (isAutoSyncEnabled){
+    public static void syncTimeUpdated(Context context, boolean isAutoSyncEnabled) {
+        if (isAutoSyncEnabled && !AlarmNotifyService.isThisServiceRunning(context)) {
             AlarmNotifyService.startService(context);
-        } else if (AlarmService.getInstance().getSortedActiveAlarmsFor14Days().size() == 0){
+        } else if (isAutoSyncEnabled && AlarmNotifyService.isThisServiceRunning(context)){
+            AlarmSyncService.startService(context);
+        }
+        else if (AlarmService.getInstance().getSortedActiveAlarmsFor14Days().size() == 0) {
+            AlarmSyncService.stopService(context);
             AlarmNotifyService.stopService(context);
         }
+    }
+
+    private static boolean isThisServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        int i = 0;
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (AlarmSyncService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
