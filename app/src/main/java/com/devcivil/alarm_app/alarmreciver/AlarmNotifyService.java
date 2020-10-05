@@ -87,6 +87,14 @@ public class AlarmNotifyService extends Service {
                 AlarmFor14Days nextUpcomingAlarm = getNextUpcomingAlarm();
                 if (nextUpcomingAlarm != null) {
                     setAlarmMgrToNextAlarm(nextUpcomingAlarm, alarmMgr);
+                } else {
+                    Intent receiverIntent = new Intent(AlarmNotifyService.this, ActivationAlarmActivityReceiver.class);
+                    Gson gson = new Gson();
+                    final String jsonString = gson.toJson(alarm);
+                    receiverIntent.putExtra(EXTRA_CURRENT_ALARM_RINGING, jsonString);
+                    final PendingIntent alarmIntent = PendingIntent.getBroadcast(AlarmNotifyService.this, 0, receiverIntent, 0);
+
+                    alarmMgr.cancel(alarmIntent);
                 }
             }
         };
