@@ -227,7 +227,7 @@ public class AlarmNotifyService extends Service {
             endOfCurrentDay.setTime(alarm.getAlarmBe());
             strTimeNextAlarm.append(
                     getResources().getStringArray(
-                                    R.array.week_days)[endOfCurrentDay.get(DAY_OF_WEEK)]
+                                    R.array.week_days)[endOfCurrentDay.get(DAY_OF_WEEK) - 1]
             );
         }
         else {

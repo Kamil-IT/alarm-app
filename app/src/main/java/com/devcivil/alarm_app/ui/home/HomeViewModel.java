@@ -154,7 +154,7 @@ public class HomeViewModel extends AndroidViewModel {
             endOfCurrentDay.setTime(alarm.getAlarmBe());
             strTimeNextAlarm.append(
                     context.getResources().getStringArray(
-                            R.array.week_days)[endOfCurrentDay.get(DAY_OF_WEEK)]
+                            R.array.week_days)[endOfCurrentDay.get(DAY_OF_WEEK) - 1]
             );
         }
         else {
