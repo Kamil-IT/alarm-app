@@ -5,7 +5,7 @@ Android app for manage alarms. All alarms are sync with server.
 
 Link to source code of server: [Github](https://github.com/Kamil-IT/alarm-api)
 
-Link to server documentation: [Swagger UI](http://alarmrestapi.eu-central-1.elasticbeanstalk.com/swagger-ui.html)
+Link to server documentation: [Swagger UI](http://alarmrestapi.eu-central-1.elasticbeanstalk.com/swagger-ui)
 
 # Screenshots
 <img src="images/image-1.png" width="25%" />
